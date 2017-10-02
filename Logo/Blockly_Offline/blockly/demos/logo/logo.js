@@ -197,3 +197,18 @@ Blockly.Blocks['clear_screen'] = {
  this.setHelpUrl("");
   }
 };
+
+Blockly.Blocks['operation'] = {
+  init: function() {
+    this.appendValueInput("left_value")
+        .setCheck("Number");
+    this.appendValueInput("right_value")
+        .setCheck("Number")
+        .appendField(new Blockly.FieldDropdown([["+","add"], ["-","substract"], ["*","multiply"], ["/","divide"]]), "op");
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};

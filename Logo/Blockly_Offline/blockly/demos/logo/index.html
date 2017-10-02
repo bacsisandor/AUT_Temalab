@@ -23,7 +23,7 @@
 <body>
   <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
 
-  <xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
+<xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
   <category name="Pen" colour="#a55b93">
     <block type="pen_up"></block>
     <block type="pen_down"></block>
@@ -39,105 +39,13 @@
       <field name="repeat_number">1</field>
     </block>
   </category>
-  <category name="Math" colour="#5b5ba5">
-    <block type="math_arithmetic">
-      <field name="OP">ADD</field>
-      <value name="A">
-        <shadow type="math_number">
-          <field name="NUM">1</field>
-        </shadow>
-      </value>
-      <value name="B">
-        <shadow type="math_number">
-          <field name="NUM">1</field>
-        </shadow>
-      </value>
-    </block>
-    <block type="math_round">
-      <field name="OP">ROUND</field>
-      <value name="NUM">
-        <shadow type="math_number">
-          <field name="NUM">3.1</field>
-        </shadow>
-      </value>
-    </block>
-    <block type="math_single">
-      <field name="OP">ROOT</field>
-      <value name="NUM">
-        <shadow type="math_number">
-          <field name="NUM">9</field>
-        </shadow>
-      </value>
-    </block>
-    <block type="math_trig">
-      <field name="OP">SIN</field>
-      <value name="NUM">
-        <shadow type="math_number">
-          <field name="NUM">45</field>
-        </shadow>
-      </value>
-    </block>
-    <block type="math_constant">
-      <field name="CONSTANT">PI</field>
-    </block>
-    <block type="math_number_property">
-      <mutation divisor_input="false"></mutation>
-      <field name="PROPERTY">EVEN</field>
-      <value name="NUMBER_TO_CHECK">
-        <shadow type="math_number">
-          <field name="NUM">0</field>
-        </shadow>
-      </value>
-    </block>
+  <category name="Numeric" colour="#5b6da5">
     <block type="math_number">
       <field name="NUM">0</field>
     </block>
-    <block type="math_on_list">
-      <mutation op="SUM"></mutation>
-      <field name="OP">SUM</field>
+    <block type="operation">
+      <field name="op">add</field>
     </block>
-    <block type="math_modulo">
-      <value name="DIVIDEND">
-        <shadow type="math_number">
-          <field name="NUM">64</field>
-        </shadow>
-      </value>
-      <value name="DIVISOR">
-        <shadow type="math_number">
-          <field name="NUM">10</field>
-        </shadow>
-      </value>
-    </block>
-    <block type="math_constrain">
-      <value name="VALUE">
-        <shadow type="math_number">
-          <field name="NUM">50</field>
-        </shadow>
-      </value>
-      <value name="LOW">
-        <shadow type="math_number">
-          <field name="NUM">1</field>
-        </shadow>
-      </value>
-      <value name="HIGH">
-        <shadow type="math_number">
-          <field name="NUM">100</field>
-        </shadow>
-      </value>
-    </block>
-    <block type="math_random_int">
-      <value name="FROM">
-        <shadow type="math_number">
-          <field name="NUM">1</field>
-        </shadow>
-      </value>
-      <value name="TO">
-        <shadow type="math_number">
-          <field name="NUM">100</field>
-        </shadow>
-      </value>
-    </block>
-    <block type="math_random_float"></block>
   </category>
   <category name="Clear" colour="#a55b6d">
     <block type="clean"></block>
