@@ -5,14 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Blockly"
         mc:Ignorable="d"
-        Title="MainWindow" Height="580" Width="650">
+        Title="Logo Blockly" Height="620" Width="1000">
     <Grid>
         <Button x:Name="injectButton" Content="Inject Javascript" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300
                 " Margin="10,10,0,0" Click="injectButton_Click"/>
         <Button x:Name="toXmlButton" Content="Workspace to XML" HorizontalAlignment="Left" Margin="332,10,0,0" VerticalAlignment="Top" Width="300
                 " Click="toXmlButton_Click"/>
-        <WebBrowser x:Name="browser" HorizontalAlignment="Left" Height="504" Margin="10,35,-30,0" VerticalAlignment="Top" Width="662"/>
-        
+        <WebBrowser x:Name="browser" HorizontalAlignment="Left" Height="544" Margin="10,35,0,0" VerticalAlignment="Top" Width="662"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="544" Margin="677,35,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="305"/>
+        <Button x:Name="compileButton" Content="Compile" HorizontalAlignment="Left" Margin="677,10,0,0" VerticalAlignment="Top" Width="305" Click="compileButton_Click"/>
+
 
     </Grid>
 </Window>

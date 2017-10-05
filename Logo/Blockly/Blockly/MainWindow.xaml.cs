@@ -5,7 +5,6 @@ using System.IO;
 using System.Reflection;
 using System.Windows;
 
-
 namespace Blockly
 {
     /// <summary>
@@ -44,6 +43,7 @@ namespace Blockly
 
         private void toXmlButton_Click(object sender, RoutedEventArgs e)
         {
+ 
             var script = "var xml = Blockly.Xml.workspaceToDom(workspace);var xml_text = Blockly.Xml.domToPrettyText(xml); document.write(xml_text);";
 
             browser.InvokeScript("execScript", new Object[] { script, "JavaScript" });
@@ -51,9 +51,18 @@ namespace Blockly
 
         private void injectButton_Click(object sender, RoutedEventArgs e)
         {
+            browser.InvokeScript("clearWorkspace");
+
             var script = "var xml = Blockly.Xml.textToDom('<xml><block type=\"repeat\"  x=\"10\" y=\"10\"><field name=\"repeat_number\">4</field><statement name=\"repeat\"><block type=\"move_forward\"><value name=\"forward_pixels\"><block type=\"math_number\"><field name=\"NUM\">90</field></block></value><next><block type=\"turn_right\"><value name=\"turn_right\"><block type= \"math_number\"><field name=\"NUM\">90</field></block></value></block></next></block></statement></block></xml>'); Blockly.Xml.domToWorkspace(xml, workspace);";
 
             browser.InvokeScript("execScript", new Object[] { script, "JavaScript" });
+        }
+
+        private void compileButton_Click(object sender, RoutedEventArgs e)
+        {
+            browser.InvokeScript("showCode");
+            var generatedCode = browser.InvokeScript("eval", new object[] { "generatedCode" });
+            textBox.Text = generatedCode.ToString();
         }
     }
 }

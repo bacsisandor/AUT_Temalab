@@ -8,6 +8,8 @@
   <script src="../../msg/js/en.js"></script>
   <script src="logo.js"></script>
   <script src="workpace.js"></script>
+   <script src="../../generators/logo.js"></script>
+  <script src="../../generators/logo/logo_stubs.js"></script>
   
   <style>
     body {
@@ -21,7 +23,7 @@
   </style>
 </head>
 <body>
-  <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+  <div id="blocklyDiv" style="height: 520px; width: 640px;"></div>
 
 <xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
   <category name="Pen" colour="#a55b93">
@@ -61,9 +63,23 @@
 </xml>
 
   <script>
+   var generatedCode;
     var workspace = Blockly.inject('blocklyDiv',
         {media: '../../media/',
          toolbox: document.getElementById('toolbox')});
+		 
+    function showCode() {
+      // Generate Logo code
+      Blockly.Logo.INFINITE_LOOP_TRAP = null;
+      var code = Blockly.Logo.workspaceToCode(workspace);
+	  generatedCode = code;
+    }
+	
+	function clearWorkspace(){
+	    if (Blockly.mainWorkspace !== null) {
+            Blockly.mainWorkspace.clear();
+        }
+	}
   </script>
 
 </body>
