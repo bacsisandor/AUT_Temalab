@@ -43,45 +43,31 @@ Blockly.Logo = new Blockly.Generator('Logo');
  * @private
  */
 Blockly.Logo.addReservedWords(
-    // import keyword
-    // print(','.join(sorted(keyword.kwlist)))
-    // https://docs.python.org/3/reference/lexical_analysis.html#keywords
-    // https://docs.python.org/2/reference/lexical_analysis.html#keywords
-    'False,None,True,and,as,assert,break,class,continue,def,del,elif,else,' +
-    'except,exec,finally,for,from,global,if,import,in,is,lambda,nonlocal,not,' +
-    'or,pass,print,raise,return,try,while,with,yield,' +
-    // https://docs.python.org/3/library/constants.html
-    // https://docs.python.org/2/library/constants.html
-    'NotImplemented,Ellipsis,__debug__,quit,exit,copyright,license,credits,' +
-    // >>> print(','.join(sorted(dir(__builtins__))))
-    // https://docs.python.org/3/library/functions.html
-    // https://docs.python.org/2/library/functions.html
-    'ArithmeticError,AssertionError,AttributeError,BaseException,' +
-    'BlockingIOError,BrokenPipeError,BufferError,BytesWarning,' +
-    'ChildProcessError,ConnectionAbortedError,ConnectionError,' +
-    'ConnectionRefusedError,ConnectionResetError,DeprecationWarning,EOFError,' +
-    'Ellipsis,EnvironmentError,Exception,FileExistsError,FileNotFoundError,' +
-    'FloatingPointError,FutureWarning,GeneratorExit,IOError,ImportError,' +
-    'ImportWarning,IndentationError,IndexError,InterruptedError,' +
-    'IsADirectoryError,KeyError,KeyboardInterrupt,LookupError,MemoryError,' +
-    'ModuleNotFoundError,NameError,NotADirectoryError,NotImplemented,' +
-    'NotImplementedError,OSError,OverflowError,PendingDeprecationWarning,' +
-    'PermissionError,ProcessLookupError,RecursionError,ReferenceError,' +
-    'ResourceWarning,RuntimeError,RuntimeWarning,StandardError,' +
-    'StopAsyncIteration,StopIteration,SyntaxError,SyntaxWarning,SystemError,' +
-    'SystemExit,TabError,TimeoutError,TypeError,UnboundLocalError,' +
-    'UnicodeDecodeError,UnicodeEncodeError,UnicodeError,' +
-    'UnicodeTranslateError,UnicodeWarning,UserWarning,ValueError,Warning,' +
-    'ZeroDivisionError,_,__build_class__,__debug__,__doc__,__import__,' +
-    '__loader__,__name__,__package__,__spec__,abs,all,any,apply,ascii,' +
-    'basestring,bin,bool,buffer,bytearray,bytes,callable,chr,classmethod,cmp,' +
-    'coerce,compile,complex,copyright,credits,delattr,dict,dir,divmod,' +
-    'enumerate,eval,exec,execfile,exit,file,filter,float,format,frozenset,' +
-    'getattr,globals,hasattr,hash,help,hex,id,input,int,intern,isinstance,' +
-    'issubclass,iter,len,license,list,locals,long,map,max,memoryview,min,' +
-    'next,object,oct,open,ord,pow,print,property,quit,range,raw_input,reduce,' +
-    'reload,repr,reversed,round,set,setattr,slice,sorted,staticmethod,str,' +
-    'sum,super,tuple,type,unichr,unicode,vars,xrange,zip'
+    'word,list,sentence,se,fput,lput,array,mdarray,listtoarray,arraytolist,'+
+    'combine,reverse,gensym,first,last,firsts,butfirst,bf,butlast,bl,butfirsts,'+
+    'bfs,item,mditem,pick,remove,remdup,quoted,split,setitem,mdsetitem,.setfirst,'+
+    '.setbf,.setitem,push,pop,queue,dequeue,wordp,word?,listp,list?,arrayp,array?,'+
+    'numberp,number?,emptyp,empty?,equalp,equal?,notequalp,notequal?,beforep,before?,'+
+    '.eq,memberp,member?,substringp,substring?,count,ascii,char,member,uppercase,lowercase,'+
+    'standout,parse,runparse,print,pr,type,show,readlist,readword,cleartext,ct,settextcolor,'+
+    'textcolor,increasefont,decreasefont,settextsize,textsize,setfont,font,sum,difference,'+
+    'product,quotient,power,remainder,modulo,minus,abs,round,sqrt,exp,log10,ln,'+
+    'arctan,sin,cos,tan,radarctan,radsin,radcos,radtan,iseq,rseq,lessp,less?,greaterp,greater?,'+
+    'lessequalp,lessequal?,greaterequalp,greaterequal?,random,rerandom,form,'+
+    'bitand,bitor,bitxor,bitnot,ashift,lshift,true,false,and,or,xor,not,'+
+    'forward,fd,back,bk,left,lt,right,rt,setpos,setxy,setx,sety,setheading,seth,home,arc,'+
+    'pos,xcor,ycor,heading,towards,scrunch,showturtle,st,hideturtle,ht,clean,clearscreen,cs,'+
+    'wrap,window,fence,fill,filled,label,setlabelheight,setlabelfont,setscrunch,shownp,shown?,'+
+    'turtlemode,labelsize,labelfont,pendown,pd,penup,pu,penpaint,ppt,penerase,pe,penreverse,px,'+
+    'setpencolor,setpalette,setpensize,setbackground,setscreencolor,setsc,pendownp,pendown?,'+
+    'penmode,pencolor,pc,palette,pensize,background,bg,getscreencolor,getsc,mousepos,clickpos,'+
+    'buttonp,button?,button,to,define,def,text,copydef,make,name,local,localmake,thing,global,'+
+    'pprop,gprop,remprop,plist,procedurep,procedure?,primitivep,primitive?,definedp,defined?,'+
+    'namep,name?,plistp,plist?,contents,buried,procedures,primitives,globals,names,plists,namelist,'+
+    'pllist,arity,erase,erall,erps,erns,erpls,ern,epl,bury,buryall,buryname,unbury,unburyall,unburyname,'+
+    'buriedp,buried?,run,runresult,repeat,forever,repcount,test,if,ifelse,iftrue,ift,iffalse,iff,stop,'+
+    'output,op,catch,throw,error,wait,bye,.maybeoutput,ignore,for,do.while,while,do.until,until,case,cond,'+
+    'apply,invoke,foreach,map,filter,find,reduce,crossmap'
 );
 
 /**
