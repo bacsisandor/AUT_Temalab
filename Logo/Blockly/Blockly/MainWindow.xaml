@@ -12,8 +12,9 @@
         <Button x:Name="toXmlButton" Content="Workspace to XML" HorizontalAlignment="Left" Margin="332,10,0,0" VerticalAlignment="Top" Width="300
                 " Click="toXmlButton_Click"/>
         <WebBrowser x:Name="browser" HorizontalAlignment="Left" Height="544" Margin="10,35,0,0" VerticalAlignment="Top" Width="662"/>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="544" Margin="677,35,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="305"/>
-        <Button x:Name="compileButton" Content="Compile" HorizontalAlignment="Left" Margin="677,10,0,0" VerticalAlignment="Top" Width="305" Click="compileButton_Click"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="524" Margin="677,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="305" AcceptsReturn="True"/>
+        <Button x:Name="generateButton" Content="Generate&#xD;&#xA;" HorizontalAlignment="Left" Margin="677,10,0,0" VerticalAlignment="Top" Width="305" Click="generateButton_Click" Height="20"/>
+        <Button x:Name="compileButton" Content="Compile&#xD;&#xA;" HorizontalAlignment="Left" Margin="677,564,0,0" VerticalAlignment="Top" Width="305" Height="25" Click="compileButton_Click"/>
 
 
     </Grid>
