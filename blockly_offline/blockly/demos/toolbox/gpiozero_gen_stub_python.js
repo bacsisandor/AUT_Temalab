@@ -42,7 +42,7 @@ Blockly.Python['initdistancesensorbasic'] = function(block) {
   var value_port1 = Blockly.Python.valueToCode(block, 'port1', Blockly.Python.ORDER_ATOMIC);
   var value_port2 = Blockly.Python.valueToCode(block, 'port2', Blockly.Python.ORDER_ATOMIC);
   // TODO: Assemble Python into code variable.
-  var code = value_port1 + value_port2;
+  var code = 'DistanceSensor' + value_port1 + value_port2;
   // TODO: Change ORDER_NONE to the correct strength.
   return [code, Blockly.Python.ORDER_NONE];
 };
