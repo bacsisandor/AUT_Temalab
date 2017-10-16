@@ -1,4 +1,4 @@
 # AUT Training Project Laboratory: Compilers and Blockly
 
-Repository for the Training Project Laboratory 
+## Repository for GPIO Zero Python library implementation in Blockly.
 

@@ -178,7 +178,7 @@ Blockly.Blocks['setled'] = {
         .appendField("set led variable");
     this.appendDummyInput()
         .appendField("to")
-        .appendField(new Blockly.FieldDropdown([["ON","on"], ["OFF","off"], ["BLINK 1 SEC","blink"]]), "whatToDo");
+        .appendField(new Blockly.FieldDropdown([["ON","on()"], ["OFF","off()"], ["BLINK 1 SEC","blink()"]]), "whatToDo");
     this.setInputsInline(false);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -274,19 +274,6 @@ Blockly.Blocks['istheremotion'] = {
   }
 };
 
-Blockly.Blocks['istherelight'] = {
-  init: function() {
-    this.appendValueInput("lightSensor")
-        .setCheck("LightSensor")
-        .appendField("is there light on variable:");
-    this.setInputsInline(true);
-    this.setOutput(true, "Boolean");
-    this.setColour(45);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
-};
-
 Blockly.Blocks['waitforbuttonpressed'] = {
   init: function() {
     this.appendValueInput("buttonVariable")
@@ -362,7 +349,7 @@ Blockly.Blocks['operationofrobot'] = {
         .appendField("robot on variable");
     this.appendDummyInput()
         .appendField(", operation:")
-        .appendField(new Blockly.FieldDropdown([["forward","forward"], ["backward","backward"], ["left","left"], ["right","right"], ["stop","stop"]]), "operation");
+        .appendField(new Blockly.FieldDropdown([["forward","forward()"], ["backward","backward()"], ["left","left()"], ["right","right()"], ["stop","stop()"]]), "operation");
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -379,7 +366,7 @@ Blockly.Blocks['operationofmotor'] = {
         .appendField("motor on port:");
     this.appendDummyInput()
         .appendField(", operation:")
-        .appendField(new Blockly.FieldDropdown([["forward","forward"], ["backward","backward"], ["stop","stop"]]), "operation");
+        .appendField(new Blockly.FieldDropdown([["forward","forward()"], ["backward","backward()"], ["stop","stop()"]]), "operation");
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);

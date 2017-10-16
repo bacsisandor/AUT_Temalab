@@ -1100,42 +1100,6 @@
 			</block>
 		</value>
 	</block>
-	<block type="factory_base" id="$qgPfvfV@WQ`Z[$tZi]V" deletable="false" movable="false" x="0" y="0">
-		<mutation connections="NONE"/>
-		<field name="NAME">isThereLight</field>
-		<field name="INLINE">INT</field>
-		<field name="CONNECTIONS">NONE</field>
-		<statement name="INPUTS">
-			<block type="input_value" id="yj~c,iuDv8v]xZ7G?|H^">
-				<field name="INPUTNAME">lightSensor</field>
-				<field name="ALIGN">LEFT</field>
-				<statement name="FIELDS">
-					<block type="field_static" id="#;AJIPB_2f!`%$Z3b]ff">
-						<field name="TEXT">is there light on variable:</field>
-					</block>
-				</statement>
-				<value name="TYPE">
-					<shadow type="type_null" id="k#(nmAZw0I7zg%{J}KYK"/>
-				</value>
-			</block>
-		</statement>
-		<value name="TOOLTIP">
-			<block type="text" id="j;RkhNmrt|omyR2RIIu7" deletable="false" movable="false">
-				<field name="TEXT"/>
-			</block>
-		</value>
-		<value name="HELPURL">
-			<block type="text" id="z#{z[o+J!Ax*,:M,vZKA" deletable="false" movable="false">
-				<field name="TEXT"/>
-			</block>
-		</value>
-		<value name="COLOUR">
-			<block type="colour_hue" id="}9x-%Y2rGlPn9g-oO9uv">
-				<mutation colour="#5b67a5"/>
-				<field name="HUE">230</field>
-			</block>
-		</value>
-	</block>
 	<block type="factory_base" id="L~/F6H/l5LXzr6B_#.[]" deletable="false" movable="false" x="0" y="0">
 		<mutation connections="BOTH"/>
 		<field name="NAME">waitForButtonPressed</field>
