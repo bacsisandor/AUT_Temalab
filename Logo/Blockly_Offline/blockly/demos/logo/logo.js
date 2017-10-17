@@ -84,11 +84,14 @@ Blockly.Blocks['turn_right'] = {
 
 Blockly.Blocks['repeat'] = {
   init: function() {
-    this.appendStatementInput("repeat")
-        .setCheck(null)
-        .appendField("Repeat")
-        .appendField(new Blockly.FieldNumber(1, 0), "repeat_number")
+    this.appendDummyInput()
+        .appendField("Repeat");
+    this.appendValueInput("repeat_number")
+        .setCheck("Number");
+    this.appendDummyInput()
         .appendField("times");
+    this.appendStatementInput("repeat")
+        .setCheck(null);
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);

@@ -33,7 +33,7 @@ Blockly.Logo['turn_right'] = function(block) {
 };
 
 Blockly.Logo['repeat'] = function(block) {
-  var number_repeat_number = block.getFieldValue('repeat_number');
+  var number_repeat_number = Blockly.Logo.valueToCode(block, 'repeat_number', Blockly.Logo.ORDER_ATOMIC);
   var statements_repeat = Blockly.Logo.statementToCode(block, 'repeat');
   var code = 'repeat ' + number_repeat_number + ' [\n' + statements_repeat + ']\n';
   return code;
@@ -82,7 +82,7 @@ Blockly.Logo['clear_screen'] = function(block) {
 Blockly.Logo['operation'] = function(block) {
   var value_left_value = Blockly.Logo.valueToCode(block, 'left_value', Blockly.Logo.ORDER_ATOMIC);
   var dropdown_op = block.getFieldValue('op');
-  var value_right_value = Blockly.Logo.valueToCode(block, 'right_value', Blockly.Logo.ORDER_ATOMIC);
+  var value_right_value = '('+Blockly.Logo.valueToCode(block, 'right_value', Blockly.Logo.ORDER_ATOMIC)+')';
   
   var code = value_left_value;
   switch(dropdown_op){
