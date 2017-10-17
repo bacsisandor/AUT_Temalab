@@ -54,6 +54,7 @@
 				<button onclick="saveBlocks()">Save Blocks</button>
 			</p>
 			<p>
+				Load Blocks from XML file:
 				<input type="file" id="file-input"/>
 			</p>
 		</td>
@@ -490,7 +491,7 @@
 	</category>
 	<category name="GZ - set" colour="#5ba56d">
 		<block type="setled">
-			<field name="whatToDo">on</field>
+			<field name="whatToDo">on()</field>
 		</block>
 		<block type="setpwmled">
 			<field name="pwmValue">0</field>
@@ -505,10 +506,10 @@
 			<field name="intensity">0</field>
 		</block>
 		<block type="operationofmotor">
-			<field name="operation">forward</field>
+			<field name="operation">forward()</field>
 		</block>
 		<block type="operationofrobot">
-			<field name="operation">forward</field>
+			<field name="operation">forward()</field>
 		</block>
 	</category>
 </xml>
