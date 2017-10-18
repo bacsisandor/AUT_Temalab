@@ -180,3 +180,9 @@ Blockly.Python['sleep'] = function (block) {
     var number_sleeptime = block.getFieldValue('sleepTime');
     return 'sleep(' + number_sleeptime + ')\n';
 };
+
+Blockly.Python['sleepvariable'] = function(block) {
+  var value_timetosleep = Blockly.Python.valueToCode(block, 'timeToSleep', Blockly.Python.ORDER_ATOMIC);
+  var code = 'sleep(' + value_timetosleep + ')\n';
+  return code;
+};

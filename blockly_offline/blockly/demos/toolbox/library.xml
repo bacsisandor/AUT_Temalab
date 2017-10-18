@@ -1510,4 +1510,47 @@
 			</block>
 		</value>
 	</block>
+	<block type="factory_base" id="q4P_64DKW}wLs1nQxc;#" deletable="false" movable="false" x="0" y="0">
+		<mutation connections="BOTH"/>
+		<field name="NAME">sleepVariable</field>
+		<field name="INLINE">INT</field>
+		<field name="CONNECTIONS">BOTH</field>
+		<statement name="INPUTS">
+			<block type="input_value" id="]zwvqD|(wbq@gB]e2dp_">
+				<field name="INPUTNAME">timeToSleep</field>
+				<field name="ALIGN">LEFT</field>
+				<statement name="FIELDS">
+					<block type="field_static" id="bd,Pf5db4}[^XETpm%H(">
+						<field name="TEXT">time to sleep variable</field>
+					</block>
+				</statement>
+				<value name="TYPE">
+					<shadow type="type_null" id="~PDd;[jRp@rjkT`z~Uhe"/>
+					<block type="type_number" id="EjLB1;Mibpnq]9Z?a-C="/>
+				</value>
+			</block>
+		</statement>
+		<value name="TOOLTIP">
+			<block type="text" id="S:~F~=yrjrw-FV{x,#8," deletable="false" movable="false">
+				<field name="TEXT"/>
+			</block>
+		</value>
+		<value name="HELPURL">
+			<block type="text" id="_Qz@ne^KTEe0RN:^8n@y" deletable="false" movable="false">
+				<field name="TEXT"/>
+			</block>
+		</value>
+		<value name="TOPTYPE">
+			<shadow type="type_null" id="$dWtA2wC*_u(G/K^`{{W"/>
+		</value>
+		<value name="BOTTOMTYPE">
+			<shadow type="type_null" id="W.~0yscZA{0=n;.?VaKr"/>
+		</value>
+		<value name="COLOUR">
+			<block type="colour_hue" id="4EDp:/3~xxnh~YC?(.Ld">
+				<mutation colour="#5b67a5"/>
+				<field name="HUE">230</field>
+			</block>
+		</value>
+	</block>
 </xml>

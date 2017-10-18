@@ -389,3 +389,17 @@ Blockly.Blocks['sleep'] = {
  this.setHelpUrl("");
   }
 };
+
+Blockly.Blocks['sleepvariable'] = {
+  init: function() {
+    this.appendValueInput("timeToSleep")
+        .setCheck("Number")
+        .appendField("time to sleep variable");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
