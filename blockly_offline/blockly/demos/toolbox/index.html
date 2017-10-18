@@ -592,6 +592,7 @@
 
     function updateWorkspaceWithBlocks(blocks) {
         var xml = Blockly.Xml.textToDom(blocks);
+        Blockly.mainWorkspace.clear();
         Blockly.Xml.domToWorkspace(xml, demoWorkspace);
     }
 
