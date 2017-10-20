@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Blockly Demo: Fixed Blockly</title>
+  <script src="../../blockly_compressed.js"></script>
+  <script src="../../blocks_compressed.js"></script>
+  <script src="../../msg/js/en.js"></script>
+  <script src="tinyscript.js"></script>
+  <script src="workpace.js"></script>
+   <script src="../../generators/tinyscript.js"></script>
+  <script src="../../generators/tinyscript/tinyscript.js"></script>
+  
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+  </style>
+</head>
+<body>
+  <div id="blocklyDiv" style="height: 520px; width: 640px;"></div>
+
+<xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
+  <category name="Logic" colour="#5b80a5">
+    <block type="controls_if"></block>
+    <block type="logic_compare">
+      <field name="OP">EQ</field>
+    </block>
+    <block type="logic_operation">
+      <field name="OP">AND</field>
+    </block>
+    <block type="logic_negate"></block>
+    <block type="logic_boolean">
+      <field name="BOOL">TRUE</field>
+    </block>
+    <block type="logic_null"></block>
+  </category>
+  <category name="Text" colour="#5ba593">
+    <block type="text">
+      <field name="TEXT"></field>
+    </block>
+    <block type="text_print">
+      <value name="TEXT">
+        <shadow type="text">
+          <field name="TEXT">abc</field>
+        </shadow>
+      </value>
+    </block>
+    <block type="text_join">
+      <mutation items="2"></mutation>
+    </block>
+  </category>
+  <category name="Loops" colour="#6da55b">
+    <block type="controls_for">
+      <field name="VAR" id="4:MPzlfex#+X2Ps_DPdM" variabletype="">i</field>
+      <value name="FROM">
+        <shadow type="math_number">
+          <field name="NUM">1</field>
+        </shadow>
+      </value>
+      <value name="TO">
+        <shadow type="math_number">
+          <field name="NUM">10</field>
+        </shadow>
+      </value>
+      <value name="BY">
+        <shadow type="math_number">
+          <field name="NUM">1</field>
+        </shadow>
+      </value>
+    </block>
+    <block type="while"></block>
+    <block type="do_while"></block>
+  </category>
+  <category name="Math" colour="#5b5ba5">
+    <block type="math_number">
+      <field name="NUM">0</field>
+    </block>
+    <block type="math_arithmetic">
+      <field name="OP">ADD</field>
+      <value name="A">
+        <shadow type="math_number">
+          <field name="NUM">1</field>
+        </shadow>
+      </value>
+      <value name="B">
+        <shadow type="math_number">
+          <field name="NUM">1</field>
+        </shadow>
+      </value>
+    </block>
+    <block type="abs"></block>
+  </category>
+  <category name="Variables" colour="#a55b6d">
+    <block type="create_var">
+      <field name="var" id="hZrAa$}ngjD(C!r)8kJC" variabletype="">myVariable</field>
+      <value name="NAME">
+        <shadow type="math_number">
+          <field name="NUM">0</field>
+        </shadow>
+      </value>
+    </block>
+    <block type="create_variabletype">
+      <field name="type">int</field>
+      <field name="var" id="hZrAa$}ngjD(C!r)8kJC" variabletype="">myVariable</field>
+    </block>
+    <block type="variables_set">
+      <field name="VAR" id="hZrAa$}ngjD(C!r)8kJC" variabletype="">myVariable</field>
+    </block>
+    <block type="math_change">
+      <field name="VAR" id="hZrAa$}ngjD(C!r)8kJC" variabletype="">myVariable</field>
+      <value name="DELTA">
+        <shadow type="math_number">
+          <field name="NUM">1</field>
+        </shadow>
+      </value>
+    </block>
+    <block type="variables_get">
+      <field name="VAR" id="hZrAa$}ngjD(C!r)8kJC" variabletype="">myVariable</field>
+    </block>
+  </category>
+</xml>
+
+  <script>
+   var generatedCode;
+    var workspace = Blockly.inject('blocklyDiv',
+        {media: '../../media/',
+         toolbox: document.getElementById('toolbox')});
+		 
+    function showCode() {
+      // Generate TinyScript code
+      Blockly.TinyScript.INFINITE_LOOP_TRAP = null;
+      var code = Blockly.TinyScript.workspaceToCode(workspace);
+	  generatedCode = code;
+    }
+	
+	function clearWorkspace(){
+	    if (Blockly.mainWorkspace !== null) {
+            Blockly.mainWorkspace.clear();
+        }
+	}
+  </script>
+
+</body>
+</html>
