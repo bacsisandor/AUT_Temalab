@@ -252,30 +252,13 @@ Blockly.TinyScript['text_print'] = function(block) {
 
 Blockly.TinyScript['text_join'] = function(block) {
   // Create a string made up of any number of elements of any type.
-  switch (block.itemCount_) {
-    case 0:
-      return ['\'\'', Blockly.TinyScript.ORDER_ATOMIC];
-    case 1:
-      var element = Blockly.TinyScript.valueToCode(block, 'ADD0',
-          Blockly.TinyScript.ORDER_NONE) || '\'\'';
-      var code = 'String(' + element + ')';
-      return [code, Blockly.TinyScript.ORDER_FUNCTION_CALL];
-    case 2:
-      var element0 = Blockly.TinyScript.valueToCode(block, 'ADD0',
-          Blockly.TinyScript.ORDER_NONE) || '\'\'';
-      var element1 = Blockly.TinyScript.valueToCode(block, 'ADD1',
-          Blockly.TinyScript.ORDER_NONE) || '\'\'';
-      var code = 'String(' + element0 + ') + String(' + element1 + ')';
-      return [code, Blockly.TinyScript.ORDER_ADDITION];
-    default:
       var elements = new Array(block.itemCount_);
       for (var i = 0; i < block.itemCount_; i++) {
         elements[i] = Blockly.TinyScript.valueToCode(block, 'ADD' + i,
             Blockly.TinyScript.ORDER_COMMA) || '\'\'';
       }
-      var code = '[' + elements.join(',') + '].join(\'\')';
+      var code = elements.join('+');
       return [code, Blockly.TinyScript.ORDER_FUNCTION_CALL];
-  }
 };
 
 Blockly.TinyScript['math_change'] = function(block) {
