@@ -277,3 +277,21 @@ Blockly.TinyScript['text_join'] = function(block) {
       return [code, Blockly.TinyScript.ORDER_FUNCTION_CALL];
   }
 };
+
+Blockly.TinyScript['math_change'] = function(block) {
+  // Add to a variable in place.
+  var argument0 = Blockly.TinyScript.valueToCode(block, 'DELTA',
+      Blockly.TinyScript.ORDER_ADDITION) || '0';
+  var varName = Blockly.TinyScript.variableDB_.getName(
+      block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
+  switch(argument0){
+	  case '1' : return varName + '++;';
+	  case '-1' : return varName + '--;';
+  }
+  if(argument0>1){
+	return varName + '+='+ argument0 +';';
+  }
+  else if(argument0<-1){
+	return varName + '-='+ Math.abs(argument0) +';';
+  }
+};

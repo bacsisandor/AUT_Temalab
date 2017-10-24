@@ -152,7 +152,7 @@ Blockly.TinyScript.init = function(workspace) {
     Blockly.TinyScript.variableDB_.reset();
   }
 
-  var defvars = [];
+  /*var defvars = [];
   var variables = workspace.getAllVariables();
   if (variables.length) {
     for (var i = 0; i < variables.length; i++) {
@@ -161,7 +161,7 @@ Blockly.TinyScript.init = function(workspace) {
     }
     Blockly.TinyScript.definitions_['variables'] =
         'var ' + defvars.join(', ') + ';';
-  }
+  }*/
 };
 
 /**
