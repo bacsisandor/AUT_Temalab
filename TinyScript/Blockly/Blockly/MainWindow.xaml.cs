@@ -45,14 +45,14 @@ namespace Blockly
 
         private void DisplayBlocks(XElement root)
         {
+            if (root == null)
+                return;
 
             string xmlString = root.ToString().Replace('\r', ' ').Replace('\n', ' ');
 
             var script = "var xml = Blockly.Xml.textToDom('<xml>";
             script += xmlString;
             script += "</xml>'); Blockly.Xml.domToWorkspace(xml, workspace);";
-
-            browser.InvokeScript("clearWorkspace");
 
             browser.InvokeScript("execScript", new Object[] { script, "JavaScript" });
         }
@@ -98,14 +98,15 @@ namespace Blockly
         private void compileButton_Click(object sender, RoutedEventArgs e)
         {
             var code = textBox.Text;
-            LogoErrorListener error = new LogoErrorListener();
+            ErrorListener error = new ErrorListener();
             var inputStream = new AntlrInputStream(code);
-            var lexer = new logoLexer(inputStream);
+            var lexer = new TinyScriptLexer(inputStream);
             lexer.AddErrorListener(error);
             var tokenStream = new CommonTokenStream(lexer);
-            var parser = new logoParser(tokenStream);
+            var parser = new TinyScriptParser(tokenStream);
             parser.AddErrorListener(error);
-            var visitor = new LogoVisitor();
+            var visitor = new TinyScriptVisitor();
+            browser.InvokeScript("clearWorkspace");
             try
             {
                 DisplayBlocks(visitor.Visit(parser.program()));
