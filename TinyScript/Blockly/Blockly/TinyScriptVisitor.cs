@@ -232,8 +232,9 @@ namespace Blockly
                 string varName = context.varName().GetText();
                 VariableType type = variables[varName];
                 block = new XElement("block", new XAttribute("type", "variables_get"));
-                field = new XElement("field", new XAttribute("name", "var"));
+                field = new XElement("field", new XAttribute("name", "VAR"));
                 field.Add(varName);
+                block.Add(field);
                 return new ExpressionElement(block, type);
             }
             return VisitValue(context.value());
