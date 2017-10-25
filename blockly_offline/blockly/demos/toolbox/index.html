@@ -32,6 +32,10 @@
 			width: 100%;
 		}
 
+		td, tr {
+			border: 1px solid black;
+		}
+
 		#blocklyArea {
 			height: 99%;
 		}
@@ -48,22 +52,31 @@
 	<tr>
 		<td>
 			<p>
-				<button onclick="generateCode()">Generate Python</button>
-			</p>
-			<p>
-				<button onclick="saveBlocks()">Save Blocks</button>
+				<button onclick="generateCode()">Generate Python and Save</button>
+				<button onclick="saveBlocks()">Save Blocks for later use</button>
 			</p>
 			<p>
 				Load Blocks from XML file:
 				<input type="file" id="file-input"/>
 			</p>
+			<p>
+				<button onclick="connectSSH(document.getElementById('ip-and-port').value)">Upload to pi and run</button>
+				<input type="text" id="ip-and-port" placeholder="localhost:8080"/>
+			</p>
 		</td>
+
 	</tr>
+
 	<tr>
 		<td id="blocklyArea">
 		</td>
+		<td>
+			<textarea style="width: 100%; height: 100%;" readonly id="on-the-fly-code-textarea"></textarea>
+		</td>
 	</tr>
 </table>
+
+<div class="terminal"></div>
 
 <div id="blocklyDiv" style="position: absolute"></div>
 
@@ -609,6 +622,34 @@
             updateWorkspaceWithBlocks(contents)
         };
         reader.readAsText(file);
+    }
+
+    function updateRealTimeBlockToPythonConversionTextarea(event) {
+        var code = Blockly.Python.workspaceToCode(demoWorkspace);
+        document.getElementById('on-the-fly-code-textarea').value = code;
+    }
+
+    demoWorkspace.addChangeListener(updateRealTimeBlockToPythonConversionTextarea);
+
+</script>
+
+<script>
+    function connectSSH(ipAndPort) {
+        var http = new XMLHttpRequest();
+        var url = 'http://' + ipAndPort + '/fileupload';
+        var body = Blockly.Python.workspaceToCode(demoWorkspace);
+        http.open("POST", url, true);
+
+        //Send the proper header information along with the request
+        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        http.onreadystatechange = function () {
+            if (http.readyState === 4 && http.status === 200) {
+                alert(http.responseText);
+            }
+        };
+
+        http.send(body);
     }
 </script>
 

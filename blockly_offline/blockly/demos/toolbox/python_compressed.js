@@ -33,7 +33,7 @@ Blockly.Python.init = function (a) {
     Blockly.Python.variableDB_ ? Blockly.Python.variableDB_.reset() : Blockly.Python.variableDB_ = new Blockly.Names(Blockly.Python.RESERVED_WORDS_);
     var b = [];
     a = a.getAllVariables();
-    for (var c = 0; c < a.length; c++)b[c] = Blockly.Python.variableDB_.getName(a[c].name, Blockly.Variables.NAME_TYPE) + " = None";
+    for (var c = 0; c < a.length; c++) b[c] = Blockly.Python.variableDB_.getName(a[c].name, Blockly.Variables.NAME_TYPE) + " = None";
     Blockly.Python.definitions_.variables = b.join("\n")
 };
 Blockly.Python.finish = function (a) {
@@ -61,7 +61,7 @@ Blockly.Python.scrub_ = function (a, b) {
     if (!a.outputConnection || !a.outputConnection.targetConnection) {
         var d = a.getCommentText();
         (d = Blockly.utils.wrap(d, Blockly.Python.COMMENT_WRAP - 3)) && (c = a.getProcedureDef ? c + ('"""' + d + '\n"""\n') : c + Blockly.Python.prefixLines(d + "\n", "# "));
-        for (var e = 0; e < a.inputList.length; e++)a.inputList[e].type == Blockly.INPUT_VALUE && (d = a.inputList[e].connection.targetBlock()) && (d = Blockly.Python.allNestedComments(d)) && (c += Blockly.Python.prefixLines(d, "# "))
+        for (var e = 0; e < a.inputList.length; e++) a.inputList[e].type == Blockly.INPUT_VALUE && (d = a.inputList[e].connection.targetBlock()) && (d = Blockly.Python.allNestedComments(d)) && (c += Blockly.Python.prefixLines(d, "# "))
     }
     e = a.nextConnection && a.nextConnection.targetBlock();
     e = Blockly.Python.blockToCode(e);
@@ -84,14 +84,18 @@ Blockly.Python.colour_random = function (a) {
     return ["'#%06x' % random.randint(0, 2**24 - 1)", Blockly.Python.ORDER_FUNCTION_CALL]
 };
 Blockly.Python.colour_rgb = function (a) {
-    var b = Blockly.Python.provideFunction_("colour_rgb", ["def " + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + "(r, g, b):", "  r = round(min(100, max(0, r)) * 2.55)", "  g = round(min(100, max(0, g)) * 2.55)", "  b = round(min(100, max(0, b)) * 2.55)", "  return '#%02x%02x%02x' % (r, g, b)"]), c = Blockly.Python.valueToCode(a, "RED", Blockly.Python.ORDER_NONE) || 0, d = Blockly.Python.valueToCode(a, "GREEN", Blockly.Python.ORDER_NONE) || 0;
+    var b = Blockly.Python.provideFunction_("colour_rgb", ["def " + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + "(r, g, b):", "  r = round(min(100, max(0, r)) * 2.55)", "  g = round(min(100, max(0, g)) * 2.55)", "  b = round(min(100, max(0, b)) * 2.55)", "  return '#%02x%02x%02x' % (r, g, b)"]),
+        c = Blockly.Python.valueToCode(a, "RED", Blockly.Python.ORDER_NONE) || 0,
+        d = Blockly.Python.valueToCode(a, "GREEN", Blockly.Python.ORDER_NONE) || 0;
     a = Blockly.Python.valueToCode(a, "BLUE", Blockly.Python.ORDER_NONE) ||
         0;
     return [b + "(" + c + ", " + d + ", " + a + ")", Blockly.Python.ORDER_FUNCTION_CALL]
 };
 Blockly.Python.colour_blend = function (a) {
     var b = Blockly.Python.provideFunction_("colour_blend", ["def " + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + "(colour1, colour2, ratio):", "  r1, r2 = int(colour1[1:3], 16), int(colour2[1:3], 16)", "  g1, g2 = int(colour1[3:5], 16), int(colour2[3:5], 16)", "  b1, b2 = int(colour1[5:7], 16), int(colour2[5:7], 16)", "  ratio = min(1, max(0, ratio))", "  r = round(r1 * (1 - ratio) + r2 * ratio)", "  g = round(g1 * (1 - ratio) + g2 * ratio)", "  b = round(b1 * (1 - ratio) + b2 * ratio)",
-        "  return '#%02x%02x%02x' % (r, g, b)"]), c = Blockly.Python.valueToCode(a, "COLOUR1", Blockly.Python.ORDER_NONE) || "'#000000'", d = Blockly.Python.valueToCode(a, "COLOUR2", Blockly.Python.ORDER_NONE) || "'#000000'";
+            "  return '#%02x%02x%02x' % (r, g, b)"]),
+        c = Blockly.Python.valueToCode(a, "COLOUR1", Blockly.Python.ORDER_NONE) || "'#000000'",
+        d = Blockly.Python.valueToCode(a, "COLOUR2", Blockly.Python.ORDER_NONE) || "'#000000'";
     a = Blockly.Python.valueToCode(a, "RATIO", Blockly.Python.ORDER_NONE) || 0;
     return [b + "(" + c + ", " + d + ", " + a + ")", Blockly.Python.ORDER_FUNCTION_CALL]
 };
@@ -100,7 +104,7 @@ Blockly.Python.lists_create_empty = function (a) {
     return ["[]", Blockly.Python.ORDER_ATOMIC]
 };
 Blockly.Python.lists_create_with = function (a) {
-    for (var b = Array(a.itemCount_), c = 0; c < a.itemCount_; c++)b[c] = Blockly.Python.valueToCode(a, "ADD" + c, Blockly.Python.ORDER_NONE) || "None";
+    for (var b = Array(a.itemCount_), c = 0; c < a.itemCount_; c++) b[c] = Blockly.Python.valueToCode(a, "ADD" + c, Blockly.Python.ORDER_NONE) || "None";
     return ["[" + b.join(", ") + "]", Blockly.Python.ORDER_ATOMIC]
 };
 Blockly.Python.lists_repeat = function (a) {
@@ -115,71 +119,75 @@ Blockly.Python.lists_isEmpty = function (a) {
     return ["not len(" + (Blockly.Python.valueToCode(a, "VALUE", Blockly.Python.ORDER_NONE) || "[]") + ")", Blockly.Python.ORDER_LOGICAL_NOT]
 };
 Blockly.Python.lists_indexOf = function (a) {
-    var b = Blockly.Python.valueToCode(a, "FIND", Blockly.Python.ORDER_NONE) || "[]", c = Blockly.Python.valueToCode(a, "VALUE", Blockly.Python.ORDER_NONE) || "''";
-    if (a.workspace.options.oneBasedIndex)var d = " 0", e = " + 1", f = ""; else d = " -1", e = "", f = " - 1";
-    if ("FIRST" == a.getFieldValue("END"))return a = Blockly.Python.provideFunction_("first_index", ["def " + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + "(my_list, elem):", "  try: index = my_list.index(elem)" + e, "  except: index =" + d, "  return index"]),
+    var b = Blockly.Python.valueToCode(a, "FIND", Blockly.Python.ORDER_NONE) || "[]",
+        c = Blockly.Python.valueToCode(a, "VALUE", Blockly.Python.ORDER_NONE) || "''";
+    if (a.workspace.options.oneBasedIndex) var d = " 0", e = " + 1", f = ""; else d = " -1", e = "", f = " - 1";
+    if ("FIRST" == a.getFieldValue("END")) return a = Blockly.Python.provideFunction_("first_index", ["def " + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + "(my_list, elem):", "  try: index = my_list.index(elem)" + e, "  except: index =" + d, "  return index"]),
         [a + "(" + c + ", " + b + ")", Blockly.Python.ORDER_FUNCTION_CALL];
     a = Blockly.Python.provideFunction_("last_index", ["def " + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + "(my_list, elem):", "  try: index = len(my_list) - my_list[::-1].index(elem)" + f, "  except: index =" + d, "  return index"]);
     return [a + "(" + c + ", " + b + ")", Blockly.Python.ORDER_FUNCTION_CALL]
 };
 Blockly.Python.lists_getIndex = function (a) {
-    var b = a.getFieldValue("MODE") || "GET", c = a.getFieldValue("WHERE") || "FROM_START", d = Blockly.Python.valueToCode(a, "VALUE", "RANDOM" == c ? Blockly.Python.ORDER_NONE : Blockly.Python.ORDER_MEMBER) || "[]";
+    var b = a.getFieldValue("MODE") || "GET", c = a.getFieldValue("WHERE") || "FROM_START",
+        d = Blockly.Python.valueToCode(a, "VALUE", "RANDOM" == c ? Blockly.Python.ORDER_NONE : Blockly.Python.ORDER_MEMBER) || "[]";
     switch (c) {
         case "FIRST":
-            if ("GET" == b)return [d + "[0]", Blockly.Python.ORDER_MEMBER];
-            if ("GET_REMOVE" == b)return [d + ".pop(0)", Blockly.Python.ORDER_FUNCTION_CALL];
-            if ("REMOVE" == b)return d + ".pop(0)\n";
+            if ("GET" == b) return [d + "[0]", Blockly.Python.ORDER_MEMBER];
+            if ("GET_REMOVE" == b) return [d + ".pop(0)", Blockly.Python.ORDER_FUNCTION_CALL];
+            if ("REMOVE" == b) return d + ".pop(0)\n";
             break;
         case "LAST":
-            if ("GET" == b)return [d + "[-1]", Blockly.Python.ORDER_MEMBER];
+            if ("GET" == b) return [d + "[-1]", Blockly.Python.ORDER_MEMBER];
             if ("GET_REMOVE" ==
-                b)return [d + ".pop()", Blockly.Python.ORDER_FUNCTION_CALL];
-            if ("REMOVE" == b)return d + ".pop()\n";
+                b) return [d + ".pop()", Blockly.Python.ORDER_FUNCTION_CALL];
+            if ("REMOVE" == b) return d + ".pop()\n";
             break;
         case "FROM_START":
             a = Blockly.Python.getAdjustedInt(a, "AT");
-            if ("GET" == b)return [d + "[" + a + "]", Blockly.Python.ORDER_MEMBER];
-            if ("GET_REMOVE" == b)return [d + ".pop(" + a + ")", Blockly.Python.ORDER_FUNCTION_CALL];
-            if ("REMOVE" == b)return d + ".pop(" + a + ")\n";
+            if ("GET" == b) return [d + "[" + a + "]", Blockly.Python.ORDER_MEMBER];
+            if ("GET_REMOVE" == b) return [d + ".pop(" + a + ")", Blockly.Python.ORDER_FUNCTION_CALL];
+            if ("REMOVE" == b) return d + ".pop(" + a + ")\n";
             break;
         case "FROM_END":
             a = Blockly.Python.getAdjustedInt(a, "AT", 1, !0);
-            if ("GET" == b)return [d + "[" + a + "]", Blockly.Python.ORDER_MEMBER];
-            if ("GET_REMOVE" == b)return [d + ".pop(" + a + ")",
+            if ("GET" == b) return [d + "[" + a + "]", Blockly.Python.ORDER_MEMBER];
+            if ("GET_REMOVE" == b) return [d + ".pop(" + a + ")",
                 Blockly.Python.ORDER_FUNCTION_CALL];
-            if ("REMOVE" == b)return d + ".pop(" + a + ")\n";
+            if ("REMOVE" == b) return d + ".pop(" + a + ")\n";
             break;
         case "RANDOM":
             Blockly.Python.definitions_.import_random = "import random";
-            if ("GET" == b)return ["random.choice(" + d + ")", Blockly.Python.ORDER_FUNCTION_CALL];
+            if ("GET" == b) return ["random.choice(" + d + ")", Blockly.Python.ORDER_FUNCTION_CALL];
             d = Blockly.Python.provideFunction_("lists_remove_random_item", ["def " + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + "(myList):", "  x = int(random.random() * len(myList))", "  return myList.pop(x)"]) + "(" + d + ")";
-            if ("GET_REMOVE" == b)return [d, Blockly.Python.ORDER_FUNCTION_CALL];
+            if ("GET_REMOVE" == b) return [d, Blockly.Python.ORDER_FUNCTION_CALL];
             if ("REMOVE" ==
-                b)return d + "\n"
+                b) return d + "\n"
     }
     throw"Unhandled combination (lists_getIndex).";
 };
 Blockly.Python.lists_setIndex = function (a) {
-    var b = Blockly.Python.valueToCode(a, "LIST", Blockly.Python.ORDER_MEMBER) || "[]", c = a.getFieldValue("MODE") || "GET", d = a.getFieldValue("WHERE") || "FROM_START", e = Blockly.Python.valueToCode(a, "TO", Blockly.Python.ORDER_NONE) || "None";
+    var b = Blockly.Python.valueToCode(a, "LIST", Blockly.Python.ORDER_MEMBER) || "[]",
+        c = a.getFieldValue("MODE") || "GET", d = a.getFieldValue("WHERE") || "FROM_START",
+        e = Blockly.Python.valueToCode(a, "TO", Blockly.Python.ORDER_NONE) || "None";
     switch (d) {
         case "FIRST":
-            if ("SET" == c)return b + "[0] = " + e + "\n";
-            if ("INSERT" == c)return b + ".insert(0, " + e + ")\n";
+            if ("SET" == c) return b + "[0] = " + e + "\n";
+            if ("INSERT" == c) return b + ".insert(0, " + e + ")\n";
             break;
         case "LAST":
-            if ("SET" == c)return b + "[-1] = " + e + "\n";
-            if ("INSERT" == c)return b + ".append(" + e + ")\n";
+            if ("SET" == c) return b + "[-1] = " + e + "\n";
+            if ("INSERT" == c) return b + ".append(" + e + ")\n";
             break;
         case "FROM_START":
             a = Blockly.Python.getAdjustedInt(a,
                 "AT");
-            if ("SET" == c)return b + "[" + a + "] = " + e + "\n";
-            if ("INSERT" == c)return b + ".insert(" + a + ", " + e + ")\n";
+            if ("SET" == c) return b + "[" + a + "] = " + e + "\n";
+            if ("INSERT" == c) return b + ".insert(" + a + ", " + e + ")\n";
             break;
         case "FROM_END":
             a = Blockly.Python.getAdjustedInt(a, "AT", 1, !0);
-            if ("SET" == c)return b + "[" + a + "] = " + e + "\n";
-            if ("INSERT" == c)return b + ".insert(" + a + ", " + e + ")\n";
+            if ("SET" == c) return b + "[" + a + "] = " + e + "\n";
+            if ("INSERT" == c) return b + ".insert(" + a + ", " + e + ")\n";
             break;
         case "RANDOM":
             Blockly.Python.definitions_.import_random = "import random";
@@ -187,13 +195,14 @@ Blockly.Python.lists_setIndex = function (a) {
             d = Blockly.Python.variableDB_.getDistinctName("tmp_x",
                 Blockly.Variables.NAME_TYPE);
             a += d + " = int(random.random() * len(" + b + "))\n";
-            if ("SET" == c)return a + (b + "[" + d + "] = " + e + "\n");
-            if ("INSERT" == c)return a + (b + ".insert(" + d + ", " + e + ")\n")
+            if ("SET" == c) return a + (b + "[" + d + "] = " + e + "\n");
+            if ("INSERT" == c) return a + (b + ".insert(" + d + ", " + e + ")\n")
     }
     throw"Unhandled combination (lists_setIndex).";
 };
 Blockly.Python.lists_getSublist = function (a) {
-    var b = Blockly.Python.valueToCode(a, "LIST", Blockly.Python.ORDER_MEMBER) || "[]", c = a.getFieldValue("WHERE1"), d = a.getFieldValue("WHERE2");
+    var b = Blockly.Python.valueToCode(a, "LIST", Blockly.Python.ORDER_MEMBER) || "[]", c = a.getFieldValue("WHERE1"),
+        d = a.getFieldValue("WHERE2");
     switch (c) {
         case "FROM_START":
             c = Blockly.Python.getAdjustedInt(a, "AT1");
@@ -265,7 +274,9 @@ Blockly.Python.logic_compare = function (a) {
     return [d + " " + b + " " + a, c]
 };
 Blockly.Python.logic_operation = function (a) {
-    var b = "AND" == a.getFieldValue("OP") ? "and" : "or", c = "and" == b ? Blockly.Python.ORDER_LOGICAL_AND : Blockly.Python.ORDER_LOGICAL_OR, d = Blockly.Python.valueToCode(a, "A", c);
+    var b = "AND" == a.getFieldValue("OP") ? "and" : "or",
+        c = "and" == b ? Blockly.Python.ORDER_LOGICAL_AND : Blockly.Python.ORDER_LOGICAL_OR,
+        d = Blockly.Python.valueToCode(a, "A", c);
     a = Blockly.Python.valueToCode(a, "B", c);
     if (d || a) {
         var e = "and" == b ? "True" : "False";
@@ -284,7 +295,8 @@ Blockly.Python.logic_null = function (a) {
     return ["None", Blockly.Python.ORDER_ATOMIC]
 };
 Blockly.Python.logic_ternary = function (a) {
-    var b = Blockly.Python.valueToCode(a, "IF", Blockly.Python.ORDER_CONDITIONAL) || "False", c = Blockly.Python.valueToCode(a, "THEN", Blockly.Python.ORDER_CONDITIONAL) || "None";
+    var b = Blockly.Python.valueToCode(a, "IF", Blockly.Python.ORDER_CONDITIONAL) || "False",
+        c = Blockly.Python.valueToCode(a, "THEN", Blockly.Python.ORDER_CONDITIONAL) || "None";
     a = Blockly.Python.valueToCode(a, "ELSE", Blockly.Python.ORDER_CONDITIONAL) || "None";
     return [c + " if " + b + " else " + a, Blockly.Python.ORDER_CONDITIONAL]
 };
@@ -298,13 +310,19 @@ Blockly.Python.controls_repeat_ext = function (a) {
 };
 Blockly.Python.controls_repeat = Blockly.Python.controls_repeat_ext;
 Blockly.Python.controls_whileUntil = function (a) {
-    var b = "UNTIL" == a.getFieldValue("MODE"), c = Blockly.Python.valueToCode(a, "BOOL", b ? Blockly.Python.ORDER_LOGICAL_NOT : Blockly.Python.ORDER_NONE) || "False", d = Blockly.Python.statementToCode(a, "DO");
+    var b = "UNTIL" == a.getFieldValue("MODE"),
+        c = Blockly.Python.valueToCode(a, "BOOL", b ? Blockly.Python.ORDER_LOGICAL_NOT : Blockly.Python.ORDER_NONE) || "False",
+        d = Blockly.Python.statementToCode(a, "DO");
     d = Blockly.Python.addLoopTrap(d, a.id) || Blockly.Python.PASS;
     b && (c = "not " + c);
     return "while " + c + ":\n" + d
 };
 Blockly.Python.controls_for = function (a) {
-    var b = Blockly.Python.variableDB_.getName(a.getFieldValue("VAR"), Blockly.Variables.NAME_TYPE), c = Blockly.Python.valueToCode(a, "FROM", Blockly.Python.ORDER_NONE) || "0", d = Blockly.Python.valueToCode(a, "TO", Blockly.Python.ORDER_NONE) || "0", e = Blockly.Python.valueToCode(a, "BY", Blockly.Python.ORDER_NONE) || "1", f = Blockly.Python.statementToCode(a, "DO");
+    var b = Blockly.Python.variableDB_.getName(a.getFieldValue("VAR"), Blockly.Variables.NAME_TYPE),
+        c = Blockly.Python.valueToCode(a, "FROM", Blockly.Python.ORDER_NONE) || "0",
+        d = Blockly.Python.valueToCode(a, "TO", Blockly.Python.ORDER_NONE) || "0",
+        e = Blockly.Python.valueToCode(a, "BY", Blockly.Python.ORDER_NONE) || "1",
+        f = Blockly.Python.statementToCode(a, "DO");
     f = Blockly.Python.addLoopTrap(f, a.id) || Blockly.Python.PASS;
     var g = "", h = function () {
         return Blockly.Python.provideFunction_("upRange",
@@ -333,7 +351,9 @@ Blockly.Python.controls_for = function (a) {
     return g += "for " + b + " in " + a + ":\n" + f
 };
 Blockly.Python.controls_forEach = function (a) {
-    var b = Blockly.Python.variableDB_.getName(a.getFieldValue("VAR"), Blockly.Variables.NAME_TYPE), c = Blockly.Python.valueToCode(a, "LIST", Blockly.Python.ORDER_RELATIONAL) || "[]", d = Blockly.Python.statementToCode(a, "DO");
+    var b = Blockly.Python.variableDB_.getName(a.getFieldValue("VAR"), Blockly.Variables.NAME_TYPE),
+        c = Blockly.Python.valueToCode(a, "LIST", Blockly.Python.ORDER_RELATIONAL) || "[]",
+        d = Blockly.Python.statementToCode(a, "DO");
     d = Blockly.Python.addLoopTrap(d, a.id) || Blockly.Python.PASS;
     return "for " + b + " in " + c + ":\n" + d
 };
@@ -353,7 +373,7 @@ Blockly.Python.math_number = function (a) {
     if (Infinity == a) {
         a = 'float("inf")';
         var b = Blockly.Python.ORDER_FUNCTION_CALL
-    } else-Infinity == a ? (a = '-float("inf")', b = Blockly.Python.ORDER_UNARY_SIGN) : b = 0 > a ? Blockly.Python.ORDER_UNARY_SIGN : Blockly.Python.ORDER_ATOMIC;
+    } else -Infinity == a ? (a = '-float("inf")', b = Blockly.Python.ORDER_UNARY_SIGN) : b = 0 > a ? Blockly.Python.ORDER_UNARY_SIGN : Blockly.Python.ORDER_ATOMIC;
     return [a, b]
 };
 Blockly.Python.math_arithmetic = function (a) {
@@ -415,7 +435,7 @@ Blockly.Python.math_single = function (a) {
         case "TAN":
             c = "math.tan(" + a + " / 180.0 * math.pi)"
     }
-    if (c)return [c, Blockly.Python.ORDER_FUNCTION_CALL];
+    if (c) return [c, Blockly.Python.ORDER_FUNCTION_CALL];
     switch (b) {
         case "ASIN":
             c =
@@ -446,8 +466,9 @@ Blockly.Python.math_constant = function (a) {
     return b[a]
 };
 Blockly.Python.math_number_property = function (a) {
-    var b = Blockly.Python.valueToCode(a, "NUMBER_TO_CHECK", Blockly.Python.ORDER_MULTIPLICATIVE) || "0", c = a.getFieldValue("PROPERTY");
-    if ("PRIME" == c)return Blockly.Python.definitions_.import_math = "import math", Blockly.Python.definitions_.from_numbers_import_Number = "from numbers import Number", [Blockly.Python.provideFunction_("math_isPrime", ["def " + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + "(n):", "  # https://en.wikipedia.org/wiki/Primality_test#Naive_methods",
+    var b = Blockly.Python.valueToCode(a, "NUMBER_TO_CHECK", Blockly.Python.ORDER_MULTIPLICATIVE) || "0",
+        c = a.getFieldValue("PROPERTY");
+    if ("PRIME" == c) return Blockly.Python.definitions_.import_math = "import math", Blockly.Python.definitions_.from_numbers_import_Number = "from numbers import Number", [Blockly.Python.provideFunction_("math_isPrime", ["def " + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + "(n):", "  # https://en.wikipedia.org/wiki/Primality_test#Naive_methods",
         "  # If n is not a number but a string, try parsing it.", "  if not isinstance(n, Number):", "    try:", "      n = float(n)", "    except:", "      return False", "  if n == 2 or n == 3:", "    return True", "  # False if n is negative, is 1, or not whole, or if n is divisible by 2 or 3.", "  if n <= 1 or n % 1 != 0 or n % 2 == 0 or n % 3 == 0:", "    return False", "  # Check all the numbers of form 6k +/- 1, up to sqrt(n).", "  for x in range(6, int(math.sqrt(n)) + 2, 6):", "    if n % (x - 1) == 0 or n % (x + 1) == 0:",
         "      return False", "  return True"]) + "(" + b + ")", Blockly.Python.ORDER_FUNCTION_CALL];
     switch (c) {
@@ -468,7 +489,7 @@ Blockly.Python.math_number_property = function (a) {
             break;
         case "DIVISIBLE_BY":
             a = Blockly.Python.valueToCode(a, "DIVISOR", Blockly.Python.ORDER_MULTIPLICATIVE);
-            if (!a || "0" == a)return ["False", Blockly.Python.ORDER_ATOMIC];
+            if (!a || "0" == a) return ["False", Blockly.Python.ORDER_ATOMIC];
             d = b + " % " + a + " == 0"
     }
     return [d, Blockly.Python.ORDER_RELATIONAL]
@@ -532,7 +553,8 @@ Blockly.Python.math_modulo = function (a) {
     return [b + " % " + a, Blockly.Python.ORDER_MULTIPLICATIVE]
 };
 Blockly.Python.math_constrain = function (a) {
-    var b = Blockly.Python.valueToCode(a, "VALUE", Blockly.Python.ORDER_NONE) || "0", c = Blockly.Python.valueToCode(a, "LOW", Blockly.Python.ORDER_NONE) || "0";
+    var b = Blockly.Python.valueToCode(a, "VALUE", Blockly.Python.ORDER_NONE) || "0",
+        c = Blockly.Python.valueToCode(a, "LOW", Blockly.Python.ORDER_NONE) || "0";
     a = Blockly.Python.valueToCode(a, "HIGH", Blockly.Python.ORDER_NONE) || "float('inf')";
     return ["min(max(" + b + ", " + c + "), " + a + ")", Blockly.Python.ORDER_FUNCTION_CALL]
 };
@@ -548,29 +570,29 @@ Blockly.Python.math_random_float = function (a) {
 };
 Blockly.Python.procedures = {};
 Blockly.Python.procedures_defreturn = function (a) {
-    for (var b = [], c, d = a.workspace.getAllVariables() || [], e = 0; c = d[e]; e++)c = c.name, -1 == a.arguments_.indexOf(c) && b.push(Blockly.Python.variableDB_.getName(c, Blockly.Variables.NAME_TYPE));
+    for (var b = [], c, d = a.workspace.getAllVariables() || [], e = 0; c = d[e]; e++) c = c.name, -1 == a.arguments_.indexOf(c) && b.push(Blockly.Python.variableDB_.getName(c, Blockly.Variables.NAME_TYPE));
     b = b.length ? "  global " + b.join(", ") + "\n" : "";
     d = Blockly.Python.variableDB_.getName(a.getFieldValue("NAME"), Blockly.Procedures.NAME_TYPE);
     c = Blockly.Python.statementToCode(a, "STACK");
     Blockly.Python.STATEMENT_PREFIX && (e = a.id.replace(/\$/g, "$$$$"), c = Blockly.Python.prefixLines(Blockly.Python.STATEMENT_PREFIX.replace(/%1/g, "'" +
-            e + "'"), Blockly.Python.INDENT) + c);
+        e + "'"), Blockly.Python.INDENT) + c);
     Blockly.Python.INFINITE_LOOP_TRAP && (c = Blockly.Python.INFINITE_LOOP_TRAP.replace(/%1/g, '"' + a.id + '"') + c);
     var f = Blockly.Python.valueToCode(a, "RETURN", Blockly.Python.ORDER_NONE) || "";
     f ? f = "  return " + f + "\n" : c || (c = Blockly.Python.PASS);
     var g = [];
-    for (e = 0; e < a.arguments_.length; e++)g[e] = Blockly.Python.variableDB_.getName(a.arguments_[e], Blockly.Variables.NAME_TYPE);
-    b = "def " + d + "(" + g.join(", ") + "):\n" + b + c + f;
+    for (e = 0; e < a.arguments_.length; e++) g[e] = Blockly.Python.variableDB_.getName(a.arguments_[e], Blockly.Variables.NAME_TYPE);
+    b = "def " + d + "(" + g.join(", ") + "):\n" + c + f;
     b = Blockly.Python.scrub_(a, b);
     Blockly.Python.definitions_["%" + d] = b;
     return null
 };
 Blockly.Python.procedures_defnoreturn = Blockly.Python.procedures_defreturn;
 Blockly.Python.procedures_callreturn = function (a) {
-    for (var b = Blockly.Python.variableDB_.getName(a.getFieldValue("NAME"), Blockly.Procedures.NAME_TYPE), c = [], d = 0; d < a.arguments_.length; d++)c[d] = Blockly.Python.valueToCode(a, "ARG" + d, Blockly.Python.ORDER_NONE) || "None";
+    for (var b = Blockly.Python.variableDB_.getName(a.getFieldValue("NAME"), Blockly.Procedures.NAME_TYPE), c = [], d = 0; d < a.arguments_.length; d++) c[d] = Blockly.Python.valueToCode(a, "ARG" + d, Blockly.Python.ORDER_NONE) || "None";
     return [b + "(" + c.join(", ") + ")", Blockly.Python.ORDER_FUNCTION_CALL]
 };
 Blockly.Python.procedures_callnoreturn = function (a) {
-    for (var b = Blockly.Python.variableDB_.getName(a.getFieldValue("NAME"), Blockly.Procedures.NAME_TYPE), c = [], d = 0; d < a.arguments_.length; d++)c[d] = Blockly.Python.valueToCode(a, "ARG" + d, Blockly.Python.ORDER_NONE) || "None";
+    for (var b = Blockly.Python.variableDB_.getName(a.getFieldValue("NAME"), Blockly.Procedures.NAME_TYPE), c = [], d = 0; d < a.arguments_.length; d++) c[d] = Blockly.Python.valueToCode(a, "ARG" + d, Blockly.Python.ORDER_NONE) || "None";
     return b + "(" + c.join(", ") + ")\n"
 };
 Blockly.Python.procedures_ifreturn = function (a) {
@@ -594,7 +616,7 @@ Blockly.Python.text_join = function (a) {
             return ["str(" + b + ") + str(" + a + ")", Blockly.Python.ORDER_ADDITIVE];
         default:
             b = [];
-            for (var c = 0; c < a.itemCount_; c++)b[c] =
+            for (var c = 0; c < a.itemCount_; c++) b[c] =
                 Blockly.Python.valueToCode(a, "ADD" + c, Blockly.Python.ORDER_NONE) || "''";
             a = Blockly.Python.variableDB_.getDistinctName("x", Blockly.Variables.NAME_TYPE);
             a = "''.join([str(" + a + ") for " + a + " in [" + b.join(", ") + "]])";
@@ -613,12 +635,14 @@ Blockly.Python.text_isEmpty = function (a) {
     return ["not len(" + (Blockly.Python.valueToCode(a, "VALUE", Blockly.Python.ORDER_NONE) || "''") + ")", Blockly.Python.ORDER_LOGICAL_NOT]
 };
 Blockly.Python.text_indexOf = function (a) {
-    var b = "FIRST" == a.getFieldValue("END") ? "find" : "rfind", c = Blockly.Python.valueToCode(a, "FIND", Blockly.Python.ORDER_NONE) || "''";
+    var b = "FIRST" == a.getFieldValue("END") ? "find" : "rfind",
+        c = Blockly.Python.valueToCode(a, "FIND", Blockly.Python.ORDER_NONE) || "''";
     b = (Blockly.Python.valueToCode(a, "VALUE", Blockly.Python.ORDER_MEMBER) || "''") + "." + b + "(" + c + ")";
     return a.workspace.options.oneBasedIndex ? [b + " + 1", Blockly.Python.ORDER_ADDITIVE] : [b, Blockly.Python.ORDER_FUNCTION_CALL]
 };
 Blockly.Python.text_charAt = function (a) {
-    var b = a.getFieldValue("WHERE") || "FROM_START", c = Blockly.Python.valueToCode(a, "VALUE", Blockly.Python.ORDER_MEMBER) || "''";
+    var b = a.getFieldValue("WHERE") || "FROM_START",
+        c = Blockly.Python.valueToCode(a, "VALUE", Blockly.Python.ORDER_MEMBER) || "''";
     switch (b) {
         case "FIRST":
             return [c + "[0]", Blockly.Python.ORDER_MEMBER];
@@ -635,7 +659,8 @@ Blockly.Python.text_charAt = function (a) {
     throw"Unhandled option (text_charAt).";
 };
 Blockly.Python.text_getSubstring = function (a) {
-    var b = a.getFieldValue("WHERE1"), c = a.getFieldValue("WHERE2"), d = Blockly.Python.valueToCode(a, "STRING", Blockly.Python.ORDER_MEMBER) || "''";
+    var b = a.getFieldValue("WHERE1"), c = a.getFieldValue("WHERE2"),
+        d = Blockly.Python.valueToCode(a, "STRING", Blockly.Python.ORDER_MEMBER) || "''";
     switch (b) {
         case "FROM_START":
             b = Blockly.Python.getAdjustedInt(a, "AT1");
@@ -679,7 +704,8 @@ Blockly.Python.text_print = function (a) {
     return "print(" + (Blockly.Python.valueToCode(a, "TEXT", Blockly.Python.ORDER_NONE) || "''") + ")\n"
 };
 Blockly.Python.text_prompt_ext = function (a) {
-    var b = Blockly.Python.provideFunction_("text_prompt", ["def " + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + "(msg):", "  try:", "    return raw_input(msg)", "  except NameError:", "    return input(msg)"]), c = a.getField("TEXT") ? Blockly.Python.quote_(a.getFieldValue("TEXT")) : Blockly.Python.valueToCode(a, "TEXT", Blockly.Python.ORDER_NONE) || "''";
+    var b = Blockly.Python.provideFunction_("text_prompt", ["def " + Blockly.Python.FUNCTION_NAME_PLACEHOLDER_ + "(msg):", "  try:", "    return raw_input(msg)", "  except NameError:", "    return input(msg)"]),
+        c = a.getField("TEXT") ? Blockly.Python.quote_(a.getFieldValue("TEXT")) : Blockly.Python.valueToCode(a, "TEXT", Blockly.Python.ORDER_NONE) || "''";
     b = b + "(" + c + ")";
     "NUMBER" == a.getFieldValue("TYPE") && (b = "float(" + b + ")");
     return [b, Blockly.Python.ORDER_FUNCTION_CALL]
@@ -691,7 +717,8 @@ Blockly.Python.text_count = function (a) {
     return [b + ".count(" + a + ")", Blockly.Python.ORDER_MEMBER]
 };
 Blockly.Python.text_replace = function (a) {
-    var b = Blockly.Python.valueToCode(a, "TEXT", Blockly.Python.ORDER_MEMBER) || "''", c = Blockly.Python.valueToCode(a, "FROM", Blockly.Python.ORDER_NONE) || "''";
+    var b = Blockly.Python.valueToCode(a, "TEXT", Blockly.Python.ORDER_MEMBER) || "''",
+        c = Blockly.Python.valueToCode(a, "FROM", Blockly.Python.ORDER_NONE) || "''";
     a = Blockly.Python.valueToCode(a, "TO", Blockly.Python.ORDER_NONE) || "''";
     return [b + ".replace(" + c + ", " + a + ")", Blockly.Python.ORDER_MEMBER]
 };
