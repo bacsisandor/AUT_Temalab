@@ -7,14 +7,15 @@
         mc:Ignorable="d"
         Title="TinyScript Blockly" Height="620" Width="1000">
     <Grid>
-        <Button x:Name="injectButton" Content="Inject Javascript" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300
-                " Margin="10,10,0,0" Click="injectButton_Click"/>
-        <Button x:Name="toXmlButton" Content="Workspace to XML" HorizontalAlignment="Left" Margin="332,10,0,0" VerticalAlignment="Top" Width="300
+        <Button x:Name="saveButton" Content="Save Blocks" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150
+                " Margin="10,10,0,0" Click="saveButton_Click"/>
+        <Button x:Name="toXmlButton" Content="Workspace to XML" HorizontalAlignment="Left" Margin="372,10,0,0" VerticalAlignment="Top" Width="300
                 " Click="toXmlButton_Click"/>
         <WebBrowser x:Name="browser" HorizontalAlignment="Left" Height="544" Margin="10,35,0,0" VerticalAlignment="Top" Width="662"/>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="524" Margin="677,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="305" AcceptsReturn="True"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="514" Margin="677,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="305" AcceptsReturn="True"/>
         <Button x:Name="generateButton" Content="Generate&#xD;&#xA;" HorizontalAlignment="Left" Margin="677,10,0,0" VerticalAlignment="Top" Width="305" Click="generateButton_Click" Height="20"/>
-        <Button x:Name="compileButton" Content="Compile&#xD;&#xA;" HorizontalAlignment="Left" Margin="677,564,0,0" VerticalAlignment="Top" Width="305" Height="25" Click="compileButton_Click"/>
+        <Button x:Name="compileButton" Content="Compile&#xD;&#xA;" HorizontalAlignment="Left" Margin="677,554,0,0" VerticalAlignment="Top" Width="305" Height="25" Click="compileButton_Click"/>
+        <Button x:Name="loadButton" Content="Load Blocks" HorizontalAlignment="Left" Height="20" Margin="185,10,0,0" VerticalAlignment="Top" Width="150" Click="loadButton_Click"/>
 
 
     </Grid>

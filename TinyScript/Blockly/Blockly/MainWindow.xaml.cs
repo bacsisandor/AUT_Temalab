@@ -59,33 +59,10 @@ namespace Blockly
 
         private void toXmlButton_Click(object sender, RoutedEventArgs e)
         {
- 
+
             var script = "var xml = Blockly.Xml.workspaceToDom(workspace);var xml_text = Blockly.Xml.domToPrettyText(xml); alert(xml_text);";
 
             browser.InvokeScript("execScript", new Object[] { script, "JavaScript" });
-        }
-
-        private void injectButton_Click(object sender, RoutedEventArgs e)
-        {
-
-            /*XDocument doc = new XDocument();
-            doc.Add(new XElement("block", new XAttribute("type", "pen_up")));
-
-
-            //string xmlString = doc.ToString();
-
-            string xmlString = "<block type=\"pen_up\"> <next> <block type=\"pen_up\" /> </next> </block>";
-
-            var script = "var xml = Blockly.Xml.textToDom('<xml>";
-            script += xmlString;
-            script += "</xml>'); Blockly.Xml.domToWorkspace(xml, workspace);";
-
-            browser.InvokeScript("clearWorkspace");
-
-           // var script = "var xml = Blockly.Xml.textToDom('<xml><block type=\"repeat\"  x=\"10\" y=\"10\"><field name=\"repeat_number\">4</field><statement name=\"repeat\"><block type=\"move_forward\"><value name=\"forward_pixels\"><block type=\"math_number\"><field name=\"NUM\">90</field></block></value><next><block type=\"turn_right\"><value name=\"turn_right\"><block type= \"math_number\"><field name=\"NUM\">90</field></block></value></block></next></block></statement></block></xml>'); Blockly.Xml.domToWorkspace(xml, workspace);";
-
-            browser.InvokeScript("execScript", new Object[] { script, "JavaScript" });
-            */
         }
 
         private void generateButton_Click(object sender, RoutedEventArgs e)
@@ -114,6 +91,32 @@ namespace Blockly
             catch (SyntaxErrorException ex)
             {
                 ex.Display();
+            }
+        }
+
+        private void saveButton_Click(object sender, RoutedEventArgs e)
+        {
+            browser.InvokeScript("saveBlocks");
+            var xml = browser.InvokeScript("eval", new object[] { "generatedXml" });
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "Save Blocks";
+            saveFileDialog.Filter = "Blocks | *.xml";
+            saveFileDialog.DefaultExt = "xml";
+            saveFileDialog.FileName = "Blocks";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                System.IO.File.WriteAllText(Path.GetFullPath(saveFileDialog.FileName), xml.ToString());
+            }
+        }
+
+        private void loadButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openfiledialog = new OpenFileDialog();
+            openfiledialog.Filter = "Blocks | *.xml";
+            if (openfiledialog.ShowDialog() == true)
+            {
+                string readText = File.ReadAllText(Path.GetFullPath(openfiledialog.FileName));
+                browser.InvokeScript("loadBlocks", readText);
             }
         }
     }

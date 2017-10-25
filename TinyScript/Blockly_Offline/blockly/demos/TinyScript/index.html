@@ -128,6 +128,7 @@
 
   <script>
    var generatedCode;
+   var generatedXml;
     var workspace = Blockly.inject('blocklyDiv',
         {media: '../../media/',
          toolbox: document.getElementById('toolbox')});
@@ -144,6 +145,20 @@
             Blockly.mainWorkspace.clear();
         }
 	}
+	
+	function saveBlocks() {
+		Blockly.TinyScript.INFINITE_LOOP_TRAP = null;
+        var xml = Blockly.Xml.workspaceToDom(workspace);
+        generatedXml = Blockly.Xml.domToPrettyText(xml);
+    }
+	
+	function loadBlocks(xml){
+		clearWorkspace();
+		var dom = Blockly.Xml.textToDom(xml);
+        Blockly.Xml.domToWorkspace(workspace, dom);
+	}
+	
+	
   </script>
 
 </body>
