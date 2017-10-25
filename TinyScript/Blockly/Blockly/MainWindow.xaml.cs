@@ -14,6 +14,28 @@ namespace Blockly
     /// </summary>
     public partial class MainWindow : Window
     {
+        [System.Runtime.InteropServices.ComVisibleAttribute(true)]
+        public class ScriptInterface
+        {
+            private MainWindow _w;
+            public ScriptInterface(MainWindow w)
+            {
+                _w = w;
+            }
+
+            public void onChanged()
+            {
+                if (_w.autogenCheckBox.IsChecked == true)
+                {
+                    _w.browser.InvokeScript("showCode");
+                    var generatedCode = _w.browser.InvokeScript("eval", new object[] { "generatedCode" });
+                    _w.textBox.Text = generatedCode.ToString();
+                }
+                
+            }
+        }
+        
+
         public MainWindow()
         {
             InitializeComponent();
@@ -21,6 +43,7 @@ namespace Blockly
             string path = Assembly.GetExecutingAssembly().Location;
             string newPath = Path.GetFullPath(Path.Combine(path, @"..\..\..\..\..\Blockly_Offline\blockly\demos\tinyscript\index.html"));
             browser.Navigate(newPath);
+            browser.ObjectForScripting = new ScriptInterface(this);
         }
 
         private void SetBrowserFeatureControlKey(string feature, string appName, uint value)
