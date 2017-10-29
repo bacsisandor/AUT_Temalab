@@ -45,15 +45,8 @@ namespace Blockly
 
         private void DisplayBlocks(XElement root)
         {
-            if (root == null)
-                return;
-
             string xmlString = root.ToString().Replace('\r', ' ').Replace('\n', ' ');
-
-            var script = "var xml = Blockly.Xml.textToDom('<xml>";
-            script += xmlString;
-            script += "</xml>'); Blockly.Xml.domToWorkspace(xml, workspace);";
-
+            string script = $"var xml = Blockly.Xml.textToDom('{ xmlString }'); Blockly.Xml.domToWorkspace(xml, workspace);";
             browser.InvokeScript("execScript", new Object[] { script, "JavaScript" });
         }
 

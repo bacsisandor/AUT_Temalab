@@ -1,38 +1,49 @@
 grammar TinyScript;
 
-program: statementList;
+program: variableDeclarationList statementList EOF;
+variableDeclarationList: variableDeclaration*;
 statementList: statement*;
-statement: variableDeclaration | ifStatement | whileStatement | doWhileStatement | forStatement | assignmentStatement | printStatement ;
+statement: ifStatement | whileStatement | doWhileStatement | forStatement | assignmentStatement | printStatement ;
+variableDeclaration: variableDeclaration1 | variableDeclaration2 ;
 
-variableDeclaration: (typeName | 'var') varName ('=' expression)? ';' ;
-typeName: INTTYPE | BOOLEANTYPE | STRINGTYPE;
-varName: ID;
-condition: expression (COND | '<=') expression;
-whileStatement: 'while' '(' condition ')' block ;
-doWhileStatement: 'do' block 'while' '(' condition ')' ';' ;
+variableDeclaration1: typeName varName ('=' expression)? ';' ;
+variableDeclaration2: 'var' varName '=' expression ';' ;
+
+whileStatement: 'while' '(' expression ')' block ;
+doWhileStatement: 'do' block 'while' '(' expression ')' ';' ;
 forStatement: 'for' '(' varName '=' expression ';' varName '<=' expression ';' incrementStatement ')' block ;
 incrementStatement: (varName '++') | (varName '+=' expression) ;
-ifStatement: 'if' '(' condition ')' block elseStatement? ;
+ifStatement: 'if' '(' expression ')' block elseIfStatement* elseStatement? ;
+elseIfStatement: 'else' 'if' '(' expression ')' block ;
 elseStatement: 'else' block ;
 block: '{' statementList '}' ;
 assignmentStatement: varName '=' expression ';' ;
-printStatement: 'print' '(' STRING ')' ';' ;
+printStatement: 'print' '(' expression ')' ';' ;
 
-expression: product (PLUSMINUS product)*;
+expression: sum (compareOp sum)?;
+compareOp: EQ | NEQ | LT | LTE | GT | GTE;
+sum: product (PLUSMINUS product)*;
 product: signedArgument (MULDIV signedArgument)*;
 signedArgument: PLUSMINUS? argument;
 argument: varName | value | ('(' expression ')');
+
 value: INT | STRING | BOOLEAN | NULL;
+typeName: INTTYPE | BOOLEANTYPE | STRINGTYPE;
+varName: ID;
 
 PLUSMINUS: [+-];
 MULDIV: [*/];
-COND: '<' | '>' | '>=' | '==' | '!=';
+EQ: '==';
+NEQ: '!=';
+LT: '<';
 LTE: '<=';
+GT: '>';
+GTE: '>=';
 INC1: '++';
 INC2: '+=';
 
-INTTYPE: 'integer';
-BOOLEANTYPE: 'boolean';
+INTTYPE: 'integer' | 'int';
+BOOLEANTYPE: 'boolean' | 'bool';
 STRINGTYPE: 'string';
 
 SEMI: ';';
