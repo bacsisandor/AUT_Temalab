@@ -1,0 +1,68 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables>
+    <variable id="3T#NWl978RT%FBi}|4:H" type="">i</variable>
+    <variable id="!IcfgBTZUmp$UhlT6%o~" type="">myVariable</variable>
+  </variables>
+  <block id="@hkyP{ofliknPkx60YTD" type="create_var" x="25" y="24">
+    <field id="3T#NWl978RT%FBi}|4:H" name="var" variableType="">i</field>
+    <value name="NAME">
+      <shadow id="bm.yc*/_=z0h1ukSc*ih" type="math_number">
+        <field name="NUM">10</field>
+      </shadow>
+    </value>
+    <next>
+      <block id=":F96Eta%)~-Si4QUQNNi" type="do_while">
+        <statement name="statements">
+          <block id="2?Kib4GuBIUdMKtdcEQU" type="text_print">
+            <value name="TEXT">
+              <shadow id="y#d7mmoNa7QO-yk~HwkU" type="text">
+                <field name="TEXT">abc</field>
+              </shadow>
+              <block id="{m,v/{S;mnTt{2%n#.)u" type="variables_get">
+                <field id="3T#NWl978RT%FBi}|4:H" name="VAR" variableType="">i</field>
+              </block>
+            </value>
+            <next>
+              <block id="Nuov_d11h5wwc{T(xuf=" type="variables_set">
+                <field id="3T#NWl978RT%FBi}|4:H" name="VAR" variableType="">i</field>
+                <value name="VALUE">
+                  <block id="JeRBs[aQ7*FpLY,-~%jK" type="math_arithmetic">
+                    <field name="OP">MINUS</field>
+                    <value name="A">
+                      <shadow id=";h[pE*JLS*#nmxHt26qR" type="math_number">
+                        <field name="NUM">1</field>
+                      </shadow>
+                      <block id="sQynkv]R_dW.Fn?t;Kb0" type="variables_get">
+                        <field id="3T#NWl978RT%FBi}|4:H" name="VAR" variableType="">i</field>
+                      </block>
+                    </value>
+                    <value name="B">
+                      <shadow id="p3QDr?`.Jxr7g.APC9tZ" type="math_number">
+                        <field name="NUM">1</field>
+                      </shadow>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <value name="condition">
+          <block id="j7uD{E{qVn:D#Y3^`euv" type="logic_compare">
+            <field name="OP">GT</field>
+            <value name="A">
+              <block id="R4E-rdbYPV6Jx|D*_,zh" type="variables_get">
+                <field id="3T#NWl978RT%FBi}|4:H" name="VAR" variableType="">i</field>
+              </block>
+            </value>
+            <value name="B">
+              <block id="|]P?DpgFNOAXna=|+ZYB" type="math_number">
+                <field name="NUM">0</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </next>
+  </block>
+</xml>

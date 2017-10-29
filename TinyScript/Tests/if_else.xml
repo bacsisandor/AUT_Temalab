@@ -1,0 +1,141 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables>
+    <variable id="yYQ]R_1df%~mM|ukZR.@" type="">a</variable>
+    <variable id="l9br8+rXh]zOHqq/l}k-" type="">b</variable>
+    <variable id="mI$~kOJ6e6A;MaIDH;j*" type="">myVariable</variable>
+  </variables>
+  <block id="j91[#T/.m+%!fA^M1[V1" type="create_var" x="21" y="13">
+    <field id="yYQ]R_1df%~mM|ukZR.@" name="var" variableType="">a</field>
+    <value name="NAME">
+      <shadow id="#gjoYHIV6RYk8^lU$O%S" type="math_number">
+        <field name="NUM">52</field>
+      </shadow>
+    </value>
+    <next>
+      <block id="n21G=8J}FSf=tqabeC@3" type="create_var">
+        <field id="l9br8+rXh]zOHqq/l}k-" name="var" variableType="">b</field>
+        <value name="NAME">
+          <shadow id="Gd?5#f=Rl~F/^dpn.%,u" type="math_number">
+            <field name="NUM">628</field>
+          </shadow>
+        </value>
+        <next>
+          <block id="A^e3E!pNa8xPoZ{@5ne3" type="controls_if">
+            <mutation elseif="1" else="1" />
+            <value name="IF0">
+              <block id="Q.DmIH7NFE~Miye;0*)Z" type="logic_compare">
+                <field name="OP">LT</field>
+                <value name="A">
+                  <block id="n6DU4czTK5D5~q|nu4ku" type="variables_get">
+                    <field id="yYQ]R_1df%~mM|ukZR.@" name="VAR" variableType="">a</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block id="M54Gi}lRtIF1=rocsPC2" type="variables_get">
+                    <field id="l9br8+rXh]zOHqq/l}k-" name="VAR" variableType="">b</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO0">
+              <block id="oN!^./eDf0J~6jg-/z72" type="text_print">
+                <value name="TEXT">
+                  <shadow id="+%RWZTY^o2W`qE2nZ-=/" type="text">
+                    <field name="TEXT">abc</field>
+                  </shadow>
+                  <block id="1Y:x0WAzKS6}=S2%C0H*" type="text_join">
+                    <mutation items="3" />
+                    <value name="ADD0">
+                      <block id="=mJfue,UgB4|0J%],xWp" type="variables_get">
+                        <field id="yYQ]R_1df%~mM|ukZR.@" name="VAR" variableType="">a</field>
+                      </block>
+                    </value>
+                    <value name="ADD1">
+                      <block id="Bn7q*%:G(R6}2ZTI.l9f" type="text">
+                        <field name="TEXT">&lt;</field>
+                      </block>
+                    </value>
+                    <value name="ADD2">
+                      <block id="FbG!LqA,1Yy[;i28Qp5~" type="variables_get">
+                        <field id="l9br8+rXh]zOHqq/l}k-" name="VAR" variableType="">b</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </statement>
+            <value name="IF1">
+              <block id="9/cmL`AfCzl2UJz^7osG" type="logic_compare">
+                <field name="OP">GT</field>
+                <value name="A">
+                  <block id="maC3v}mJ0X4JLv$RC{AD" type="variables_get">
+                    <field id="yYQ]R_1df%~mM|ukZR.@" name="VAR" variableType="">a</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block id=".QPqByarLF4fjdLoNxI|" type="variables_get">
+                    <field id="l9br8+rXh]zOHqq/l}k-" name="VAR" variableType="">b</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO1">
+              <block id="EaL(PU;s$Pt1Fz;6c=}S" type="text_print">
+                <value name="TEXT">
+                  <shadow id="h!{AAZ5_NA6[5qGx2_ur" type="text">
+                    <field name="TEXT">abc</field>
+                  </shadow>
+                  <block id="o^4HOPj=FbvCrtg9e@!i" type="text_join">
+                    <mutation items="3" />
+                    <value name="ADD0">
+                      <block id="tmQ?31d!7OlI(3bQ}fjI" type="variables_get">
+                        <field id="yYQ]R_1df%~mM|ukZR.@" name="VAR" variableType="">a</field>
+                      </block>
+                    </value>
+                    <value name="ADD1">
+                      <block id="}`rfAXF]29(hn$hC*{K2" type="text">
+                        <field name="TEXT">&gt;</field>
+                      </block>
+                    </value>
+                    <value name="ADD2">
+                      <block id="iM3!Nj_7@}0@IVl1y?TX" type="variables_get">
+                        <field id="l9br8+rXh]zOHqq/l}k-" name="VAR" variableType="">b</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </statement>
+            <statement name="ELSE">
+              <block id="_d;KR^NC$tz)rQ^I^c}x" type="text_print">
+                <value name="TEXT">
+                  <shadow id="oxb+c)xt)rX)7Sm(iv+K" type="text">
+                    <field name="TEXT">abc</field>
+                  </shadow>
+                  <block id="%TP@E4)K.x^(mNV.@f{d" type="text_join">
+                    <mutation items="3" />
+                    <value name="ADD0">
+                      <block id="Tjdx6kE?v%FO{ZqA=#aj" type="variables_get">
+                        <field id="yYQ]R_1df%~mM|ukZR.@" name="VAR" variableType="">a</field>
+                      </block>
+                    </value>
+                    <value name="ADD1">
+                      <block id="lOatdV-Rl[ekt/Coz:]+" type="text">
+                        <field name="TEXT">=</field>
+                      </block>
+                    </value>
+                    <value name="ADD2">
+                      <block id="%tO1^7gIk65p+QYmYr^h" type="variables_get">
+                        <field id="l9br8+rXh]zOHqq/l}k-" name="VAR" variableType="">b</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+</xml>

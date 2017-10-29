@@ -1,0 +1,112 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables>
+    <variable id="yYQ]R_1df%~mM|ukZR.@" type="">a</variable>
+    <variable id="l9br8+rXh]zOHqq/l}k-" type="">b</variable>
+    <variable id="MUdmK_(WeN@uqNhi$8R1" type="">temp</variable>
+  </variables>
+  <block id="B17Ri6=P.!wN^D_VAi0K" type="create_var" x="40" y="30">
+    <field id="yYQ]R_1df%~mM|ukZR.@" name="var" variableType="">a</field>
+    <value name="NAME">
+      <shadow id="JS+ttyGD}OEb![d-5*ij" type="math_number">
+        <field name="NUM">19</field>
+      </shadow>
+    </value>
+    <next>
+      <block id="te02PxBRiX(iJW5PVK:(" type="create_var">
+        <field id="l9br8+rXh]zOHqq/l}k-" name="var" variableType="">b</field>
+        <value name="NAME">
+          <shadow id="6*_=?iqnX^ePJt.((F/l" type="math_number">
+            <field name="NUM">42</field>
+          </shadow>
+        </value>
+        <next>
+          <block id="j6_4}V#i~;-w3:kVFhd{" type="text_print">
+            <value name="TEXT">
+              <shadow id="hHi2thJq@aOm!GXi3koV" type="text">
+                <field name="TEXT">abc</field>
+              </shadow>
+              <block id="0wq6uS:({,]W^Tp0QmhZ" type="text_join">
+                <mutation items="3" />
+                <value name="ADD0">
+                  <block id="Q3KK0AK6lho/=0wcO+~L" type="variables_get">
+                    <field id="yYQ]R_1df%~mM|ukZR.@" name="VAR" variableType="">a</field>
+                  </block>
+                </value>
+                <value name="ADD1">
+                  <block id="9XyN#01[#(2+dbhHYK7*" type="text">
+                    <field name="TEXT"> </field>
+                  </block>
+                </value>
+                <value name="ADD2">
+                  <block id="p2pB(k.Cl^dSkyV3|!6Y" type="variables_get">
+                    <field id="l9br8+rXh]zOHqq/l}k-" name="VAR" variableType="">b</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <next>
+              <block id=":Mjrm+2Y)]xx/C(6g=C+" type="create_var">
+                <field id="MUdmK_(WeN@uqNhi$8R1" name="var" variableType="">temp</field>
+                <value name="NAME">
+                  <shadow id="{#7E.XJUmlJ`pXFpe2qa" type="math_number">
+                    <field name="NUM">0</field>
+                  </shadow>
+                  <block id="A4xT2,`qwl#{(7*g(NX%" type="variables_get">
+                    <field id="yYQ]R_1df%~mM|ukZR.@" name="VAR" variableType="">a</field>
+                  </block>
+                </value>
+                <next>
+                  <block id="7T:y`kQl;,nXRUatt:g]" type="variables_set">
+                    <field id="yYQ]R_1df%~mM|ukZR.@" name="VAR" variableType="">a</field>
+                    <value name="VALUE">
+                      <block id="[5N*m+4GO1r5oX39}b{C" type="variables_get">
+                        <field id="l9br8+rXh]zOHqq/l}k-" name="VAR" variableType="">b</field>
+                      </block>
+                    </value>
+                    <next>
+                      <block id="#|f+On|xF[=sjduG9{,M" type="variables_set">
+                        <field id="l9br8+rXh]zOHqq/l}k-" name="VAR" variableType="">b</field>
+                        <value name="VALUE">
+                          <block id="#bC%(p^gXv,C|go0IN(7" type="variables_get">
+                            <field id="MUdmK_(WeN@uqNhi$8R1" name="VAR" variableType="">temp</field>
+                          </block>
+                        </value>
+                        <next>
+                          <block id="3P?L5RqkFI-}I_Uio%K~" type="text_print">
+                            <value name="TEXT">
+                              <shadow id="hHi2thJq@aOm!GXi3koV" type="text">
+                                <field name="TEXT">abc</field>
+                              </shadow>
+                              <block id="@)`bz`zYd.4rQ0;-ZbC3" type="text_join">
+                                <mutation items="3" />
+                                <value name="ADD0">
+                                  <block id="%epSKix@w?OIhr34FL)]" type="variables_get">
+                                    <field id="yYQ]R_1df%~mM|ukZR.@" name="VAR" variableType="">a</field>
+                                  </block>
+                                </value>
+                                <value name="ADD1">
+                                  <block id="}VS$%cDS*t)J/E0Q0Jda" type="text">
+                                    <field name="TEXT"> </field>
+                                  </block>
+                                </value>
+                                <value name="ADD2">
+                                  <block id="UFhHse$I)1HPz4p,vj^f" type="variables_get">
+                                    <field id="l9br8+rXh]zOHqq/l}k-" name="VAR" variableType="">b</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+</xml>
