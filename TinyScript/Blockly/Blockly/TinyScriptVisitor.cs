@@ -82,6 +82,7 @@ namespace Blockly
                 case "int": return VariableType.INT;
                 case "string": return VariableType.STRING;
                 case "boolean": return VariableType.BOOLEAN;
+                case "bool": return VariableType.BOOLEAN;
                 default: return VariableType.NULL;
             }
         }
@@ -110,7 +111,7 @@ namespace Blockly
             if (context.expression() != null)
             {
                 expression = (ExpressionElement)VisitExpression(context.expression());
-                if (type != expression.Type)
+                if (!CheckType(type, expression.Type))
                 {
                     ThrowSyntaxError(context.expression().Start, "Type mismatch");
                 }
@@ -128,6 +129,10 @@ namespace Blockly
         public override XElement VisitVariableDeclaration2([NotNull] TinyScriptParser.VariableDeclaration2Context context)
         {
             ExpressionElement expression = (ExpressionElement)VisitExpression(context.expression());
+            if (expression.Type == VariableType.NULL)
+            {
+                ThrowSyntaxError(context.expression().Start, "Type mismatch");
+            }
             XElement block = MakeVariable(expression.Type, context.varName().Start, true);
             XElement value = new XElement("value", new XAttribute("name", "NAME"));
             value.Add(expression);
@@ -499,6 +504,15 @@ namespace Blockly
         public string[] GetVariableNames()
         {
             return variables.Keys.ToArray();
+        }
+
+        private bool CheckType(VariableType type1, VariableType type2)
+        {
+            if (type1 == VariableType.NULL || type2 == VariableType.NULL)
+            {
+                return true;
+            }
+            return type1 == type2;
         }
     }
 }
