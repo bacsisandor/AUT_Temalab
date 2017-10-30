@@ -135,5 +135,28 @@ namespace Blockly
                 browser.InvokeScript("loadBlocks", readText);
             }
         }
+
+        private void codeSaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "Save Code";
+            saveFileDialog.Filter = "Text Files | *.txt";
+            saveFileDialog.DefaultExt = "txt";
+            saveFileDialog.FileName = "Code";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                System.IO.File.WriteAllText(Path.GetFullPath(saveFileDialog.FileName), textBox.Text);
+            }
+        }
+
+        private void codeLoadButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openfiledialog = new OpenFileDialog();
+            openfiledialog.Filter = "Text Files | *.txt";
+            if (openfiledialog.ShowDialog() == true)
+            {
+                textBox.Text = File.ReadAllText(Path.GetFullPath(openfiledialog.FileName));
+            }
+        }
     }
 }

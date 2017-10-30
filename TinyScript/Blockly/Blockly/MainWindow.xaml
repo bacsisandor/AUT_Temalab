@@ -12,11 +12,13 @@
         <Button x:Name="toXmlButton" Content="Workspace to XML" HorizontalAlignment="Left" Margin="320,10,0,0" VerticalAlignment="Top" Width="150
                 " Click="toXmlButton_Click"/>
         <WebBrowser x:Name="browser" HorizontalAlignment="Left" Height="544" Margin="10,35,0,0" VerticalAlignment="Top" Width="662"/>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="514" Margin="677,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="305" AcceptsReturn="True"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="484" Margin="677,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="305" AcceptsReturn="True"/>
         <Button x:Name="generateButton" Content="Generate&#xD;&#xA;" HorizontalAlignment="Left" Margin="677,10,0,0" VerticalAlignment="Top" Width="305" Click="generateButton_Click" Height="20"/>
         <Button x:Name="compileButton" Content="Compile&#xD;&#xA;" HorizontalAlignment="Left" Margin="677,554,0,0" VerticalAlignment="Top" Width="305" Height="25" Click="compileButton_Click"/>
         <Button x:Name="loadButton" Content="Load Blocks" HorizontalAlignment="Left" Height="20" Margin="165,10,0,0" VerticalAlignment="Top" Width="150" Click="loadButton_Click"/>
         <CheckBox x:Name="autogenCheckBox" Content="Automatic generation" HorizontalAlignment="Left" Margin="537,15,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <Button x:Name="codeSaveButton" Content="Save Code" HorizontalAlignment="Left" Height="25" Margin="677,524,0,0" VerticalAlignment="Top" Width="150" Click="codeSaveButton_Click"/>
+        <Button x:Name="codeLoadButton" Content="Load Code" HorizontalAlignment="Left" Height="25" Margin="832,524,0,0" VerticalAlignment="Top" Width="150" Click="codeLoadButton_Click"/>
 
     </Grid>
 </Window>
