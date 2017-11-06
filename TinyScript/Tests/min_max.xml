@@ -1,0 +1,67 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables />
+  <block id="*r~nL~}cdAEknO~S;M|5" type="text_print" x="28" y="34">
+    <value name="TEXT">
+      <shadow id="bA3_^Y#$F2Pv7+#q7toA" type="text">
+        <field name="TEXT">abc</field>
+      </shadow>
+      <block id="9?~Fum/xL7bZT^K`d{Gg" type="maximum_select">
+        <mutation items="3" />
+        <field name="select">max</field>
+        <value name="ADD0">
+          <block id="dCkha59R:L8QlI`2:a*3" type="math_number">
+            <field name="NUM">5</field>
+          </block>
+        </value>
+        <value name="ADD1">
+          <block id="#V$:ggz^ItD@n4ha8pJq" type="math_number">
+            <field name="NUM">53</field>
+          </block>
+        </value>
+        <value name="ADD2">
+          <block id="[i}FreQ/`NGvWK9s[04{" type="math_number">
+            <field name="NUM">324</field>
+          </block>
+        </value>
+      </block>
+    </value>
+    <next>
+      <block id="p^1WLrtNNt2R]$e6{`Cf" type="text_print">
+        <value name="TEXT">
+          <shadow id="bA3_^Y#$F2Pv7+#q7toA" type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+          <block id="~kB]rbPv(t@kx7A`9]ub" type="maximum_select">
+            <mutation items="3" />
+            <field name="select">min</field>
+            <value name="ADD0">
+              <block id="1qq1A6Ih,$IzCfM]b0l/" type="math_number">
+                <field name="NUM">68</field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block id="K#Kd,o2ti-_2-GXYWUzs" type="math_arithmetic">
+                <field name="OP">MULTIPLY</field>
+                <value name="A">
+                  <shadow id="}riB#^W~DIPCMQ8~|}_d" type="math_number">
+                    <field name="NUM">6</field>
+                  </shadow>
+                </value>
+                <value name="B">
+                  <shadow id="HbW^JcX7{6G$M^V,.gsA" type="math_number">
+                    <field name="NUM">1</field>
+                  </shadow>
+                </value>
+              </block>
+            </value>
+            <value name="ADD2">
+              <block id="_8tHw6d@Pmz?X^#_?emo" type="math_number">
+                <field name="NUM">-85</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </next>
+  </block>
+</xml>
