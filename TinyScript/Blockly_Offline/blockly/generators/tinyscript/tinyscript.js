@@ -301,3 +301,15 @@ Blockly.TinyScript['get_array'] = function(block) {
   var code = variable_variable + '[' + value_index + ']';
   return [code, Blockly.TinyScript.ORDER_NONE];
 };
+
+
+Blockly.TinyScript['maximum_select'] = function(block) {
+  var selected = block.getFieldValue('select');
+  var elements = new Array(block.itemCount_);
+  for (var i = 0; i < block.itemCount_; i++) {
+    elements[i] = Blockly.TinyScript.valueToCode(block, 'ADD' + i,
+        Blockly.TinyScript.ORDER_COMMA) || 'null';
+  }
+  var code = selected + '(' + elements.join(', ') + ')';
+  return [code, Blockly.TinyScript.ORDER_ATOMIC];
+}; 
