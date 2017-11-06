@@ -76,3 +76,43 @@ Blockly.Blocks['abs'] = {
  this.setHelpUrl("");
   }
 };
+
+Blockly.Blocks['create_array'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Create array");
+    this.appendDummyInput()
+        .appendField("type")
+        .appendField(new Blockly.FieldDropdown([["integer","int"], ["boolean","bool"], ["string","string"]]), "type")
+        .appendField(new Blockly.FieldVariable("myArray"), "name");
+    this.appendValueInput("size")
+        .setCheck("Number")
+        .appendField("Size");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(65);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.Blocks['set_array'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Set")
+        .appendField(new Blockly.FieldVariable("item"), "item");
+    this.appendValueInput("index")
+        .setCheck("Number")
+        .appendField("index");
+    this.appendValueInput("value")
+        .setCheck(["Boolean", "Number", "String"])
+        .appendField("to");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(65);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};

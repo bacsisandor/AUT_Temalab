@@ -124,6 +124,33 @@
       <field name="VAR" id="hZrAa$}ngjD(C!r)8kJC" variabletype="">myVariable</field>
     </block>
   </category>
+    <category name="Array" colour="#a5a55b">
+    <block type="create_array">
+      <field name="type">int</field>
+      <field name="name" id="d~Q/Z/T_,x[FQmdrnJ(u" variabletype="">myArray</field>
+	  <value name="size">
+		  <shadow type="math_number">
+			<field name="NUM">0</field>
+		  </shadow>
+      </value>
+    </block>
+  <block type="set_array">
+    <field name="item" id="5jbX?[CAot60T2!AXb~t" variabletype="">item</field>
+    <value name="index">
+      <shadow type="math_number">
+        <field name="NUM">0</field>
+      </shadow>
+    </value>
+	    <value name="value">
+      <shadow type="math_number">
+        <field name="NUM">0</field>
+      </shadow>
+    </value>
+  </block>
+    <block type="variables_get">
+      <field name="VAR" id="d~Q/Z/T_,x[FQmdrnJ(u" variabletype="">myArray</field>
+    </block>
+  </category>
 </xml>
 
   <script>
