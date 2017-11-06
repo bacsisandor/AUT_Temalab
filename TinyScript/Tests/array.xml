@@ -1,0 +1,84 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables>
+    <variable id="-Bvf@KU|0OigM2,d.Zrg" type="">myArray</variable>
+    <variable id="b7yxrKmat,:5.p[4hJJ," type="">i</variable>
+    <variable id="|`|lw[^Z`xHnXxWetvtc" type="">myVariable</variable>
+  </variables>
+  <block id=".^f.Nibh0lOI=4?EKpPX" type="create_var" x="21" y="32">
+    <field id="b7yxrKmat,:5.p[4hJJ," name="var" variableType="">i</field>
+    <value name="NAME">
+      <shadow id="azgR(mz*%=1.+tueV]j?" type="math_number">
+        <field name="NUM">0</field>
+      </shadow>
+    </value>
+    <next>
+      <block id="iFebbhpn]Z-hrc~9|WL(" type="create_array">
+        <field name="type">int</field>
+        <field id="-Bvf@KU|0OigM2,d.Zrg" name="name" variableType="">myArray</field>
+        <value name="size">
+          <shadow id="Cn?0s2)mt(Lc*YV[``(#" type="math_number">
+            <field name="NUM">5</field>
+          </shadow>
+        </value>
+        <next>
+          <block id="V%;F4M,-1wLk^%fld-;4" type="controls_for">
+            <field id="b7yxrKmat,:5.p[4hJJ," name="VAR" variableType="">i</field>
+            <value name="FROM">
+              <shadow id="~7M(Hop,.jSvO`Z#~~ZE" type="math_number">
+                <field name="NUM">1</field>
+              </shadow>
+            </value>
+            <value name="TO">
+              <shadow id="efWxzkW6I~+8QH+O49uX" type="math_number">
+                <field name="NUM">10</field>
+              </shadow>
+            </value>
+            <value name="BY">
+              <shadow id="BQ5Ap;uxk@0/gSh15UL{" type="math_number">
+                <field name="NUM">1</field>
+              </shadow>
+            </value>
+            <statement name="DO">
+              <block id="O1u_2Q~Z:NwP.Xgcmi,7" type="set_array">
+                <field id="-Bvf@KU|0OigM2,d.Zrg" name="item" variableType="">myArray</field>
+                <value name="index">
+                  <shadow id="X!m4*y`Dx;XkhXrL,,%|" type="math_number">
+                    <field name="NUM">0</field>
+                  </shadow>
+                  <block id="8(i}|Heii|dZA8?PR#lC" type="variables_get">
+                    <field id="b7yxrKmat,:5.p[4hJJ," name="VAR" variableType="">i</field>
+                  </block>
+                </value>
+                <value name="value">
+                  <shadow id="**;CPMNwRhyjR7k9ux`G" type="math_number">
+                    <field name="NUM">42</field>
+                  </shadow>
+                </value>
+                <next>
+                  <block id="W4!/B?0xES$+iM%35YIh" type="text_print">
+                    <value name="TEXT">
+                      <shadow id="S[-]%jM=47vi@D9^_(gm" type="text">
+                        <field name="TEXT">abc</field>
+                      </shadow>
+                      <block id="Sx=.``$(B1fgNG+|%.Hh" type="get_array">
+                        <field id="-Bvf@KU|0OigM2,d.Zrg" name="variable" variableType="">myArray</field>
+                        <value name="index">
+                          <shadow id="[4y{4(adR9-TV$A^W_4%" type="math_number">
+                            <field name="NUM">0</field>
+                          </shadow>
+                          <block id="J~B-+C{wiCv)?mR9B?Tv" type="variables_get">
+                            <field id="b7yxrKmat,:5.p[4hJJ," name="VAR" variableType="">i</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                  </block>
+                </next>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+</xml>

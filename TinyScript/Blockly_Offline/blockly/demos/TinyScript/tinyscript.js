@@ -116,3 +116,19 @@ Blockly.Blocks['set_array'] = {
  this.setHelpUrl("");
   }
 };
+
+Blockly.Blocks['get_array'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Get")
+        .appendField(new Blockly.FieldVariable("item"), "variable");
+    this.appendValueInput("index")
+        .setCheck("Number")
+        .appendField("index");
+    this.setInputsInline(true);
+	this.setOutput(true, null);
+    this.setColour(65);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
