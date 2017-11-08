@@ -3,7 +3,7 @@ grammar TinyScript;
 program: variableDeclarationList statementList EOF;
 variableDeclarationList: variableDeclaration*;
 statementList: statement*;
-statement: ifStatement | whileStatement | doWhileStatement | forStatement | assignmentStatement | functionCallStatement | incrementStatement | decrementStatement | arrayAssignmentStatement;
+statement: ifStatement | whileStatement | doWhileStatement | forStatement | assignmentStatement | arrayAssignmentStatement | functionCallStatement | incrementStatement | decrementStatement;
 variableDeclaration: variableDeclaration1 | variableDeclaration2 | arrayDeclaration;
 
 variableDeclaration1: typeName varName ('=' expression)? ';' ;
@@ -13,7 +13,6 @@ arrayDeclaration: typeName varName '[' expression ']' ';' ;
 whileStatement: 'while' '(' expression ')' block ;
 doWhileStatement: 'do' block 'while' '(' expression ')' ';' ;
 forStatement: 'for' '(' varName '=' expression ';' varName '<=' expression ';' incrementation ')' block ;
-incrementation: (varName '++') | (varName '+=' expression) ;
 ifStatement: 'if' '(' expression ')' block elseIfStatement* elseStatement? ;
 elseIfStatement: 'else' 'if' '(' expression ')' block ;
 elseStatement: 'else' block ;
@@ -22,14 +21,15 @@ assignmentStatement: varName '=' expression ';' ;
 arrayAssignmentStatement: varName '[' expression ']' '=' expression ';' ;
 functionCallStatement: functionCall ';' ;
 incrementStatement: incrementation ';' ;
-decrementStatement: (varName '--') | (varName '-=' expression) ';' ;
+incrementation: (varName '++') | (varName '+=' expression) ;
+decrementStatement: ((varName '--') | (varName '-=' expression)) ';' ;
 
 expression: sum (compareOp sum)?;
 compareOp: EQ | NEQ | LT | LTE | GT | GTE;
 sum: product (PLUSMINUS product)*;
 product: signedArgument (MULDIV signedArgument)*;
 signedArgument: PLUSMINUS? argument;
-argument: indexedArray | varName | value | functionCall | ('(' expression ')');
+argument:  varName | value | indexedArray | functionCall | ('(' expression ')');
 indexedArray: varName '[' expression ']' ;
 functionCall: functionName '(' (expression (',' expression)*)? ')' ;
 
