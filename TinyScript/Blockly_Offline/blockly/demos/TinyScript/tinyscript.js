@@ -139,7 +139,7 @@ Blockly.Blocks['maximum_select'] = {
     this.setColour(15);
     this.itemCount_ = 3;
     this.updateShape_();
-    this.setOutput(true, 'Array');
+    this.setOutput(true, 'Number');
     this.setMutator(new Blockly.Mutator(['maximum_select_item']));
     this.setTooltip("");
   },
