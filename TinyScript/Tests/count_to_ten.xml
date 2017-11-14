@@ -2,8 +2,9 @@
   <variables>
     <variable id="PT`8p8~hQ@BHwk#I./O0" type="">i</variable>
     <variable id="`3AjhFzA{pBRGzw-2iRr" type="">myVariable</variable>
+    <variable id="/lk#B.(y1yY%tR6d]KjB" type="">variable</variable>
   </variables>
-  <block id="oM4f^W$~61PkJ(NnRj2A" type="create_var" x="26" y="6">
+  <block id="oM4f^W$~61PkJ(NnRj2A" type="create_var" y="6" x="26">
     <field id="PT`8p8~hQ@BHwk#I./O0" name="var" variableType="">i</field>
     <value name="NAME">
       <shadow id="4X`a~*]h(;|c:B4PFL0)" type="math_number">
@@ -11,24 +12,13 @@
       </shadow>
     </value>
     <next>
-      <block id="PRa=n;EI4_R$_9-vUJ9j" type="controls_for">
-        <field id="PT`8p8~hQ@BHwk#I./O0" name="VAR" variableType="">i</field>
-        <value name="FROM">
-          <shadow id="[v65xgpF1vb_|@,D0rjX" type="math_number">
-            <field name="NUM">1</field>
-          </shadow>
-        </value>
-        <value name="TO">
-          <shadow id="CfZ]~mEv$l_-V_YOA[`:" type="math_number">
-            <field name="NUM">10</field>
-          </shadow>
-        </value>
-        <value name="BY">
-          <shadow id="dOm1dkGmN]-1#mR@2EP`" type="math_number">
-            <field name="NUM">1</field>
-          </shadow>
-        </value>
-        <statement name="DO">
+      <block id="%kQ,0P*1opH~JQ2XZnE_" type="count">
+        <field id="PT`8p8~hQ@BHwk#I./O0" name="variable" variableType="">i</field>
+        <field name="initial">0</field>
+        <field name="until">10</field>
+        <field name="direction">increment</field>
+        <field name="inc_value">1</field>
+        <statement name="core">
           <block id="oe_7^c:j;||pCX+;Y;W9" type="text_print">
             <value name="TEXT">
               <shadow id="z6.a`.;seI+MyaoH]*z|" type="text">
