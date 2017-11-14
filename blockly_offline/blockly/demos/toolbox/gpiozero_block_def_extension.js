@@ -9,6 +9,51 @@ Blockly.Blocks['gpioportnumber'] = {
   }
 };
 
+Blockly.Blocks['initrobotvacuumcleaner'] = {
+    init: function() {
+        this.appendValueInput("drive")
+            .setCheck(null)
+            .appendField("Drive Robot");
+        this.appendValueInput("cleaner")
+            .setCheck(null)
+            .appendField("Cleaner Motor");
+        this.appendValueInput("distSensorForward")
+            .setCheck(null)
+            .appendField("Distance Sensor forward");
+        this.setOutput(true, null);
+        this.setColour(300);
+        this.setTooltip("");
+        this.setHelpUrl("");
+    }
+};
+
+Blockly.Blocks['setvacuumcleaner'] = {
+    init: function() {
+        this.appendValueInput("vacuumCleaner")
+            .setCheck(null)
+            .appendField("vacuum cleaner");
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldDropdown([["start","start"], ["stop","stop"]]), "operation");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("");
+        this.setHelpUrl("");
+    }
+}
+
+Blockly.Blocks['pause'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField("pause");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(315);
+        this.setTooltip("");
+        this.setHelpUrl("");
+    }
+};
+
 Blockly.Blocks['initled'] = {
   init: function() {
     this.appendValueInput("gpioPortNumber")

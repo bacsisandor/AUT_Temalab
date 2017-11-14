@@ -79,6 +79,44 @@ Blockly.Python['initlightsensor'] = function (block) {
     return [code, Blockly.Python.ORDER_NONE];
 };
 
+Blockly.Python['initrobotvacuumcleaner'] = function (block) {
+    var value_drive = Blockly.Python.valueToCode(block, 'drive', Blockly.Python.ORDER_ATOMIC);
+    var value_cleaner = Blockly.Python.valueToCode(block, 'cleaner', Blockly.Python.ORDER_ATOMIC);
+    var value_distsensorforward = Blockly.Python.valueToCode(block, 'distSensorForward', Blockly.Python.ORDER_ATOMIC);
+
+    var code = '= (' + value_drive + ', ' + value_cleaner + ', ' + value_distsensorforward + ')\n' +
+        '\n' +
+        '\n' +
+        'def forwardObstacleDetected():\n' +
+        '    vc[0].stop()\n' +
+        '    vc[0].left(1)\n' +
+        '    sleep(0.5)\n' +
+        '    vc[0].forward(0.5)\n' +
+        '\n';
+    return [code, Blockly.Python.ORDER_NONE];
+};
+
+Blockly.Python['pause'] = function(block) {
+    var code = 'pause()\n';
+    return code;
+};
+
+Blockly.Python['setvacuumcleaner'] = function (block) {
+    var value_vacuumcleaner = Blockly.Python.valueToCode(block, 'vacuumCleaner', Blockly.Python.ORDER_ATOMIC);
+    var dropdown_operation = block.getFieldValue('operation');
+    if (dropdown_operation === 'start') {
+        code = value_vacuumcleaner + '[0].forward(0.5)\n' +
+            + value_vacuumcleaner + '[1].forward(1)\n' +
+            + value_vacuumcleaner + '[2].when_in_range = forwardObstacleDetected()\n';
+    } else {
+        code = value_vacuumcleaner + '[0].stop()\n' +
+            + value_vacuumcleaner + '[1].stop()\n' +
+            + value_vacuumcleaner + '[2].when_in_range = None\n';
+    }
+
+    return code;
+};
+
 Blockly.Python['initrgbled'] = function (block) {
     var value_gpioportnumberred = Blockly.Python.valueToCode(block, 'gpioPortNumberRed', Blockly.Python.ORDER_ATOMIC);
     var value_gpioportnumbergreen = Blockly.Python.valueToCode(block, 'gpioPortNumberGreen', Blockly.Python.ORDER_ATOMIC);
@@ -122,7 +160,7 @@ Blockly.Python['setseparateledofrgbledtocolorintensity'] = function (block) {
     var value_variablergbled = Blockly.Python.valueToCode(block, 'variableRgbLed', Blockly.Python.ORDER_ATOMIC);
     var dropdown_colorchooser = block.getFieldValue('colorChooser');
     var number_intensity = block.getFieldValue('intensity');
-    return value_variablergbled + '.' + dropdown_colorchooser + ' = ' + number_intensity+ '\n';
+    return value_variablergbled + '.' + dropdown_colorchooser + ' = ' + number_intensity + '\n';
 };
 
 Blockly.Python['isbuttonpressed'] = function (block) {
@@ -181,8 +219,8 @@ Blockly.Python['sleep'] = function (block) {
     return 'sleep(' + number_sleeptime + ')\n';
 };
 
-Blockly.Python['sleepvariable'] = function(block) {
-  var value_timetosleep = Blockly.Python.valueToCode(block, 'timeToSleep', Blockly.Python.ORDER_ATOMIC);
-  var code = 'sleep(' + value_timetosleep + ')\n';
-  return code;
+Blockly.Python['sleepvariable'] = function (block) {
+    var value_timetosleep = Blockly.Python.valueToCode(block, 'timeToSleep', Blockly.Python.ORDER_ATOMIC);
+    var code = 'sleep(' + value_timetosleep + ')\n';
+    return code;
 };

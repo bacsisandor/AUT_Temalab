@@ -6,8 +6,8 @@
 	<script src="../../blockly_compressed.js"></script>
 	<script src="../../blocks_compressed.js"></script>
 	<script src="python_compressed.js"></script>
-	<script src="gpiozero_block_def_js.js"></script>
-	<script src="gpiozero_gen_stub_python.js"></script>
+	<script src="gpiozero_block_def_extension.js"></script>
+	<script src="gpiozero_code_generator_python.js"></script>
 	<script src="../../msg/js/en.js"></script>
 
 	<style>
@@ -442,6 +442,7 @@
 		<block type="gpioportnumber">
 			<field name="PORT">2</field>
 		</block>
+		<block type="initrobotvacuumcleaner"></block>
 		<block type="initpwmled"></block>
 		<block type="initbutton"></block>
 		<block type="initmotionsensor"></block>
@@ -466,6 +467,7 @@
 			<field name="valueOfGreen">0</field>
 			<field name="valueOfBlue">0</field>
 		</block>
+		<block type="setvacuumcleaner"></block>
 		<block type="setseparateledofrgbledtocolorintensity">
 			<field name="colorChooser">red</field>
 			<field name="intensity">0</field>
@@ -525,6 +527,8 @@
 		<block type="operationofrobot">
 			<field name="operation">forward()</field>
 		</block>
+		<block type="setvacuumcleaner"></block>
+		<block type="pause"></block>
 	</category>
 </xml>
 
