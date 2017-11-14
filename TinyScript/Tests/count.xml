@@ -1,0 +1,91 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables>
+    <variable id="m;Mtx+:GU{k8WDP!?.?y" type="">i</variable>
+    <variable id="tXQHhb.*n7@v8uk}5Q=:" type="">myVariable</variable>
+    <variable id=":a)^90?KpT03j9V%)YI=" type="">k</variable>
+    <variable id="!ZKga@im,_TiQ02JV@L}" type="">l</variable>
+    <variable id="BtYiq#cI~`Gf),Wx?g{j" type="">j</variable>
+  </variables>
+  <block id="Kx:9+{[N|5-moKVEDR9S" type="count" x="-120" y="-161">
+    <field id="m;Mtx+:GU{k8WDP!?.?y" name="variable" variableType="">i</field>
+    <field name="initial">0</field>
+    <field name="until">10</field>
+    <field name="direction">increment</field>
+    <field name="inc_value">1</field>
+    <statement name="core">
+      <block id="XA65T1BH30:i$Y;Cg:xF" type="text_print">
+        <value name="TEXT">
+          <shadow id="U@)q[~@nJ)YC%p2%nvQe" type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+          <block id="2Myo^pee#!mNN|3{+d@e" type="variables_get">
+            <field id="m;Mtx+:GU{k8WDP!?.?y" name="VAR" variableType="">i</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+    <next>
+      <block id="o4W?Y:q4aLm5}[$`JDv%" type="count">
+        <field id=":a)^90?KpT03j9V%)YI=" name="variable" variableType="">k</field>
+        <field name="initial">0</field>
+        <field name="until">-5</field>
+        <field name="direction">decrement</field>
+        <field name="inc_value">1</field>
+        <statement name="core">
+          <block id=":)A|.WveJGH6=1q@^MC6" type="text_print">
+            <value name="TEXT">
+              <shadow id="x`29dA;`2b0f=Az^40=x" type="text">
+                <field name="TEXT">abc</field>
+              </shadow>
+              <block id="1x}DhICR~zr|B@CX{$V_" type="variables_get">
+                <field id=":a)^90?KpT03j9V%)YI=" name="VAR" variableType="">k</field>
+              </block>
+            </value>
+          </block>
+        </statement>
+        <next>
+          <block id="/ESzhDO_kdG`y{ciYn.{" type="count">
+            <field id="!ZKga@im,_TiQ02JV@L}" name="variable" variableType="">l</field>
+            <field name="initial">0</field>
+            <field name="until">10</field>
+            <field name="direction">increment</field>
+            <field name="inc_value">2</field>
+            <statement name="core">
+              <block id="axPuDe[I6@FxG6x~:!W!" type="text_print">
+                <value name="TEXT">
+                  <shadow id="U@)q[~@nJ)YC%p2%nvQe" type="text">
+                    <field name="TEXT">abc</field>
+                  </shadow>
+                  <block id="Z+a#|1o!^2X]G`GOVJiZ" type="variables_get">
+                    <field id="!ZKga@im,_TiQ02JV@L}" name="VAR" variableType="">l</field>
+                  </block>
+                </value>
+              </block>
+            </statement>
+            <next>
+              <block id="twY%#aB3^W7dD#}L3eIn" type="count">
+                <field id="BtYiq#cI~`Gf),Wx?g{j" name="variable" variableType="">j</field>
+                <field name="initial">0</field>
+                <field name="until">-10</field>
+                <field name="direction">decrement</field>
+                <field name="inc_value">2</field>
+                <statement name="core">
+                  <block id="=QSN}9C_^jG38s3[6Mc{" type="text_print">
+                    <value name="TEXT">
+                      <shadow id="U@)q[~@nJ)YC%p2%nvQe" type="text">
+                        <field name="TEXT">abc</field>
+                      </shadow>
+                      <block id="VVp62azHAmO}ogJCspd;" type="variables_get">
+                        <field id="BtYiq#cI~`Gf),Wx?g{j" name="VAR" variableType="">j</field>
+                      </block>
+                    </value>
+                  </block>
+                </statement>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+</xml>

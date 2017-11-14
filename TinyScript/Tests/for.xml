@@ -1,0 +1,191 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables>
+    <variable id="9e;ATj@As`{(/{%zP)EV" type="">i</variable>
+    <variable id="HEI{J6X}SDJrWj,XC8]K" type="">j</variable>
+    <variable id="n:DVM)oP/ZorB3euTo@0" type="">myVariable</variable>
+  </variables>
+  <block id="q-DfI5b{:CZVi%v3~BdN" type="for" x="-152" y="-260">
+    <field id="9e;ATj@As`{(/{%zP)EV" name="variable1" variableType="">i</field>
+    <field name="direction">increment</field>
+    <field id="9e;ATj@As`{(/{%zP)EV" name="variable2" variableType="">i</field>
+    <value name="init">
+      <block id="IiV5Gg?b6xD2zZ*`D3#R" type="math_number">
+        <field name="NUM">-5</field>
+      </block>
+    </value>
+    <value name="condition">
+      <block id="lTwx!)66jJ;S~7rqby}8" type="logic_compare">
+        <field name="OP">LTE</field>
+        <value name="A">
+          <block id="lx[j:IEhICzBlWmz?_=a" type="variables_get">
+            <field id="9e;ATj@As`{(/{%zP)EV" name="VAR" variableType="">i</field>
+          </block>
+        </value>
+        <value name="B">
+          <block id="gHp4UD_vmNqSt[%nB4nF" type="math_number">
+            <field name="NUM">10</field>
+          </block>
+        </value>
+      </block>
+    </value>
+    <value name="NAME">
+      <block id="NJz*GdvvbPX}FWP|6,na" type="math_number">
+        <field name="NUM">1</field>
+      </block>
+    </value>
+    <statement name="core">
+      <block id="[J!hFv@#SI_kg.ZbBrT-" type="text_print">
+        <value name="TEXT">
+          <shadow id="{L2.Jgt]Lp7:)Q)Wk)3k" type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+          <block id="B=e8;|Fklv(og{SN7AZ1" type="variables_get">
+            <field id="9e;ATj@As`{(/{%zP)EV" name="VAR" variableType="">i</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+    <next>
+      <block id=";-UuTq@PS^bjz@M~gF#8" type="for">
+        <field id="HEI{J6X}SDJrWj,XC8]K" name="variable1" variableType="">j</field>
+        <field name="direction">increment</field>
+        <field id="HEI{J6X}SDJrWj,XC8]K" name="variable2" variableType="">j</field>
+        <value name="init">
+          <block id="M{jiGb`be:mUXMMYgPVO" type="math_number">
+            <field name="NUM">0</field>
+          </block>
+        </value>
+        <value name="condition">
+          <block id="yQidm]nnfWE/!^Ea8uRJ" type="logic_compare">
+            <field name="OP">LTE</field>
+            <value name="A">
+              <block id="[p:Xvo}1ZIY#D+i9;xi_" type="variables_get">
+                <field id="HEI{J6X}SDJrWj,XC8]K" name="VAR" variableType="">j</field>
+              </block>
+            </value>
+            <value name="B">
+              <block id="v6s%7=YE[^1{?4J)X;oB" type="math_number">
+                <field name="NUM">10</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <value name="NAME">
+          <block id="!R6]HE2zsKBKfS@U#eyC" type="math_number">
+            <field name="NUM">2</field>
+          </block>
+        </value>
+        <statement name="core">
+          <block id="92@kapJas~6@guD15?s|" type="text_print">
+            <value name="TEXT">
+              <shadow id="{L2.Jgt]Lp7:)Q)Wk)3k" type="text">
+                <field name="TEXT">abc</field>
+              </shadow>
+              <block id="]Xx8#3:CAWaZm.|5JIfT" type="variables_get">
+                <field id="HEI{J6X}SDJrWj,XC8]K" name="VAR" variableType="">j</field>
+              </block>
+            </value>
+          </block>
+        </statement>
+        <next>
+          <block id="zEV8I%rF|OPz0EIC|xhk" type="for">
+            <field id="9e;ATj@As`{(/{%zP)EV" name="variable1" variableType="">i</field>
+            <field name="direction">decrement</field>
+            <field id="9e;ATj@As`{(/{%zP)EV" name="variable2" variableType="">i</field>
+            <value name="init">
+              <block id="g/|U,b,C:e1=X!JO~g5c" type="math_arithmetic">
+                <field name="OP">ADD</field>
+                <value name="A">
+                  <shadow id="+Hc:f*9|C_(=T5jU4~4}" type="math_number">
+                    <field name="NUM">5</field>
+                  </shadow>
+                </value>
+                <value name="B">
+                  <shadow id="axaMD6WK/Pu|jla.sx,W" type="math_number">
+                    <field name="NUM">3</field>
+                  </shadow>
+                </value>
+              </block>
+            </value>
+            <value name="condition">
+              <block id="Q3c0UdmywEV/9I2qD46|" type="logic_compare">
+                <field name="OP">GTE</field>
+                <value name="A">
+                  <block id="#Eh`J=zkG}:;|k|.EVHU" type="variables_get">
+                    <field id="9e;ATj@As`{(/{%zP)EV" name="VAR" variableType="">i</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block id=":tb2O5q79;5-;VRi*%L|" type="math_number">
+                    <field name="NUM">-6</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="NAME">
+              <block id="F{H8E/g^l3t%MHohs?|," type="math_number">
+                <field name="NUM">1</field>
+              </block>
+            </value>
+            <statement name="core">
+              <block id="jREBF~`1zV+N{f}[oi[7" type="text_print">
+                <value name="TEXT">
+                  <shadow id="{L2.Jgt]Lp7:)Q)Wk)3k" type="text">
+                    <field name="TEXT">abc</field>
+                  </shadow>
+                  <block id="^pV?nsR{fMB0IXjML6bI" type="variables_get">
+                    <field id="9e;ATj@As`{(/{%zP)EV" name="VAR" variableType="">i</field>
+                  </block>
+                </value>
+              </block>
+            </statement>
+            <next>
+              <block id="W7*tr@YN^6|C@}%)Q$,@" type="for">
+                <field id="HEI{J6X}SDJrWj,XC8]K" name="variable1" variableType="">j</field>
+                <field name="direction">decrement</field>
+                <field id="HEI{J6X}SDJrWj,XC8]K" name="variable2" variableType="">j</field>
+                <value name="init">
+                  <block id=":m3bBbjvP`1I55|@M=!P" type="math_number">
+                    <field name="NUM">0</field>
+                  </block>
+                </value>
+                <value name="condition">
+                  <block id="Jb}BHJ2qdcN^[4r*U=cU" type="logic_compare">
+                    <field name="OP">GTE</field>
+                    <value name="A">
+                      <block id="=.@j;|?qW/J*##lh8PH^" type="variables_get">
+                        <field id="HEI{J6X}SDJrWj,XC8]K" name="VAR" variableType="">j</field>
+                      </block>
+                    </value>
+                    <value name="B">
+                      <block id="/CzaGG:6}7p,!|^LqqA@" type="math_number">
+                        <field name="NUM">-6</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <value name="NAME">
+                  <block id="[,l5Q!FjElnlz_f/PvUh" type="math_number">
+                    <field name="NUM">2</field>
+                  </block>
+                </value>
+                <statement name="core">
+                  <block id="7#?_N4Bax?m^g=|98=ux" type="text_print">
+                    <value name="TEXT">
+                      <shadow id="{L2.Jgt]Lp7:)Q)Wk)3k" type="text">
+                        <field name="TEXT">abc</field>
+                      </shadow>
+                      <block id="$4g,4rXX)k;F,omaOsj@" type="variables_get">
+                        <field id="HEI{J6X}SDJrWj,XC8]K" name="VAR" variableType="">j</field>
+                      </block>
+                    </value>
+                  </block>
+                </statement>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+</xml>

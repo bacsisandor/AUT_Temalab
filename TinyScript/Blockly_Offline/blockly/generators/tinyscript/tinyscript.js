@@ -143,7 +143,7 @@ Blockly.TinyScript['math_arithmetic'] = function(block) {
   var order = tuple[1];
   var argument0 = Blockly.TinyScript.valueToCode(block, 'A', order) || '0';
   var argument1 = Blockly.TinyScript.valueToCode(block, 'B', order) || '0';
-  argument1 = '('+argument1+')'; //see logo: - (-10) example why ive done this
+  if(argument1<0) argument1= '('+argument1+')'; //see logo: - (-10) example why ive done this 
   var code;
   // Power in JavaScript requires a special case since it has no operator.
   if (!operator) {
@@ -275,8 +275,12 @@ Blockly.TinyScript['count'] = function(block) {
   var dropdown_direction = block.getFieldValue('direction');
   var number_inc_value = block.getFieldValue('inc_value');
   var statements_core = Blockly.TinyScript.statementToCode(block, 'core');
-  // TODO: Assemble JavaScript into code variable.
-  var code = '...;\n';
+  var inc;
+  if(dropdown_direction=='increment') inc='+';
+  else inc='-';
+  var code;
+  if(number_inc_value!=1) code = 'count(from '+variable_variable+'='+ number_initial+'; to '+variable_variable+'='+number_until+'; '+variable_variable+'='+variable_variable+inc+number_inc_value+'){\n'+statements_core+'}\n';
+  else code = 'count(from '+variable_variable+'='+ number_initial+'; to '+variable_variable+'='+number_until+'; '+variable_variable+inc+inc+'){\n'+statements_core+'}\n';
   return code;
 };
 
@@ -284,11 +288,14 @@ Blockly.TinyScript['for'] = function(block) {
   var variable_variable1 = Blockly.TinyScript.variableDB_.getName(block.getFieldValue('variable1'), Blockly.Variables.NAME_TYPE);
   var value_init = Blockly.TinyScript.valueToCode(block, 'init', Blockly.TinyScript.ORDER_ATOMIC);
   var value_condition = Blockly.TinyScript.valueToCode(block, 'condition', Blockly.TinyScript.ORDER_ATOMIC);
-  var dropdown_asd = block.getFieldValue('direction');
+  var dropdown_direction = block.getFieldValue('direction');
   var variable_variable2 = Blockly.TinyScript.variableDB_.getName(block.getFieldValue('variable2'), Blockly.Variables.NAME_TYPE);
   var value_name = Blockly.TinyScript.valueToCode(block, 'NAME', Blockly.TinyScript.ORDER_ATOMIC);
   var statements_core = Blockly.TinyScript.statementToCode(block, 'core');
-  // TODO: Assemble JavaScript into code variable.
-  var code = '...;\n';
+  var inc;
+  if(dropdown_direction=='increment') inc='+';
+  else inc='-';
+  if(value_name!=1) code = 'for('+variable_variable1+'='+value_init+'; '+value_condition+'; '+variable_variable2+'='+variable_variable2+inc+value_name+'){\n'+statements_core+'}\n';
+  else var code = 'for('+variable_variable1+'='+value_init+'; '+value_condition+'; '+variable_variable2+inc+inc+'){\n'+statements_core+'}\n';
   return code;
 };
