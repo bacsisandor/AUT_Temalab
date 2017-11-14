@@ -128,71 +128,6 @@ Blockly.TinyScript['logic_null'] = function(block) {
   return ['null', Blockly.TinyScript.ORDER_ATOMIC];
 };
 
-Blockly.TinyScript['controls_for'] = function(block) {
-  // For loop.
-  var variable0 = Blockly.TinyScript.variableDB_.getName(
-      block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
-  var argument0 = Blockly.TinyScript.valueToCode(block, 'FROM',
-      Blockly.TinyScript.ORDER_ASSIGNMENT) || '0';
-  var argument1 = Blockly.TinyScript.valueToCode(block, 'TO',
-      Blockly.TinyScript.ORDER_ASSIGNMENT) || '0';
-  var increment = Blockly.TinyScript.valueToCode(block, 'BY',
-      Blockly.TinyScript.ORDER_ASSIGNMENT) || '1';
-  var branch = Blockly.TinyScript.statementToCode(block, 'DO');
-  branch = Blockly.TinyScript.addLoopTrap(branch, block.id);
-  var code;
-  if (Blockly.isNumber(argument0) && Blockly.isNumber(argument1) &&
-      Blockly.isNumber(increment)) {
-    // All arguments are simple numbers.
-    var up = parseFloat(argument0) <= parseFloat(argument1);
-    code = 'for (' + variable0 + ' = ' + argument0 + '; ' +
-        variable0 + (up ? ' <= ' : ' >= ') + argument1 + '; ' +
-        variable0;
-    var step = Math.abs(parseFloat(increment));
-    if (step == 1) {
-      code += up ? '++' : '--';
-    } else {
-      code += (up ? ' += ' : ' -= ') + step;
-    }
-    code += ') {\n' + branch + '}\n';
-  } else {
-    code = '';
-    // Cache non-trivial values to variables to prevent repeated look-ups.
-    var startVar = argument0;
-    if (!argument0.match(/^\w+$/) && !Blockly.isNumber(argument0)) {
-      startVar = Blockly.TinyScript.variableDB_.getDistinctName(
-          variable0 + '_start', Blockly.Variables.NAME_TYPE);
-      code += 'var ' + startVar + ' = ' + argument0 + ';\n';
-    }
-    var endVar = argument1;
-    if (!argument1.match(/^\w+$/) && !Blockly.isNumber(argument1)) {
-      var endVar = Blockly.TinyScript.variableDB_.getDistinctName(
-          variable0 + '_end', Blockly.Variables.NAME_TYPE);
-      code += 'var ' + endVar + ' = ' + argument1 + ';\n';
-    }
-    // Determine loop direction at start, in case one of the bounds
-    // changes during loop execution.
-    var incVar = Blockly.TinyScript.variableDB_.getDistinctName(
-        variable0 + '_inc', Blockly.Variables.NAME_TYPE);
-    code += 'var ' + incVar + ' = ';
-    if (Blockly.isNumber(increment)) {
-      code += Math.abs(increment) + ';\n';
-    } else {
-      code += 'Math.abs(' + increment + ');\n';
-    }
-    code += 'if (' + startVar + ' > ' + endVar + ') {\n';
-    code += Blockly.TinyScript.INDENT + incVar + ' = -' + incVar + ';\n';
-    code += '}\n';
-    code += 'for (' + variable0 + ' = ' + startVar + '; ' +
-        incVar + ' >= 0 ? ' +
-        variable0 + ' <= ' + endVar + ' : ' +
-        variable0 + ' >= ' + endVar + '; ' +
-        variable0 + ' += ' + incVar + ') {\n' +
-        branch + '}\n';
-  }
-  return code;
-};
-
 //remove thet pow thing
 Blockly.TinyScript['math_arithmetic'] = function(block) {
   // Basic arithmetic operators, and power.
@@ -330,5 +265,30 @@ Blockly.TinyScript['maximum_select'] = function(block) {
 Blockly.TinyScript['read_input'] = function(block) {
   var value_name = Blockly.TinyScript.valueToCode(block, 'NAME', Blockly.TinyScript.ORDER_ATOMIC);
   var code = 'read('+ value_name +');\n';
+  return code;
+};
+
+Blockly.TinyScript['count'] = function(block) {
+  var variable_variable = Blockly.TinyScript.variableDB_.getName(block.getFieldValue('variable'), Blockly.Variables.NAME_TYPE);
+  var number_initial = block.getFieldValue('initial');
+  var number_until = block.getFieldValue('until');
+  var dropdown_direction = block.getFieldValue('direction');
+  var number_inc_value = block.getFieldValue('inc_value');
+  var statements_core = Blockly.TinyScript.statementToCode(block, 'core');
+  // TODO: Assemble JavaScript into code variable.
+  var code = '...;\n';
+  return code;
+};
+
+Blockly.TinyScript['for'] = function(block) {
+  var variable_variable1 = Blockly.TinyScript.variableDB_.getName(block.getFieldValue('variable1'), Blockly.Variables.NAME_TYPE);
+  var value_init = Blockly.TinyScript.valueToCode(block, 'init', Blockly.TinyScript.ORDER_ATOMIC);
+  var value_condition = Blockly.TinyScript.valueToCode(block, 'condition', Blockly.TinyScript.ORDER_ATOMIC);
+  var dropdown_asd = block.getFieldValue('asd');
+  var variable_variable2 = Blockly.TinyScript.variableDB_.getName(block.getFieldValue('variable2'), Blockly.Variables.NAME_TYPE);
+  var value_name = Blockly.TinyScript.valueToCode(block, 'NAME', Blockly.TinyScript.ORDER_ATOMIC);
+  var statements_core = Blockly.TinyScript.statementToCode(block, 'core');
+  // TODO: Assemble JavaScript into code variable.
+  var code = '...;\n';
   return code;
 };
