@@ -25,9 +25,9 @@ namespace Blockly
             return Name;
         }
 
-        public bool Equals(VariableType other)
+        public virtual bool Equals(VariableType other)
         {
-            return Name == other.Name && IsArray == other.IsArray;
+            return Name == other.Name;
         }
 
         public override bool Equals(object obj)
@@ -54,7 +54,7 @@ namespace Blockly
             return Name.GetHashCode() ^ IsArray.GetHashCode();
         }
 
-        public static VariableType FromString(string name, bool array = false)
+        public static VariableType FromString(string name)
         {
             if (name == "integer")
             {
@@ -64,12 +64,12 @@ namespace Blockly
             {
                 name = "bool";
             }
-            ElementalType type = new ElementalType(name);
-            if (array)
-            {
-                return new ArrayType(type);
-            }
-            return type;
+            return new ElementalType(name);
+        }
+
+        public static VariableType ArrayFromString(string name, int size)
+        {
+            return new ArrayType(FromString(name), size);
         }
     }
 
@@ -110,7 +110,6 @@ namespace Blockly
     public class ArrayType : VariableType
     {
         private VariableType elementType;
-        private int size;
 
         public override string Name
         {
@@ -136,9 +135,17 @@ namespace Blockly
             }
         }
 
-        public ArrayType(VariableType elementType)
+        public int Size { get; private set; }
+
+        public ArrayType(VariableType elementType, int size)
         {
             this.elementType = elementType;
+            Size = size;
+        }
+
+        public override bool Equals(VariableType other)
+        {
+            return base.Equals(other) && Size == ((ArrayType)other).Size;
         }
     }
 }

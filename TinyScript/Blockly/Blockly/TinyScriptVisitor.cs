@@ -641,7 +641,7 @@ namespace Blockly
         {
             XElement block = new XElement("block", new XAttribute("type", "create_array"));
             XElement typeField = new XElement("field", new XAttribute("name", "type"));
-            VariableType type = VariableType.FromString(context.typeName().GetText(), true);
+            VariableType type = VariableType.ArrayFromString(context.typeName().GetText(), 0);
             typeField.Add(type);
             block.Add(typeField);
             XElement nameField = new XElement("field", new XAttribute("name", "name"));
@@ -683,7 +683,7 @@ namespace Blockly
             index.Add(idxExpression);
             XElement value = new XElement("value", new XAttribute("name", "value"));
             ExpressionElement valueExpression = (ExpressionElement)VisitExpression(context.expression()[1]);
-            if (valueExpression.Type.Name != variables[varName].Name)
+            if (valueExpression.Type != variables[varName].ElementType)
             {
                 ThrowSyntaxError(context.expression()[1].Start, "Type mismatch");
             }
@@ -723,8 +723,8 @@ namespace Blockly
             XElement mutation = new XElement("mutation", new XAttribute("items", expressions.Length));
             block.Add(mutation);
             XElement typeField = new XElement("field", new XAttribute("name", "type"));
-            VariableType type = VariableType.FromString(context.typeName().GetText(), true);
-            typeField.Add(type.ElementType.ToString());
+            VariableType type = VariableType.ArrayFromString(context.typeName().GetText(), expressions.Length);
+            typeField.Add(type.ElementType.Name);
             block.Add(typeField);
             string varName = context.varName().GetText();
             if (variables.ContainsKey(varName))
@@ -741,7 +741,7 @@ namespace Blockly
                 ExpressionElement expression = (ExpressionElement)VisitExpression(expressions[i]);
                 if (!CheckType(expression.Type, type.ElementType))
                 {
-                    ThrowSyntaxError(expressions[0].Start, "Type mismatch");
+                    ThrowSyntaxError(expressions[i].Start, "Type mismatch");
                 }
                 value.Add(expression);
                 block.Add(value);
