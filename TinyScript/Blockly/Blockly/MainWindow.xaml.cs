@@ -88,6 +88,11 @@ namespace Blockly
             textBox.Text = generatedCode.ToString();
         }
 
+        public bool Validate()
+        {
+            return Compile(false);
+        }
+
         private bool Compile(bool display)
         {
             var code = textBox.Text;
@@ -178,7 +183,7 @@ namespace Blockly
 
         private void genCButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!Compile(false))
+            if (!Validate())
             {
                 return;
             }
