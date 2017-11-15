@@ -88,7 +88,7 @@ namespace Blockly
             textBox.Text = generatedCode.ToString();
         }
 
-        private void compileButton_Click(object sender, RoutedEventArgs e)
+        private bool Compile(bool display)
         {
             var code = textBox.Text;
             ErrorListener error = new ErrorListener();
@@ -99,15 +99,27 @@ namespace Blockly
             var parser = new TinyScriptParser(tokenStream);
             parser.AddErrorListener(error);
             var visitor = new TinyScriptVisitor();
-            browser.InvokeScript("clearWorkspace");
+            XElement root;
             try
             {
-                DisplayBlocks(visitor.Visit(parser.program()));
+                root = visitor.Visit(parser.program());
             }
             catch (SyntaxErrorException ex)
             {
                 ex.Display();
+                return false;
             }
+            if (display)
+            {
+                browser.InvokeScript("clearWorkspace");
+                DisplayBlocks(root);
+            }
+            return true;
+        }
+
+        private void compileButton_Click(object sender, RoutedEventArgs e)
+        {
+            Compile(true);
         }
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
@@ -138,6 +150,11 @@ namespace Blockly
 
         private void codeSaveButton_Click(object sender, RoutedEventArgs e)
         {
+            SaveCode(textBox.Text);
+        }
+
+        private void SaveCode(string code)
+        {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Title = "Save Code";
             saveFileDialog.Filter = "Text Files | *.txt";
@@ -145,7 +162,7 @@ namespace Blockly
             saveFileDialog.FileName = "Code";
             if (saveFileDialog.ShowDialog() == true)
             {
-                System.IO.File.WriteAllText(Path.GetFullPath(saveFileDialog.FileName), textBox.Text);
+                System.IO.File.WriteAllText(Path.GetFullPath(saveFileDialog.FileName), code);
             }
         }
 
@@ -157,6 +174,25 @@ namespace Blockly
             {
                 textBox.Text = File.ReadAllText(Path.GetFullPath(openfiledialog.FileName));
             }
+        }
+
+        private void genCButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Compile(false))
+            {
+                return;
+            }
+            var code = textBox.Text;
+            ErrorListener error = new ErrorListener();
+            var inputStream = new AntlrInputStream(code);
+            var lexer = new TinyScriptLexer(inputStream);
+            lexer.AddErrorListener(error);
+            var tokenStream = new CommonTokenStream(lexer);
+            var parser = new TinyScriptParser(tokenStream);
+            parser.AddErrorListener(error);
+            var visitor = new TinyScriptCVisitor();
+            string cCode = visitor.Visit(parser.program()).ToString();
+            SaveCode(cCode);
         }
     }
 }

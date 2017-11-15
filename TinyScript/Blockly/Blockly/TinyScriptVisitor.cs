@@ -32,19 +32,13 @@ namespace Blockly
         public override XElement VisitProgram([NotNull] TinyScriptParser.ProgramContext context)
         {
             XElement xml = new XElement("xml");
-            XElement first = VisitVariableDeclarationList(context.variableDeclarationList());
-            XElement next;
-            if (first != null)
+            xml.Add(VisitVariableDeclarationList(context.variableDeclarationList()));
+            XElement statements = VisitStatementList(context.statementList());
+            if (statements != null)
             {
-                next = new XElement("next");
-                first.Add(next);
-                xml.Add(first);
+                statements.Add(new XAttribute("x", "0"), new XAttribute("y", "100"));
+                xml.Add(statements);
             }
-            else
-            {
-                next = xml;
-            }
-            next.Add(VisitStatementList(context.statementList()));
             return xml;
         }
 
@@ -276,19 +270,24 @@ namespace Blockly
             }
             if (context.varName() != null)
             {
-                string varName = context.varName().GetText();
-                if (!variables.ContainsKey(varName))
-                {
-                    ThrowSyntaxError(context.varName().Start, "Variable does not exist");
-                }
-                VariableType type = variables[varName];
-                XElement block = new XElement("block", new XAttribute("type", "variables_get"));
-                XElement field = new XElement("field", new XAttribute("name", "VAR"));
-                field.Add(varName);
-                block.Add(field);
-                return new ExpressionElement(block, type);
+                return VisitVarName(context.varName());
             }
             return VisitValue(context.value());
+        }
+
+        public override XElement VisitVarName([NotNull] TinyScriptParser.VarNameContext context)
+        {
+            string varName = context.GetText();
+            if (!variables.ContainsKey(varName))
+            {
+                ThrowSyntaxError(context.Start, "Variable does not exist");
+            }
+            VariableType type = variables[varName];
+            XElement block = new XElement("block", new XAttribute("type", "variables_get"));
+            XElement field = new XElement("field", new XAttribute("name", "VAR"));
+            field.Add(varName);
+            block.Add(field);
+            return new ExpressionElement(block, type);
         }
 
         public override XElement VisitValue([NotNull] TinyScriptParser.ValueContext context)
@@ -405,61 +404,76 @@ namespace Blockly
 
         public override XElement VisitForStatement([NotNull] TinyScriptParser.ForStatementContext context)
         {
-            XElement block = new XElement("block", new XAttribute("type", "controls_for"));
-            XElement field = new XElement("field", new XAttribute("name", "VAR"));
-            if (context.varName()[0].GetText() != context.varName()[1].GetText())
-            {
-                ThrowSyntaxError(context.varName()[1].Start, "Name mismatch");
-            }
-            string varName = context.varName()[0].GetText();
+            XElement block = new XElement("block", new XAttribute("type", "for"));
+            XElement field = new XElement("field", new XAttribute("name", "variable1"));
+            string varName = context.varName().GetText();
             if (!variables.ContainsKey(varName))
             {
-                ThrowSyntaxError(context.varName()[0].Start, "Variable does not exist");
+                ThrowSyntaxError(context.varName().Start, "Variable does not exist");
             }
             if (variables[varName] != VariableType.INT)
             {
-                ThrowSyntaxError(context.varName()[0].Start, "Type mismatch");
+                ThrowSyntaxError(context.varName().Start, "Type mismatch");
             }
             field.Add(varName);
+            XElement field2 = new XElement("field", new XAttribute("name", "variable2"));
+            field2.Add(varName);
             block.Add(field);
+            block.Add(field2);
             ExpressionElement assignExpr = (ExpressionElement)VisitExpression(context.expression()[0]);
             ExpressionElement compareExpr = (ExpressionElement)VisitExpression(context.expression()[1]);
-            if (assignExpr.Type != VariableType.INT || compareExpr.Type != VariableType.INT)
+            if (assignExpr.Type != VariableType.INT || compareExpr.Type != VariableType.BOOLEAN)
             {
                 ThrowSyntaxError(context.expression()[0].Start, "Type mismatch");
             }
-            XElement from = new XElement("value", new XAttribute("name", "FROM"));
+            XElement from = new XElement("value", new XAttribute("name", "init"));
             from.Add(assignExpr);
-            XElement to = new XElement("value", new XAttribute("name", "TO"));
+            XElement to = new XElement("value", new XAttribute("name", "condition"));
             to.Add(compareExpr);
             block.Add(from);
             block.Add(to);
-            XElement incrExpr = Increment(context.incrementation(), varName);
-            XElement by = new XElement("value", new XAttribute("name", "BY"));
+            TinyScriptParser.VarNameContext varContext;
+            TinyScriptParser.ExpressionContext exprContext;
+            XElement dirField = new XElement("field", new XAttribute("name", "direction"));
+            if (context.incrementation() != null)
+            {
+                varContext = context.incrementation().varName();
+                exprContext = context.incrementation().expression();
+                dirField.Add("increment");
+            }
+            else
+            {
+                varContext = context.decrementation().varName();
+                exprContext = context.decrementation().expression();
+                dirField.Add("decrement");
+            }
+            block.Add(dirField);
+            XElement incrExpr = Increment(varContext, exprContext, varName);
+            XElement by = new XElement("value", new XAttribute("name", "NAME"));
             by.Add(incrExpr);
             block.Add(by);
-            XElement statement = new XElement("statement", new XAttribute("name", "DO"));
+            XElement statement = new XElement("statement", new XAttribute("name", "core"));
             statement.Add(VisitBlock(context.block()));
             block.Add(statement);
             return block;
         }
 
-        private XElement Increment([NotNull] TinyScriptParser.IncrementationContext context, string varName)
+        private XElement Increment([NotNull] TinyScriptParser.VarNameContext varContext, TinyScriptParser.ExpressionContext exprContext, string varName)
         {
-            if (context.varName().GetText() != varName)
+            if (varContext.GetText() != varName)
             {
-                ThrowSyntaxError(context.varName().Start, "Name mismatch");
+                ThrowSyntaxError(varContext.Start, "Name mismatch");
             }
-            if (context.expression() == null)
+            if (exprContext == null)
             {
                 XElement block = new XElement("block", new XAttribute("type", "math_number"));
                 block.Add(new XElement("field", new XAttribute("name", "NUM"), "1"));
                 return block;
             }
-            ExpressionElement expr = (ExpressionElement)VisitExpression(context.expression());
+            ExpressionElement expr = (ExpressionElement)VisitExpression(exprContext);
             if (expr.Type != VariableType.INT)
             {
-                ThrowSyntaxError(context.expression().Start, "Type mismatch");
+                ThrowSyntaxError(exprContext.Start, "Type mismatch");
             }
             return expr;
         }
@@ -472,7 +486,8 @@ namespace Blockly
 
         public override XElement VisitDecrementStatement([NotNull] TinyScriptParser.DecrementStatementContext context)
         {
-            return IncrementDecrement(context.varName(), context.expression(), false);
+            TinyScriptParser.DecrementationContext decContext = context.decrementation();
+            return IncrementDecrement(decContext.varName(), decContext.expression(), false);
         }
 
         private XElement IncrementDecrement(TinyScriptParser.VarNameContext varNameContext, TinyScriptParser.ExpressionContext expressionContext, bool increment)
@@ -639,6 +654,10 @@ namespace Blockly
             {
                 ThrowSyntaxError(context.expression().Start, "Type mismatch");
             }
+            if (variables.ContainsKey(varName))
+            {
+                ThrowSyntaxError(context.varName().Start, "Variable already exists");
+            }
             variables.Add(varName, type);
             size.Add(expr);
             block.Add(size);
@@ -695,6 +714,48 @@ namespace Blockly
             block.Add(nameField);
             block.Add(index);
             return new ExpressionElement(block, variables[varName].ElementType);
+        }
+
+        public override XElement VisitArrayInitialization([NotNull] TinyScriptParser.ArrayInitializationContext context)
+        {
+            XElement block = new XElement("block", new XAttribute("type", "init_array"));
+            var expressions = context.expression();
+            XElement mutation = new XElement("mutation", new XAttribute("items", expressions.Length));
+            block.Add(mutation);
+            XElement typeField = new XElement("field", new XAttribute("name", "type"));
+            VariableType type = VariableType.FromString(context.typeName().GetText(), true);
+            typeField.Add(type.ElementType.ToString());
+            block.Add(typeField);
+            string varName = context.varName().GetText();
+            if (variables.ContainsKey(varName))
+            {
+                ThrowSyntaxError(context.varName().Start, "Variable already exists");
+            }
+            XElement nameField = new XElement("field", new XAttribute("name", "name"));
+            nameField.Add(varName);
+            variables.Add(varName, type);
+            block.Add(nameField);
+            for (int i = 0; i < expressions.Length; i++)
+            {
+                XElement value = new XElement("value", new XAttribute("name", $"ADD{ i }"));
+                ExpressionElement expression = (ExpressionElement)VisitExpression(expressions[i]);
+                if (!CheckType(expression.Type, type.ElementType))
+                {
+                    ThrowSyntaxError(expressions[0].Start, "Type mismatch");
+                }
+                value.Add(expression);
+                block.Add(value);
+            }
+            return block;
+        }
+
+        public override XElement VisitReadStatement([NotNull] TinyScriptParser.ReadStatementContext context)
+        {
+            XElement block = new XElement("block", new XAttribute("type", "read_input"));
+            XElement value = new XElement("value", new XAttribute("name", "NAME"));
+            value.Add(VisitVarName(context.varName()));
+            block.Add(value);
+            return block;
         }
     }
 }

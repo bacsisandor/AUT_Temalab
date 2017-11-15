@@ -54,17 +54,15 @@ namespace Blockly
             return Name.GetHashCode() ^ IsArray.GetHashCode();
         }
 
-        public static VariableType FromString(string str, bool array = false)
+        public static VariableType FromString(string name, bool array = false)
         {
-            string name;
-            switch (str)
+            if (name == "integer")
             {
-                case "integer": name = "int"; break;
-                case "int": name = "int"; break;
-                case "string": name = "string"; break;
-                case "boolean": name = "bool"; break;
-                case "bool": name = "bool"; break;
-                default: name = "null"; break;
+                name = "int";
+            }
+            else if (name == "boolean")
+            {
+                name = "bool";
             }
             ElementalType type = new ElementalType(name);
             if (array)
@@ -112,12 +110,13 @@ namespace Blockly
     public class ArrayType : VariableType
     {
         private VariableType elementType;
+        private int size;
 
         public override string Name
         {
             get
             {
-                return elementType.Name;
+                return elementType.Name + "[]";
             }
         }
 
