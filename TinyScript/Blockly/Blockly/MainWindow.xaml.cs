@@ -38,8 +38,8 @@ namespace Blockly
         private struct ValidationResult
         {
             public bool Success { get; private set; }
-            public TinyScriptParser.ProgramContext ProgramContext { get; set; }
-            public TinyScriptVisitor.TypeData TypeData { get; set; }
+            public TinyScriptParser.ProgramContext ProgramContext { get; private set; }
+            public TinyScriptVisitor.TypeData TypeData { get; private set; }
 
             public ValidationResult(bool success, TinyScriptParser.ProgramContext programContext, TinyScriptVisitor.TypeData typeData)
             {
