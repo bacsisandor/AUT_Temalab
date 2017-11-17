@@ -63,6 +63,7 @@
     <Compile Include="SyntaxErrorException.cs" />
     <Compile Include="TinyScriptCVisitor.cs" />
     <Compile Include="TinyScriptVisitor.cs" />
+    <Compile Include="TinyScriptXMLVisitor.cs" />
     <Compile Include="VariableType.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

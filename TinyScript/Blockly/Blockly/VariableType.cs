@@ -51,7 +51,7 @@ namespace Blockly
 
         public override int GetHashCode()
         {
-            return Name.GetHashCode() ^ IsArray.GetHashCode();
+            return Name.GetHashCode();
         }
 
         public static VariableType FromString(string name)

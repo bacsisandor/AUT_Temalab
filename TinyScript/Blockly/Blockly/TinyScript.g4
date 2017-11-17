@@ -3,7 +3,7 @@ grammar TinyScript;
 program: variableDeclarationList statementList EOF;
 variableDeclarationList: variableDeclaration*;
 statementList: statement*;
-statement: ifStatement | whileStatement | doWhileStatement | forStatement | assignmentStatement | arrayAssignmentStatement | functionCallStatement | incrementStatement | decrementStatement | readStatement;
+statement: ifStatement | whileStatement | doWhileStatement | forStatement | assignmentStatement | arrayAssignmentStatement | functionCallStatement | incrementStatement | readStatement;
 variableDeclaration: variableDeclaration1 | variableDeclaration2 | arrayDeclaration | arrayInitialization;
 
 variableDeclaration1: typeName varName ('=' expression)? ';' ;
@@ -13,7 +13,7 @@ arrayInitialization: typeName varName '[' ']' '=' '{' (expression (',' expressio
 
 whileStatement: 'while' '(' expression ')' block ;
 doWhileStatement: 'do' block 'while' '(' expression ')' ';' ;
-forStatement: 'for' '(' varName '=' expression ';' expression ';' (incrementation | decrementation) ')' block ;
+forStatement: 'for' '(' varName '=' expression ';' expression ';' incrementation ')' block ;
 ifStatement: 'if' '(' expression ')' block elseIfStatement* elseStatement? ;
 elseIfStatement: 'else' 'if' '(' expression ')' block ;
 elseStatement: 'else' block ;
@@ -22,9 +22,7 @@ assignmentStatement: varName '=' expression ';' ;
 arrayAssignmentStatement: varName '[' expression ']' '=' expression ';' ;
 functionCallStatement: functionCall ';' ;
 incrementStatement: incrementation ';' ;
-decrementStatement: decrementation ';' ;
-incrementation: (varName '++') | (varName '+=' expression) ;
-decrementation: (varName '--') | (varName '-=' expression) ;
+incrementation: (varName INCDEC1) | (varName INCDEC2 expression) ;
 readStatement: 'read' '(' varName ')' ';' ;
 
 expression: sum (compareOp sum)?;
@@ -49,10 +47,8 @@ LT: '<';
 LTE: '<=';
 GT: '>';
 GTE: '>=';
-INC1: '++';
-INC2: '+=';
-DEC1: '--';
-DEC2: '-=';
+INCDEC1: '++' | '--';
+INCDEC2: '+=' | '-=';
 
 INTTYPE: 'integer' | 'int';
 BOOLEANTYPE: 'boolean' | 'bool';
@@ -76,7 +72,7 @@ BRACKET4: ']';
 COMMA: ',';
 NULL: 'null';
 BOOLEAN: 'true' | 'false';
-STRING: '"' (~[\r\n])* '"';
+STRING: '"' (~[\r\n"])* '"';
 INT: [0-9]+ ;
 ID: [a-zA-Z][a-zA-Z0-9_]*;
 WS: (' '| '\t' | '\n' | '\r') -> skip;

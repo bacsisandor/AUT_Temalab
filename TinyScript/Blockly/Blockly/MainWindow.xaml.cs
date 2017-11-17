@@ -34,7 +34,20 @@ namespace Blockly
                 
             }
         }
-        
+
+        private struct ValidationResult
+        {
+            public bool Success { get; private set; }
+            public TinyScriptParser.ProgramContext ProgramContext { get; set; }
+            public TinyScriptVisitor.TypeData TypeData { get; set; }
+
+            public ValidationResult(bool success, TinyScriptParser.ProgramContext programContext, TinyScriptVisitor.TypeData typeData)
+            {
+                Success = success;
+                ProgramContext = programContext;
+                TypeData = typeData;
+            }
+        }
 
         public MainWindow()
         {
@@ -88,43 +101,41 @@ namespace Blockly
             textBox.Text = generatedCode.ToString();
         }
 
-        public bool Validate()
+        private ValidationResult Validate()
         {
-            return Compile(false);
-        }
-
-        private bool Compile(bool display)
-        {
-            var code = textBox.Text;
             ErrorListener error = new ErrorListener();
-            var inputStream = new AntlrInputStream(code);
+            var inputStream = new AntlrInputStream(textBox.Text);
             var lexer = new TinyScriptLexer(inputStream);
             lexer.AddErrorListener(error);
             var tokenStream = new CommonTokenStream(lexer);
             var parser = new TinyScriptParser(tokenStream);
             parser.AddErrorListener(error);
             var visitor = new TinyScriptVisitor();
-            XElement root;
+            TinyScriptParser.ProgramContext context;
+            TinyScriptVisitor.TypeData data;
             try
             {
-                root = visitor.Visit(parser.program());
+                context = parser.program();
+                data = visitor.Analyze(context);
             }
             catch (SyntaxErrorException ex)
             {
                 ex.Display();
-                return false;
+                return new ValidationResult(false, null, null);
             }
-            if (display)
-            {
-                browser.InvokeScript("clearWorkspace");
-                DisplayBlocks(root);
-            }
-            return true;
+            return new ValidationResult(true, context, data);
         }
 
         private void compileButton_Click(object sender, RoutedEventArgs e)
         {
-            Compile(true);
+            ValidationResult result = Validate();
+            if (!result.Success)
+            {
+                return;
+            }
+            browser.InvokeScript("clearWorkspace");
+            TinyScriptXMLVisitor visitor = new TinyScriptXMLVisitor(result.TypeData);
+            DisplayBlocks(visitor.Visit(result.ProgramContext));
         }
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
@@ -183,20 +194,13 @@ namespace Blockly
 
         private void genCButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!Validate())
+            ValidationResult result = Validate();
+            if (!result.Success)
             {
                 return;
             }
-            var code = textBox.Text;
-            ErrorListener error = new ErrorListener();
-            var inputStream = new AntlrInputStream(code);
-            var lexer = new TinyScriptLexer(inputStream);
-            lexer.AddErrorListener(error);
-            var tokenStream = new CommonTokenStream(lexer);
-            var parser = new TinyScriptParser(tokenStream);
-            parser.AddErrorListener(error);
-            var visitor = new TinyScriptCVisitor();
-            string cCode = visitor.Visit(parser.program()).ToString();
+            TinyScriptCVisitor visitor = new TinyScriptCVisitor(result.TypeData);
+            string cCode = visitor.Visit(result.ProgramContext);
             SaveCode(cCode);
         }
     }
