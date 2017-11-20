@@ -33,19 +33,19 @@
     <block type="text">
       <field name="TEXT"></field>
     </block>
-    <block type="text_print">
-      <value name="TEXT">
-        <shadow type="text">
-          <field name="TEXT">abc</field>
-        </shadow>
-      </value>
-    </block>
     <block type="text_join">
       <mutation items="2"></mutation>
     </block>
   </category>
-  <category name="Input" colour="#006677">
+  <category name="I/O" colour="#006677">
 	<block type="read_input"></block>
+	  <block type="text_print">
+		  <value name="TEXT">
+			<shadow type="text">
+			  <field name="TEXT">abc</field>
+			</shadow>
+		  </value>
+	  </block>
   </category>
   <category name="Loops" colour="#6da55b">
     <block type="count">
@@ -81,6 +81,9 @@
       </value>
     </block>
     <block type="abs"></block>
+	<block type="maximum_select">
+		<field name="variable" id="~z(At[qO`1T5RRP0e?~]" variabletype="">item</field>
+	</block>
   </category>
   <category name="Variables" colour="#a55b6d">
     <block type="create_var">
@@ -142,11 +145,6 @@
     </value>
   </block>
   <block type="init_array">
-  </block>
-  </category>
-  <category name="Functions" colour="#aa5522">
-      <block type="maximum_select">
-    <field name="variable" id="~z(At[qO`1T5RRP0e?~]" variabletype="">item</field>
   </block>
   </category>
 </xml>
