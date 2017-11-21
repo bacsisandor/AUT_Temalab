@@ -10,8 +10,8 @@
   <script src="../../generators/tinyscript.js"></script>
   <script src="../../generators/tinyscript/tinyscript.js"></script>
 </head>
-<body>
-  <div id="blocklyDiv" style="height: 520px; width: 640px;"></div>
+<body style="margin: 0 0 0 0">
+  <div id="blocklyDiv" style="height: 100vh; width: 100%;"></div>
 
 <xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
   <category name="Logic" colour="#5b80a5">
@@ -153,7 +153,16 @@
    var generatedXml;
     var workspace = Blockly.inject('blocklyDiv',
         {media: '../../media/',
-         toolbox: document.getElementById('toolbox')});
+         toolbox: document.getElementById('toolbox'),
+		 zoom: {
+            controls: true,
+            wheel: true,
+            startScale: 1,
+            maxScale: 1.5,
+            minScale: 0.5,
+            scaleSpeed: 1.2
+        }
+		 });
 		 
     function showCode() {
       // Generate TinyScript code
@@ -185,6 +194,7 @@
 	}
 	
 	workspace.addChangeListener(onChange);
+
 	
   </script>
 

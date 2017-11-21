@@ -136,7 +136,7 @@ Blockly.Blocks['get_array'] = {
 
 Blockly.Blocks['maximum_select'] = {
   init: function() {
-    this.setColour(15);
+    this.setColour(230);
     this.itemCount_ = 3;
     this.updateShape_();
     this.setOutput(true, 'Number');
