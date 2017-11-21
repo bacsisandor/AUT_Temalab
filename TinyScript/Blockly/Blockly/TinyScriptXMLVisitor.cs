@@ -359,10 +359,7 @@ namespace Blockly
             XElement field = new XElement("field", new XAttribute("name", "variable1"));
             string varName = context.varName().GetText();
             field.Add(varName);
-            XElement field2 = new XElement("field", new XAttribute("name", "variable2"));
-            field2.Add(varName);
             block.Add(field);
-            block.Add(field2);
             XElement assignExpr = VisitExpression(context.expression()[0]);
             XElement compareExpr = VisitExpression(context.expression()[1]);
             XElement from = new XElement("value", new XAttribute("name", "init"));
@@ -371,6 +368,9 @@ namespace Blockly
             to.Add(compareExpr);
             block.Add(from);
             block.Add(to);
+            XElement field2 = new XElement("field", new XAttribute("name", "variable2"));
+            field2.Add(context.incrementation().varName().GetText());
+            block.Add(field2);
             XElement dirField = new XElement("field", new XAttribute("name", "direction"));
             bool direction;
             if (context.incrementation().INCDEC1() != null)
@@ -383,7 +383,7 @@ namespace Blockly
             }
             dirField.Add(direction ? "increment" : "decrement");
             block.Add(dirField);
-            XElement incrExpr = Increment(context.incrementation().varName(), context.incrementation().expression(), varName);
+            XElement incrExpr = Increment(context.incrementation().varName(), context.incrementation().expression());
             XElement by = new XElement("value", new XAttribute("name", "NAME"));
             by.Add(incrExpr);
             block.Add(by);
@@ -393,7 +393,7 @@ namespace Blockly
             return block;
         }
 
-        private XElement Increment([NotNull] TinyScriptParser.VarNameContext varContext, TinyScriptParser.ExpressionContext exprContext, string varName)
+        private XElement Increment([NotNull] TinyScriptParser.VarNameContext varContext, TinyScriptParser.ExpressionContext exprContext)
         {
             if (exprContext == null)
             {

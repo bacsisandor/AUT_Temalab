@@ -17,7 +17,7 @@ namespace Blockly
 
             public TypeData(Dictionary<string, VariableType> variables)
             {
-                this.variables = variables;
+                this.variables = new Dictionary<string, VariableType>(variables);
             }
 
             public VariableType GetVariableType(string name)
@@ -279,10 +279,6 @@ namespace Blockly
             if (assignExpr != VariableType.INT || compareExpr != VariableType.BOOLEAN)
             {
                 ThrowSyntaxError(context.expression()[0].Start, "Type mismatch");
-            }
-            if (context.incrementation().varName().GetText() != context.varName().GetText())
-            {
-                ThrowSyntaxError(context.incrementation().varName().Start, "Name mismatch");
             }
             VisitIncrementation(context.incrementation());
             return VariableType.VOID;
