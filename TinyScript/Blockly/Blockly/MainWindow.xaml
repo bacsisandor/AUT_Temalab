@@ -5,21 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Blockly"
         mc:Ignorable="d"
-        Title="TinyScript Blockly" Height="620" Width="1000">
+        Title="TinyScript Blockly" Height="620" Width="1000" MinWidth="800" MinHeight="600">
     <Grid>
-        <Button x:Name="saveButton" Content="Save Blocks" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150
-                " Margin="10,10,0,0" Click="saveButton_Click"/>
-        <Button x:Name="toXmlButton" Content="Workspace to XML" HorizontalAlignment="Left" Margin="320,10,0,0" VerticalAlignment="Top" Width="150
-                " Click="toXmlButton_Click"/>
-        <WebBrowser x:Name="browser" HorizontalAlignment="Left" Height="544" Margin="10,35,0,0" VerticalAlignment="Top" Width="662"/>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="484" Margin="677,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="305" AcceptsReturn="True"/>
-        <Button x:Name="generateButton" Content="Generate&#xD;&#xA;" HorizontalAlignment="Left" Margin="677,10,0,0" VerticalAlignment="Top" Width="305" Click="generateButton_Click" Height="20"/>
-        <Button x:Name="compileButton" Content="Compile&#xD;&#xA;" HorizontalAlignment="Left" Margin="677,554,0,0" VerticalAlignment="Top" Width="150" Height="25" Click="compileButton_Click"/>
-        <Button x:Name="loadButton" Content="Load Blocks" HorizontalAlignment="Left" Height="20" Margin="165,10,0,0" VerticalAlignment="Top" Width="150" Click="loadButton_Click"/>
-        <CheckBox x:Name="autogenCheckBox" Content="Automatic generation" HorizontalAlignment="Left" Margin="537,15,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <Button x:Name="codeSaveButton" Content="Save Code" HorizontalAlignment="Left" Height="25" Margin="677,524,0,0" VerticalAlignment="Top" Width="150" Click="codeSaveButton_Click"/>
-        <Button x:Name="codeLoadButton" Content="Load Code" HorizontalAlignment="Left" Height="25" Margin="832,524,0,0" VerticalAlignment="Top" Width="150" Click="codeLoadButton_Click"/>
-        <Button x:Name="genCButton" Content="Generate C&#xA;" HorizontalAlignment="Left" Margin="832,554,0,0" VerticalAlignment="Top" Width="150" Height="25" Click="genCButton_Click"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="165*" />
+            <ColumnDefinition Width="165*" />
+            <ColumnDefinition Width="165*" />
+            <ColumnDefinition Width="165*" />
+            <ColumnDefinition Width="270*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50px" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="50px" />
+        </Grid.RowDefinitions>
+        <Button x:Name="saveButton" Content="Save Blocks" Margin="10,10,10,10" Click="saveButton_Click" Grid.Row="0" Grid.Column="0"/>
+        <Button x:Name="loadButton" Content="Load Blocks"  Margin="10,10,10,10" Click="loadButton_Click" Grid.Row="0" Grid.Column="1"/>
+        <Button x:Name="toXmlButton" Content="Workspace to XML" Margin="10,10,10,10" Click="toXmlButton_Click" Grid.Row="0" Grid.Column="2"/>
+        <WebBrowser x:Name="browser" Margin="10,10,10,10" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"/>
+        <TextBox x:Name="textBox" Margin="10,10,10,10" TextWrapping="Wrap" AcceptsReturn="True" Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2"/>
+        <Button x:Name="generateButton" Content="Blocks to code" Margin="10,10,10,10" Click="generateButton_Click" Grid.Row="0" Grid.Column="4" VerticalContentAlignment="Center" Grid.ColumnSpan="2"/>
+        <Button x:Name="compileButton" Content="Code to blocks" Margin="10,10,10,10" Click="compileButton_Click" Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="2"/>
+        <CheckBox x:Name="autogenCheckBox" Content="Automatic generation" Margin="10,10,10,10" IsChecked="True" Grid.Row="0" Grid.Column="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Button x:Name="codeSaveButton" Content="Save Code" Margin="10,10,10,10" Click="codeSaveButton_Click" Grid.Row="2" Grid.Column="1"/>
+        <Button x:Name="codeLoadButton" Content="Load Code" Margin="10,10,10,10" Click="codeLoadButton_Click" Grid.Row="2" Grid.Column="2"/>
+        <Button x:Name="genCButton" Content="Generate C" Margin="10,10,10,10" Click="genCButton_Click" Grid.Row="2" Grid.Column="3"/>
 
     </Grid>
 </Window>
