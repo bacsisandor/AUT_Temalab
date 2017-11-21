@@ -201,7 +201,9 @@ namespace Blockly
             }
             TinyScriptCVisitor visitor = new TinyScriptCVisitor(result.TypeData);
             string cCode = visitor.Visit(result.ProgramContext);
-            SaveCode(cCode);
+            CodeViewer cw = new CodeViewer();
+            cw.Show();
+            cw.setTextBox(cCode);
         }
     }
 }

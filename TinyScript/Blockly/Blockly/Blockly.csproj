@@ -60,11 +60,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CodeViewer.xaml.cs">
+      <DependentUpon>CodeViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SyntaxErrorException.cs" />
     <Compile Include="TinyScriptCVisitor.cs" />
     <Compile Include="TinyScriptVisitor.cs" />
     <Compile Include="TinyScriptXMLVisitor.cs" />
     <Compile Include="VariableType.cs" />
+    <Page Include="CodeViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
