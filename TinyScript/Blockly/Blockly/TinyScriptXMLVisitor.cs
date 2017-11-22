@@ -461,7 +461,7 @@ namespace Blockly
                 case "abs": return AbsFunction(nameToken, context.expression());
                 case "min": return MinMaxFunction(nameToken, context.expression(), false);
                 case "max": return MinMaxFunction(nameToken, context.expression(), true);
-                default: return null;
+                default: return new XElement("test");
             }
         }
 

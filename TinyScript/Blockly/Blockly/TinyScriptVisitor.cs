@@ -16,16 +16,28 @@ namespace Blockly
             VariableType GetVariableType(string name);
 
             VariableType GetPrintArgumentType(IToken token);
+
+            void EnterScope(string scope);
+
+            void ExitScope();
         }
 
         private class TypeData : ITypeData
         {
-            private Dictionary<string, VariableType> variables = new Dictionary<string, VariableType>();
+            private Dictionary<string, Dictionary<string, VariableType>> variables = new Dictionary<string, Dictionary<string, VariableType>>();
+            private Dictionary<string, List<VariableType>> parameters = new Dictionary<string, List<VariableType>>();
             private Dictionary<long, VariableType> prints = new Dictionary<long, VariableType>();
+            private string scope;
+
+            public TypeData()
+            {
+                TryAddScope("_global");
+                ExitScope();
+            }
 
             public VariableType GetVariableType(string name)
             {
-                return variables[name];
+                return variables[scope][name];
             }
 
             public VariableType GetPrintArgumentType(IToken token)
@@ -36,16 +48,27 @@ namespace Blockly
 
             public bool TryGetVariableType(string name, out VariableType type)
             {
-                return variables.TryGetValue(name, out type);
+                return variables[scope].TryGetValue(name, out type);
             }
 
-            public bool AddVariable(string name, VariableType type)
+            public bool TryAddVariable(string name, VariableType type)
             {
-                if (variables.ContainsKey(name))
+                if (variables[scope].ContainsKey(name))
                 {
                     return false;
                 }
-                variables.Add(name, type);
+                variables[scope].Add(name, type);
+                return true;
+            }
+
+            public bool TryAddScope(string scope)
+            {
+                if (variables.ContainsKey(scope))
+                {
+                    return false;
+                }
+                variables.Add(scope, new Dictionary<string, VariableType>());
+                parameters.Add(scope, new List<VariableType>());
                 return true;
             }
 
@@ -53,6 +76,41 @@ namespace Blockly
             {
                 long id = MakePrintIdentifier(token);
                 prints.Add(id, type);
+            }
+
+            public void EnterScope(string scope)
+            {
+                this.scope = scope;
+            }
+
+            public bool TryEnterScope(string scope)
+            {
+                if (!variables.ContainsKey(scope))
+                {
+                    return false;
+                }
+                EnterScope(scope);
+                return true;
+            }
+
+            public void ExitScope()
+            {
+                EnterScope("_global");
+            }
+
+            public int GetParameterCount()
+            {
+                return parameters[scope].Count - 1;
+            }
+
+            public void AddParameter(VariableType type)
+            {
+                parameters[scope].Add(type);
+            }
+
+            public VariableType GetParameterType(int i)
+            {
+                return parameters[scope][i];
             }
 
             private static long MakePrintIdentifier(IToken token)
@@ -76,6 +134,7 @@ namespace Blockly
 
         public override VariableType VisitProgram([NotNull] TinyScriptParser.ProgramContext context)
         {
+            VisitFunctionDefinitionList(context.functionDefinitionList());
             VisitVariableDeclarationList(context.variableDeclarationList());
             VisitStatementList(context.statementList());
             return VariableType.VOID;
@@ -95,6 +154,15 @@ namespace Blockly
             foreach (var statement in context.statement())
             {
                 VisitStatement(statement);
+            }
+            return VariableType.VOID;
+        }
+
+        public override VariableType VisitFunctionDefinitionList([NotNull] TinyScriptParser.FunctionDefinitionListContext context)
+        {
+            foreach (var def in context.functionDefinition())
+            {
+                VisitFunctionDefinition(def);
             }
             return VariableType.VOID;
         }
@@ -140,7 +208,7 @@ namespace Blockly
         private void MakeVariable(VariableType type, IToken name)
         {
             string varName = name.Text;
-            if (!typeData.AddVariable(varName, type))
+            if (!typeData.TryAddVariable(varName, type))
             {
                 ThrowSyntaxError(name, "Variable already exists");
             }
@@ -368,8 +436,30 @@ namespace Blockly
                 case "abs": return AbsFunction(nameToken, context.expression());
                 case "min": return MinMaxFunction(nameToken, context.expression(), false);
                 case "max": return MinMaxFunction(nameToken, context.expression(), true);
-                default: ThrowSyntaxError(nameToken, "Function does not exist"); return null;
+                default: return CustomFunction(nameToken, context.expression());
             }
+        }
+
+        private VariableType CustomFunction(IToken nameToken, TinyScriptParser.ExpressionContext[] args)
+        {
+            if (!typeData.TryEnterScope(nameToken.Text))
+            {
+                ThrowSyntaxError(nameToken, "Function does not exist");
+            }
+            if (args.Length != typeData.GetParameterCount())
+            {
+                ThrowSyntaxError(nameToken, "Invalid argument list");
+            }
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (!CheckType(typeData.GetParameterType(i), VisitExpression(args[i])))
+                {
+                    ThrowSyntaxError(args[i].Start, "Type mismatch");
+                }
+            }
+            VariableType result = typeData.GetParameterType(args.Length);
+            typeData.ExitScope();
+            return result;
         }
 
         private VariableType PrintFunction(IToken nameToken, TinyScriptParser.ExpressionContext[] args)
@@ -489,6 +579,59 @@ namespace Blockly
             {
                 ThrowSyntaxError(context.varName().Start, "Type mismatch");
             }
+            return VariableType.VOID;
+        }
+
+        public override VariableType VisitFunctionDefinition([NotNull] TinyScriptParser.FunctionDefinitionContext context)
+        {
+            string functionName = context.functionName().GetText();
+            if (!typeData.TryAddScope(functionName))
+            {
+                ThrowSyntaxError(context.functionName().Start, "Function already exists");
+            }
+            typeData.EnterScope(functionName);
+            VariableType type;
+            foreach (var param in context.parameter())
+            {
+                if (param.BRACKET3() != null)
+                {
+                    type = VariableType.ArrayFromString(param.typeName().GetText(), -1);
+                }
+                else
+                {
+                    type = VariableType.FromString(param.typeName().GetText());
+                }
+                if (!typeData.TryAddVariable(param.varName().GetText(), type))
+                {
+                    ThrowSyntaxError(param.Start, "Parameter already exists");
+                }
+                typeData.AddParameter(type);
+            }
+            if (context.typeName() != null)
+            {
+                if (context.BRACKET3() != null)
+                {
+                    type = VariableType.ArrayFromString(context.typeName().GetText(), -1);
+                }
+                else
+                {
+                    type = VariableType.FromString(context.typeName().GetText());
+                }
+            }
+            else
+            {
+                type = VariableType.VOID;
+            }
+            typeData.AddParameter(type);
+            VisitFunctionBody(context.functionBody());
+            typeData.ExitScope();
+            return VariableType.VOID;
+        }
+
+        public override VariableType VisitFunctionBody([NotNull] TinyScriptParser.FunctionBodyContext context)
+        {
+            VisitVariableDeclarationList(context.variableDeclarationList());
+            VisitStatementList(context.statementList());
             return VariableType.VOID;
         }
     }

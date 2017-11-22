@@ -1,10 +1,15 @@
 grammar TinyScript;
 
-program: variableDeclarationList statementList EOF;
+program: functionDefinitionList variableDeclarationList statementList EOF;
+functionDefinitionList: functionDefinition*;
 variableDeclarationList: variableDeclaration*;
 statementList: statement*;
 statement: ifStatement | whileStatement | doWhileStatement | forStatement | assignmentStatement | arrayAssignmentStatement | functionCallStatement | incrementStatement | readStatement;
 variableDeclaration: variableDeclaration1 | variableDeclaration2 | arrayDeclaration | arrayInitialization;
+
+functionDefinition: ((typeName (BRACKET3 BRACKET4)?) | 'void') functionName '(' (parameter (',' parameter)*)? ')' functionBody ;
+functionBody: '{' variableDeclarationList statementList '}' ;
+parameter: typeName varName (BRACKET3 BRACKET4)? ;
 
 variableDeclaration1: typeName varName ('=' expression)? ';' ;
 variableDeclaration2: 'var' varName '=' expression ';' ;
@@ -53,6 +58,7 @@ INCDEC2: '+=' | '-=';
 INTTYPE: 'integer' | 'int';
 BOOLEANTYPE: 'boolean' | 'bool';
 STRINGTYPE: 'string';
+VOID: 'void';
 
 SEMI: ';';
 EQUALS: '=';
