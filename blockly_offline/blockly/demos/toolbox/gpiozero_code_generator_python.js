@@ -46,7 +46,7 @@ Blockly.Python['initdistancesensor'] = function (block) {
     value_port2 = value_port2.substring(1, value_port2.length - 1);
     var code = 'DistanceSensor(' + value_port1 + ', ' + value_port2
         + ', max_distance=' + number_max_distance
-        + ', threshold_distance=' + number_threshold_distance + ')';
+        + ', threshold_distance=' + number_threshold_distance + ')\n';
     return [code, Blockly.Python.ORDER_NONE];
 };
 
@@ -73,6 +73,23 @@ Blockly.Python['initrobot'] = function (block) {
     return [code, Blockly.Python.ORDER_NONE];
 };
 
+Blockly.Python['initbasicoutputdevice'] = function (block) {
+    var value_pinnumber = Blockly.Python.valueToCode(block, 'pinNumber', Blockly.Python.ORDER_ATOMIC);
+    var dropdown_activehighvalue = block.getFieldValue('activeHighValue');
+    var code;
+    if (dropdown_activehighvalue === 'yes') {
+        code = 'DigitalOutputDevice(' + value_pinnumber + ')\n';
+    } else {
+        code = 'DigitalOutputDevice(' + value_pinnumber + ', active_high=False)\n';
+    }
+    return [code, Blockly.Python.ORDER_NONE];
+};
+
+Blockly.Python['initcputemperature'] = function (block) {
+    var code = 'CPUTemperature()';
+    return [code, Blockly.Python.ORDER_NONE];
+};
+
 Blockly.Python['initlightsensor'] = function (block) {
     var value_name = Blockly.Python.valueToCode(block, 'NAME', Blockly.Python.ORDER_ATOMIC);
     var code = 'LightSensor' + value_name;
@@ -84,36 +101,101 @@ Blockly.Python['initrobotvacuumcleaner'] = function (block) {
     var value_cleaner = Blockly.Python.valueToCode(block, 'cleaner', Blockly.Python.ORDER_ATOMIC);
     var value_distsensorforward = Blockly.Python.valueToCode(block, 'distSensorForward', Blockly.Python.ORDER_ATOMIC);
 
-    var code = '= (' + value_drive + ', ' + value_cleaner + ', ' + value_distsensorforward + ')\n' +
-        '\n' +
-        '\n' +
-        'def forwardObstacleDetected():\n' +
-        '    vc[0].stop()\n' +
-        '    vc[0].left(1)\n' +
-        '    sleep(0.5)\n' +
-        '    vc[0].forward(0.5)\n' +
-        '\n';
+    var code = ' (' + value_drive + ', ' + value_cleaner + ', ' + value_distsensorforward + ')\n';
     return [code, Blockly.Python.ORDER_NONE];
 };
 
-Blockly.Python['pause'] = function(block) {
+Blockly.Python['vacuumcleanerhandler'] = function (block) {
+    var value_vacuumcleanervariable = Blockly.Python.valueToCode(block, 'vacuumCleanerVariable', Blockly.Python.ORDER_ATOMIC);
+    var code = 'def forwardObstacleDetected():\n' +
+        '    ' + value_vacuumcleanervariable + '[0].stop()\n' +
+        '    ' + value_vacuumcleanervariable + '[0].left(1)\n' +
+        '    sleep(0.5)\n' +
+        '    ' + value_vacuumcleanervariable + '[0].forward(0.5)\n' +
+        '\n' +
+        '\n' +
+        '' + value_vacuumcleanervariable + '[0].forward(0.5)\n' +
+        '' + value_vacuumcleanervariable + '[1].forward(1)\n' +
+        '' + value_vacuumcleanervariable + '[2].when_in_range = forwardObstacleDetected()\n' +
+        'pause()';
+    return code;
+};
+
+Blockly.Python['initrobberdetector'] = function (block) {
+    var value_portofbuzzer = Blockly.Python.valueToCode(block, 'portOfBuzzer', Blockly.Python.ORDER_ATOMIC);
+    var value_portofmotionsensor = Blockly.Python.valueToCode(block, 'portOfMotionSensor', Blockly.Python.ORDER_ATOMIC);
+    var code = '(Buzzer(' + value_portofbuzzer + '), MotionSensor(' + value_portofmotionsensor + '))\n';
+    return [code, Blockly.Python.ORDER_NONE];
+};
+
+Blockly.Python['robberdetectorhandler'] = function (block) {
+    var value_robberdetectorvariable = Blockly.Python.valueToCode(block, 'robberDetectorVariable', Blockly.Python.ORDER_ATOMIC);
+    var code = 'def alarm():\n' +
+        '    ' + value_robberdetectorvariable + '[0].beep(n=20)\n' +
+        '    \n' +
+        '    \n' +
+        '' + value_robberdetectorvariable + '[1].when_motion = alarm\n' +
+        'pause()\n';
+    return code;
+};
+
+Blockly.Python['pause'] = function (block) {
     var code = 'pause()\n';
     return code;
 };
 
-Blockly.Python['setvacuumcleaner'] = function (block) {
-    var value_vacuumcleaner = Blockly.Python.valueToCode(block, 'vacuumCleaner', Blockly.Python.ORDER_ATOMIC);
-    var dropdown_operation = block.getFieldValue('operation');
-    if (dropdown_operation === 'start') {
-        code = value_vacuumcleaner + '[0].forward(0.5)\n' +
-            + value_vacuumcleaner + '[1].forward(1)\n' +
-            + value_vacuumcleaner + '[2].when_in_range = forwardObstacleDetected()\n';
+Blockly.Python['petfeederhandler'] = function (block) {
+    var value_petfeedervariable = Blockly.Python.valueToCode(block, 'petFeederVariable', Blockly.Python.ORDER_ATOMIC);
+
+    var code = 'def feedPet():\n' +
+        '    ' + value_petfeedervariable + '[0].max()\n' +
+        '    sleep(5)\n' +
+        '    ' + value_petfeedervariable + '[0].min()\n' +
+        '    sleep(1800)\n' +
+        '\n' +
+        'while True:\n' +
+        '    ' + value_petfeedervariable + '[1].wait_for_dark()\n' +
+        '    feedPet()\n';
+    return code;
+};
+
+Blockly.Python['initledbargraph'] = function (block) {
+    var value_p1 = Blockly.Python.valueToCode(block, 'p1', Blockly.Python.ORDER_ATOMIC);
+    var value_p2 = Blockly.Python.valueToCode(block, 'p2', Blockly.Python.ORDER_ATOMIC);
+    var value_p3 = Blockly.Python.valueToCode(block, 'p3', Blockly.Python.ORDER_ATOMIC);
+    var value_p4 = Blockly.Python.valueToCode(block, 'p4', Blockly.Python.ORDER_ATOMIC);
+    var value_p5 = Blockly.Python.valueToCode(block, 'p5', Blockly.Python.ORDER_ATOMIC);
+    var dropdown_pwmtype = block.getFieldValue('pwmType');
+
+    var code;
+    if (dropdown_pwmtype === 'True') {
+        code = 'LEDBarGraph(' + value_p1 + ',' + value_p2 + ',' + value_p3 + ',' + value_p4 + ',' + value_p5 + ', pwm=True)\n';
     } else {
-        code = value_vacuumcleaner + '[0].stop()\n' +
-            + value_vacuumcleaner + '[1].stop()\n' +
-            + value_vacuumcleaner + '[2].when_in_range = None\n';
+        code = 'LEDBarGraph(' + value_p1 + ',' + value_p2 + ',' + value_p3 + ',' + value_p4 + ',' + value_p5 + ', pwm=False)\n';
     }
 
+    return [code, Blockly.Python.ORDER_NONE];
+};
+
+Blockly.Python['setrgbledcolortovar'] = function (block) {
+    var value_rgbled = Blockly.Python.valueToCode(block, 'rgbled', Blockly.Python.ORDER_ATOMIC);
+    var dropdown_color = block.getFieldValue('color');
+    var value_var = Blockly.Python.valueToCode(block, 'var', Blockly.Python.ORDER_ATOMIC);
+    var code = '...\n';
+    return code;
+};
+
+Blockly.Python['setpwmledtovar'] = function (block) {
+    var value_pwmled = Blockly.Python.valueToCode(block, 'pwmled', Blockly.Python.ORDER_ATOMIC);
+    var value_var = Blockly.Python.valueToCode(block, 'var', Blockly.Python.ORDER_ATOMIC);
+    var code = value_pwmled + '.value = ' + value_var + '\n';
+    return code;
+};
+
+Blockly.Python['setvalueoffield'] = function (block) {
+    var value_variable = Blockly.Python.valueToCode(block, 'variable', Blockly.Python.ORDER_ATOMIC);
+    var value_value = Blockly.Python.valueToCode(block, 'value', Blockly.Python.ORDER_ATOMIC);
+    var code = value_variable + '.value = ' + value_value + '\n';
     return code;
 };
 
@@ -127,7 +209,7 @@ Blockly.Python['initrgbled'] = function (block) {
 
     var code = 'RGBLED(red=' + value_gpioportnumberred
         + ', green=' + value_gpioportnumbergreen
-        + ', blue=' + value_gpioportnumberblue + ')';
+        + ', blue=' + value_gpioportnumberblue + ')\n';
     return [code, Blockly.Python.ORDER_NONE];
 };
 
@@ -137,6 +219,14 @@ Blockly.Python['setled'] = function (block) {
     dropdown_whattodo = '.' + dropdown_whattodo;
     return value_variable + dropdown_whattodo + '\n';
 };
+
+Blockly.Python['setbasicoutputdevicestate'] = function (block) {
+    var value_outputdevice = Blockly.Python.valueToCode(block, 'outputDevice', Blockly.Python.ORDER_ATOMIC);
+    var dropdown_state = block.getFieldValue('state');
+    dropdown_state = '.' + dropdown_state;
+    return value_outputdevice + dropdown_state + '\n';
+};
+
 
 Blockly.Python['setpwmled'] = function (block) {
     var value_variable = Blockly.Python.valueToCode(block, 'variable', Blockly.Python.ORDER_ATOMIC);
@@ -193,6 +283,31 @@ Blockly.Python['waitfordark'] = function (block) {
 Blockly.Python['lightsensorvalue'] = function (block) {
     var value_lightsensor = Blockly.Python.valueToCode(block, 'lightSensor', Blockly.Python.ORDER_ATOMIC);
     var code = value_lightsensor + '.values';
+    return [code, Blockly.Python.ORDER_NONE];
+};
+
+Blockly.Python['getcputempvalue'] = function (block) {
+    var value_cputempvar = Blockly.Python.valueToCode(block, 'cpuTempVar', Blockly.Python.ORDER_ATOMIC);
+    var code = value_cputempvar + '.values';
+    return [code, Blockly.Python.ORDER_NONE];
+};
+
+Blockly.Python['cputemperaturesinglevalue'] = function (block) {
+    var value_cputempvariable = Blockly.Python.valueToCode(block, 'cputempvariable', Blockly.Python.ORDER_ATOMIC);
+    var code = value_cputempvariable + '.temperature';
+    return [code, Blockly.Python.ORDER_NONE];
+};
+
+Blockly.Python['getvalues'] = function (block) {
+    var value_variable = Blockly.Python.valueToCode(block, 'variable', Blockly.Python.ORDER_ATOMIC);
+    var code = value_variable + '.values';
+    return [code, Blockly.Python.ORDER_NONE];
+};
+
+Blockly.Python['initpetfeeder'] = function (block) {
+    var value_servo = Blockly.Python.valueToCode(block, 'servo', Blockly.Python.ORDER_ATOMIC);
+    var value_lightsensor = Blockly.Python.valueToCode(block, 'lightsensor', Blockly.Python.ORDER_ATOMIC);
+    var code = '= (Servo(' + value_servo + '), LightSensor(' + value_lightsensor + '))\n';
     return [code, Blockly.Python.ORDER_NONE];
 };
 
