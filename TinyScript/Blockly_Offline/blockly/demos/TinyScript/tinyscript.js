@@ -375,9 +375,9 @@ Blockly.Blocks['count'] = {
         .appendField(new Blockly.FieldVariable("variable"), "variable")
         .appendField("=")
         .appendField(new Blockly.FieldNumber(0), "initial")
-        .appendField(", to")
+        .appendField("to")
         .appendField(new Blockly.FieldNumber(0), "until")
-        .appendField(",")
+        .appendField("")
         .appendField(new Blockly.FieldDropdown([["increment","increment"], ["decrement","decrement"]]), "direction")
         .appendField("variable by")
         .appendField(new Blockly.FieldNumber(0), "inc_value");
@@ -400,15 +400,14 @@ Blockly.Blocks['for'] = {
     this.appendValueInput("init")
         .setCheck("Number");
     this.appendDummyInput()
-        .appendField(", until");
+        .appendField("until");
     this.appendValueInput("condition")
         .setCheck("Boolean");
     this.appendDummyInput()
-        .appendField(",")
         .appendField(new Blockly.FieldDropdown([["increment","increment"], ["decrement","decrement"]]), "direction")
         .appendField(new Blockly.FieldVariable("i"), "variable2")
         .appendField("by");
-    this.appendValueInput("NAME")
+    this.appendValueInput("inc_number")
         .setCheck("Number");
     this.appendStatementInput("core")
         .setCheck(null);
