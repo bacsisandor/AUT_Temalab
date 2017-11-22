@@ -246,7 +246,7 @@ Blockly.TinyScript['init_array'] = function(block) {
     elements[i] = Blockly.TinyScript.valueToCode(block, 'ADD' + i,
         Blockly.TinyScript.ORDER_COMMA) || 'null';
   }
-  var code = dropdown_type + ' ' + variable_name+ '[] = ' + '{' + elements.join(', ') + '}';
+  var code = dropdown_type + ' ' + variable_name+ '[] = ' + '{' + elements.join(', ') + '};';
   return [code, Blockly.TinyScript.ORDER_ATOMIC];
 }; 
 
