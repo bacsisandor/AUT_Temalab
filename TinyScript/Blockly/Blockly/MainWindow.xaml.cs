@@ -39,9 +39,9 @@ namespace Blockly
         {
             public bool Success { get; private set; }
             public TinyScriptParser.ProgramContext ProgramContext { get; private set; }
-            public TinyScriptVisitor.TypeData TypeData { get; private set; }
+            public TinyScriptVisitor.ITypeData TypeData { get; private set; }
 
-            public ValidationResult(bool success, TinyScriptParser.ProgramContext programContext, TinyScriptVisitor.TypeData typeData)
+            public ValidationResult(bool success, TinyScriptParser.ProgramContext programContext, TinyScriptVisitor.ITypeData typeData)
             {
                 Success = success;
                 ProgramContext = programContext;
@@ -112,7 +112,7 @@ namespace Blockly
             parser.AddErrorListener(error);
             var visitor = new TinyScriptVisitor();
             TinyScriptParser.ProgramContext context;
-            TinyScriptVisitor.TypeData data;
+            TinyScriptVisitor.ITypeData data;
             try
             {
                 context = parser.program();

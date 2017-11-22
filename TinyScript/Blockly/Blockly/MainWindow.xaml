@@ -29,7 +29,7 @@
         <CheckBox x:Name="autogenCheckBox" Content="Automatic generation" Margin="10,10,10,10" IsChecked="True" Grid.Row="0" Grid.Column="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <Button x:Name="codeSaveButton" Content="Save Code" Margin="10,10,10,10" Click="codeSaveButton_Click" Grid.Row="2" Grid.Column="1"/>
         <Button x:Name="codeLoadButton" Content="Load Code" Margin="10,10,10,10" Click="codeLoadButton_Click" Grid.Row="2" Grid.Column="2"/>
-        <Button x:Name="genCButton" Content="Generate C" Margin="10,10,10,10" Click="genCButton_Click" Grid.Row="2" Grid.Column="3"/>
+        <Button x:Name="genCButton" Content="Generate C++" Margin="10,10,10,10" Click="genCButton_Click" Grid.Row="2" Grid.Column="3"/>
 
     </Grid>
 </Window>

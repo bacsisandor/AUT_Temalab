@@ -5,14 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
+using Antlr4.Runtime;
 
 namespace Blockly
 {
     public class TinyScriptCVisitor : TinyScriptBaseVisitor<string>
     {
-        private TinyScriptVisitor.TypeData typeData;
+        private TinyScriptVisitor.ITypeData typeData;
 
-        public TinyScriptCVisitor(TinyScriptVisitor.TypeData typeData)
+        public TinyScriptCVisitor(TinyScriptVisitor.ITypeData typeData)
         {
             this.typeData = typeData;
         }
@@ -21,7 +22,10 @@ namespace Blockly
         {
             string varDecl = VisitVariableDeclarationList(context.variableDeclarationList());
             string statements = VisitStatementList(context.statementList());
-            return varDecl + "\n\n" + statements;
+            string block = $"{ varDecl }\n\n{ statements }\nreturn 0;";
+            block = "\t" + block.Replace("\n", "\n\t");
+            string result = $"#include \"TinyScript.h\"\n\nint main()\n{{\n{ block }\n}}";
+            return result.Replace("\n", Environment.NewLine);
         }
 
         public override string VisitVariableDeclarationList([NotNull] TinyScriptParser.VariableDeclarationListContext context)
@@ -60,22 +64,29 @@ namespace Blockly
 
         public override string VisitVariableDeclaration1([NotNull] TinyScriptParser.VariableDeclaration1Context context)
         {
-            string varName = context.varName().GetText();
-            VariableType type = typeData.GetVariableType(varName);
-            if (context.expression() == null)
-            {
-                return $"{ type } { varName };";
-            }
-            string expression = VisitExpression(context.expression());
-            return $"{ type } { varName } = { expression };";
+            return VariableDeclaration(context.varName(), context.expression());
         }
 
         public override string VisitVariableDeclaration2([NotNull] TinyScriptParser.VariableDeclaration2Context context)
         {
-            string varName = context.varName().GetText();
+            return VariableDeclaration(context.varName(), context.expression());
+        }
+
+        private string VariableDeclaration(TinyScriptParser.VarNameContext varContext, TinyScriptParser.ExpressionContext exprContext)
+        {
+            string varName = varContext.GetText();
             VariableType type = typeData.GetVariableType(varName);
-            string expression = VisitExpression(context.expression());
-            return $"{ type } { varName } = { expression };";
+            string typeName = type.Name;
+            if (typeName == "string")
+            {
+                typeName = "std::string";
+            }
+            if (exprContext == null)
+            {
+                return $"{ typeName } { varName };";
+            }
+            string expression = VisitExpression(exprContext);
+            return $"{ typeName } { varName } = { expression };";
         }
 
         public override string VisitExpression([NotNull] TinyScriptParser.ExpressionContext context)
@@ -247,17 +258,28 @@ namespace Blockly
         public override string VisitFunctionCall([NotNull] TinyScriptParser.FunctionCallContext context)
         {
             string name = context.functionName().GetText();
+            var expression = context.expression();
+            if (name == "print")
+            {
+                return PrintFunction(context.functionName().Start, expression[0]);
+            }
             string result = $"{ name }(";
-            for (int i = 0; i < context.expression().Length; i++)
+            for (int i = 0; i < expression.Length; i++)
             {
                 if (i > 0)
                 {
                     result += ", ";
                 }
-                result += VisitExpression(context.expression()[i]);
+                result += VisitExpression(expression[i]);
             }
             result += ")";
             return result;
+        }
+
+        private string PrintFunction(IToken token, TinyScriptParser.ExpressionContext exprContext)
+        {
+            string expression = VisitExpression(exprContext);
+            return $"std::cout << ({ expression }) << std::endl";
         }
 
         public override string VisitArrayDeclaration([NotNull] TinyScriptParser.ArrayDeclarationContext context)
@@ -302,7 +324,8 @@ namespace Blockly
 
         public override string VisitReadStatement([NotNull] TinyScriptParser.ReadStatementContext context)
         {
-            return $"read({ context.varName().GetText() });";
+            string varName = context.varName().GetText();
+            return $"std::cin >> { varName };";
         }
     }
 }

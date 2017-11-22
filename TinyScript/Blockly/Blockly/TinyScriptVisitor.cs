@@ -11,32 +11,67 @@ namespace Blockly
 {
     public class TinyScriptVisitor : TinyScriptBaseVisitor<VariableType>
     {
-        public class TypeData
+        public interface ITypeData
         {
-            private Dictionary<string, VariableType> variables;
+            VariableType GetVariableType(string name);
 
-            public TypeData(Dictionary<string, VariableType> variables)
-            {
-                this.variables = new Dictionary<string, VariableType>(variables);
-            }
+            VariableType GetPrintArgumentType(IToken token);
+        }
+
+        private class TypeData : ITypeData
+        {
+            private Dictionary<string, VariableType> variables = new Dictionary<string, VariableType>();
+            private Dictionary<long, VariableType> prints = new Dictionary<long, VariableType>();
 
             public VariableType GetVariableType(string name)
             {
                 return variables[name];
             }
+
+            public VariableType GetPrintArgumentType(IToken token)
+            {
+                long id = MakePrintIdentifier(token);
+                return prints[id];
+            }
+
+            public bool TryGetVariableType(string name, out VariableType type)
+            {
+                return variables.TryGetValue(name, out type);
+            }
+
+            public bool AddVariable(string name, VariableType type)
+            {
+                if (variables.ContainsKey(name))
+                {
+                    return false;
+                }
+                variables.Add(name, type);
+                return true;
+            }
+
+            public void AddPrintArgument(IToken token, VariableType type)
+            {
+                long id = MakePrintIdentifier(token);
+                prints.Add(id, type);
+            }
+
+            private static long MakePrintIdentifier(IToken token)
+            {
+                return (token.Line << 32) | token.Column;
+            }
         }
 
-        private Dictionary<string, VariableType> variables = new Dictionary<string, VariableType>();
+        private TypeData typeData = new TypeData();
 
         private void ThrowSyntaxError(IToken token, string message)
         {
             throw new SyntaxErrorException(token.Line, token.Column, message);
         }
 
-        public TypeData Analyze(TinyScriptParser.ProgramContext context)
+        public ITypeData Analyze(TinyScriptParser.ProgramContext context)
         {
             VisitProgram(context);
-            return new TypeData(variables);
+            return typeData;
         }
 
         public override VariableType VisitProgram([NotNull] TinyScriptParser.ProgramContext context)
@@ -87,7 +122,7 @@ namespace Blockly
                     ThrowSyntaxError(context.expression().Start, "Type mismatch");
                 }
             }
-            MakeVariable(type, context.varName().Start, false);
+            MakeVariable(type, context.varName().Start);
             return VariableType.VOID;
         }
 
@@ -98,18 +133,17 @@ namespace Blockly
             {
                 ThrowSyntaxError(context.expression().Start, "Type mismatch");
             }
-            MakeVariable(expression, context.varName().Start, true);
+            MakeVariable(expression, context.varName().Start);
             return VariableType.VOID;
         }
 
-        private void MakeVariable(VariableType type, IToken name, bool var)
+        private void MakeVariable(VariableType type, IToken name)
         {
             string varName = name.Text;
-            if (variables.ContainsKey(varName))
+            if (!typeData.AddVariable(varName, type))
             {
                 ThrowSyntaxError(name, "Variable already exists");
             }
-            variables.Add(varName, type);
         }
 
         public override VariableType VisitExpression([NotNull] TinyScriptParser.ExpressionContext context)
@@ -206,11 +240,12 @@ namespace Blockly
         public override VariableType VisitVarName([NotNull] TinyScriptParser.VarNameContext context)
         {
             string varName = context.GetText();
-            if (!variables.ContainsKey(varName))
+            VariableType type;
+            if (!typeData.TryGetVariableType(varName, out type))
             {
                 ThrowSyntaxError(context.Start, "Variable does not exist");
             }
-            return variables[varName];
+            return type;
         }
 
         public override VariableType VisitValue([NotNull] TinyScriptParser.ValueContext context)
@@ -348,6 +383,7 @@ namespace Blockly
             {
                 ThrowSyntaxError(args[0].Start, "Type mismatch");
             }
+            typeData.AddPrintArgument(nameToken, expression);
             return VariableType.VOID;
         }
 
@@ -399,7 +435,7 @@ namespace Blockly
             {
                 ThrowSyntaxError(context.expression().Start, "Type mismatch");
             }
-            MakeVariable(type, context.varName().Start, false);
+            MakeVariable(type, context.varName().Start);
             return VariableType.VOID;
         }
 
@@ -434,7 +470,7 @@ namespace Blockly
         {
             var expressions = context.expression();
             VariableType type = VariableType.ArrayFromString(context.typeName().GetText(), expressions.Length);
-            MakeVariable(type, context.varName().Start, false);
+            MakeVariable(type, context.varName().Start);
             for (int i = 0; i < expressions.Length; i++)
             {
                 VariableType expression = VisitExpression(expressions[i]);

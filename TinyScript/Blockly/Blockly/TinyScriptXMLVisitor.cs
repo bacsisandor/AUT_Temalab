@@ -12,9 +12,9 @@ namespace Blockly
 {
     public class TinyScriptXMLVisitor : TinyScriptBaseVisitor<XElement>
     {
-        private TinyScriptVisitor.TypeData typeData;
+        private TinyScriptVisitor.ITypeData typeData;
 
-        public TinyScriptXMLVisitor(TinyScriptVisitor.TypeData typeData)
+        public TinyScriptXMLVisitor(TinyScriptVisitor.ITypeData typeData)
         {
             this.typeData = typeData;
         }

@@ -24,7 +24,7 @@ namespace Blockly
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Title = "Save Code";
-            saveFileDialog.Filter = "C files | *.c";
+            saveFileDialog.Filter = "C++ files | *.cpp";
             saveFileDialog.DefaultExt = "txt";
             saveFileDialog.FileName = "Code";
             if (saveFileDialog.ShowDialog() == true)
