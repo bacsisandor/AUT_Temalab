@@ -585,5 +585,63 @@ namespace Blockly
             block.Add(value);
             return block;
         }
+
+        public override XElement VisitCountStatement([NotNull] TinyScriptParser.CountStatementContext context)
+        {
+            XElement block = new XElement("block", new XAttribute("type", "count"));
+            XElement field = new XElement("field", new XAttribute("name", "variable"));
+            string varName = context.varName()[0].GetText();
+            field.Add(varName);
+            block.Add(field);
+            XElement initField = new XElement("field", new XAttribute("name", "initial"));
+            string from = context.signedArgument()[0].argument().GetText();
+            if (context.signedArgument()[0].PLUSMINUS() != null)
+            {
+                from = context.signedArgument()[0].PLUSMINUS().GetText() + from;
+            }
+            initField.Add(from);
+            block.Add(initField);
+            XElement untilField = new XElement("field", new XAttribute("name", "until"));
+            string to = context.signedArgument()[1].argument().GetText();
+            if (context.signedArgument()[1].PLUSMINUS() != null)
+            {
+                to = context.signedArgument()[1].PLUSMINUS().GetText() + to;
+            }
+            untilField.Add(to);
+            block.Add(untilField);
+            XElement dirField = new XElement("field", new XAttribute("name", "direction"));
+            bool direction;
+            bool incrOne = (context.incrementation().INCDEC1() != null);
+            if (incrOne)
+            {
+                direction = context.incrementation().INCDEC1().GetText() == "++";
+            }
+            else
+            {
+                direction = context.incrementation().INCDEC2().GetText() == "+=";
+            }
+            dirField.Add(direction ? "increment" : "decrement");
+            block.Add(dirField);
+            XElement incrField = new XElement("field", new XAttribute("name", "inc_value"));
+            string increment;
+            if (incrOne)
+            {
+                increment = "1";
+            }
+            else
+            {
+                increment = context.incrementation().expression().sum()[0].product()[0].signedArgument()[0].argument().value().GetText();
+                if (context.incrementation().expression().sum()[0].product()[0].signedArgument()[0].PLUSMINUS() != null)
+                {
+                    increment = context.incrementation().expression().sum()[0].product()[0].signedArgument()[0].PLUSMINUS().GetText() + increment;
+                }
+            }
+            incrField.Add(increment);
+            block.Add(incrField);
+            XElement statement = new XElement("statement", new XAttribute("name", "core"));
+            statement.Add(VisitBlock(context.block()));
+            block.Add(statement);
+            return block;
+        }
     }
 }

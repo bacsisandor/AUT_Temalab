@@ -634,5 +634,27 @@ namespace Blockly
             VisitStatementList(context.statementList());
             return VariableType.VOID;
         }
+
+        public override VariableType VisitCountStatement([NotNull] TinyScriptParser.CountStatementContext context)
+        {
+            if (context.varName()[0].GetText() != context.varName()[1].GetText())
+            {
+                ThrowSyntaxError(context.varName()[0].Start, "Variables must be the same");
+            }
+            VariableType type = VisitVarName(context.varName()[0]);
+            if (type != VariableType.INT)
+            {
+                ThrowSyntaxError(context.varName()[0].Start, "Type mismatch");
+            }
+
+            VariableType initExpr = VisitSignedArgument(context.signedArgument()[0]);
+            VariableType untilExpr = VisitSignedArgument(context.signedArgument()[1]);
+            if (initExpr != VariableType.INT || untilExpr != VariableType.INT)
+            {
+                ThrowSyntaxError(context.signedArgument()[0].Start, "Type mismatch");
+            }
+            VisitIncrementation(context.incrementation());
+            return VariableType.VOID;
+        }
     }
 }

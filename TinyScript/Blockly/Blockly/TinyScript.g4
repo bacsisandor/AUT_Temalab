@@ -4,7 +4,7 @@ program: functionDefinitionList variableDeclarationList statementList EOF;
 functionDefinitionList: functionDefinition*;
 variableDeclarationList: variableDeclaration*;
 statementList: statement*;
-statement: ifStatement | whileStatement | doWhileStatement | forStatement | assignmentStatement | arrayAssignmentStatement | functionCallStatement | incrementStatement | readStatement;
+statement: ifStatement | whileStatement | doWhileStatement | forStatement | countStatement | assignmentStatement | arrayAssignmentStatement | functionCallStatement | incrementStatement | readStatement;
 variableDeclaration: variableDeclaration1 | variableDeclaration2 | arrayDeclaration | arrayInitialization;
 
 functionDefinition: ((typeName (BRACKET3 BRACKET4)?) | 'void') functionName '(' (parameter (',' parameter)*)? ')' functionBody ;
@@ -19,6 +19,7 @@ arrayInitialization: typeName varName '[' ']' '=' '{' (expression (',' expressio
 whileStatement: 'while' '(' expression ')' block ;
 doWhileStatement: 'do' block 'while' '(' expression ')' ';' ;
 forStatement: 'for' '(' varName '=' expression ';' expression ';' incrementation ')' block ;
+countStatement: 'count' '(' 'from' varName '=' signedArgument ';' 'to' varName '=' signedArgument ';' incrementation ')' block;
 ifStatement: 'if' '(' expression ')' block elseIfStatement* elseStatement? ;
 elseIfStatement: 'else' 'if' '(' expression ')' block ;
 elseStatement: 'else' block ;
@@ -67,6 +68,9 @@ ELSE: 'else';
 WHILE: 'while';
 DO: 'do';
 FOR: 'for';
+COUNT: 'count';
+FROM: 'from';
+TO: 'to';
 VAR: 'var';
 READ: 'read';
 CURLY1: '{';

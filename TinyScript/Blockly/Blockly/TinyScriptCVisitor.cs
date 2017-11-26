@@ -327,5 +327,24 @@ namespace Blockly
             string varName = context.varName().GetText();
             return $"std::cin >> { varName };";
         }
+
+        public override string VisitCountStatement([NotNull] TinyScriptParser.CountStatementContext context)
+        {
+            string varName = context.varName()[0].GetText();
+            string from = context.signedArgument()[0].argument().GetText();
+            if (context.signedArgument()[0].PLUSMINUS() != null)
+            {
+                from = context.signedArgument()[0].PLUSMINUS().GetText() + from;
+            }
+            string to = context.signedArgument()[1].argument().GetText();
+            if (context.signedArgument()[1].PLUSMINUS() != null)
+            {
+                to = context.signedArgument()[1].PLUSMINUS().GetText() + to;
+            }
+            string incr = VisitIncrementation(context.incrementation());
+            string result = $"for ({ varName } = { from }; { varName } = { to }; { incr }) ";
+            result += VisitBlock(context.block());
+            return result;
+        }
     }
 }
