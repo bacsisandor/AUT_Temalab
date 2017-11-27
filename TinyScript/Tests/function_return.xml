@@ -1,0 +1,70 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables>
+    <variable id="%l,?69/m.Sl]lAA,^%v7" type="">a</variable>
+    <variable id="UM(nD(jErrM*uc}RTwld" type="">b</variable>
+  </variables>
+  <block id="{gGv9E;4ss;Gar3ldtf;" type="procedures_defreturn" y="-42" x="117">
+    <mutation>
+      <arg name="a" />
+      <arg name="b" />
+    </mutation>
+    <field name="NAME">max</field>
+    <field name="type0">int</field>
+    <field name="type1">int</field>
+    <field name="type">int</field>
+    <comment w="160" h="80" pinned="false">Describe this function...</comment>
+    <statement name="STACK">
+      <block id="5d.jZc[Y}Lz)sqYZdvN_" type="procedures_ifreturn">
+        <mutation value="1" />
+        <value name="CONDITION">
+          <block id="aUHSI-88D)_X#n)r$sx@" type="logic_compare">
+            <field name="OP">LT</field>
+            <value name="A">
+              <block id=".G/iqWBI!3RJMV(sbPPL" type="variables_get">
+                <field id="%l,?69/m.Sl]lAA,^%v7" name="VAR" variableType="">a</field>
+              </block>
+            </value>
+            <value name="B">
+              <block id="a1I=Re@5ppMw]fqn2z{c" type="variables_get">
+                <field id="UM(nD(jErrM*uc}RTwld" name="VAR" variableType="">b</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <value name="VALUE">
+          <block id="]|peCRQI,;_`Xk}Oh16O" type="variables_get">
+            <field id="UM(nD(jErrM*uc}RTwld" name="VAR" variableType="">b</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+    <value name="RETURN">
+      <block id="s#-FzUB7F%Ak(^4BQ$|v" type="variables_get">
+        <field id="%l,?69/m.Sl]lAA,^%v7" name="VAR" variableType="">a</field>
+      </block>
+    </value>
+  </block>
+  <block id="hu8B|^ey{LV$%[~IpDL2" type="text_print" y="107" x="120">
+    <value name="TEXT">
+      <shadow id="D=|,79[oEz~T$A3uwPs%" type="text">
+        <field name="TEXT">abc</field>
+      </shadow>
+      <block id="?8=OgJ!F3q/5TT{{,jjd" type="procedures_callreturn">
+        <mutation name="max">
+          <arg name="a" />
+          <arg name="b" />
+        </mutation>
+        <value name="ARG0">
+          <block id="*-~qL%g}UN|=[c^Opx0n" type="math_number">
+            <field name="NUM">5</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block id="n+ZgEYZ:uQ^r-8CvU%)^" type="math_number">
+            <field name="NUM">2</field>
+          </block>
+        </value>
+      </block>
+    </value>
+  </block>
+</xml>

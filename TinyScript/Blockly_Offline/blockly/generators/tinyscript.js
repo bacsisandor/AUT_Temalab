@@ -250,7 +250,7 @@ Blockly.TinyScript.scrub_ = function(block, code) {
   }
   var nextBlock = block.nextConnection && block.nextConnection.targetBlock();
   var nextCode = Blockly.TinyScript.blockToCode(nextBlock);
-  return commentCode + code + nextCode;
+  return code + nextCode;
 };
 
 /**

@@ -1,0 +1,86 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables>
+    <variable id="%l,?69/m.Sl]lAA,^%v7" type="">a</variable>
+    <variable id="UM(nD(jErrM*uc}RTwld" type="">b</variable>
+    <variable id="Gyl/DA=~6)d.~:Gq(h?1" type="">maximum</variable>
+  </variables>
+  <block id="{gGv9E;4ss;Gar3ldtf;" type="procedures_defreturn" y="19" x="115">
+    <mutation>
+      <arg name="a" />
+      <arg name="b" />
+    </mutation>
+    <field name="NAME">max</field>
+    <field name="type0">int</field>
+    <field name="type1">int</field>
+    <field name="type">int</field>
+    <comment w="160" h="80" pinned="false">Describe this function...</comment>
+    <statement name="STACK">
+      <block id="EIA-i-I$)T`(o+6r60zv" type="create_variabletype">
+        <field name="type">int</field>
+        <field id="Gyl/DA=~6)d.~:Gq(h?1" name="var" variableType="">maximum</field>
+        <value name="NAME">
+          <block id="x1Ev~!Pe,_h6e?Hle[Pm" type="variables_get">
+            <field id="%l,?69/m.Sl]lAA,^%v7" name="VAR" variableType="">a</field>
+          </block>
+        </value>
+        <next>
+          <block id="8g+ar36`^tN_KygY-MU4" type="controls_if">
+            <value name="IF0">
+              <block id="Okkt1cqR^G`OvOfxO{3L" type="logic_compare">
+                <field name="OP">LT</field>
+                <value name="A">
+                  <block id="?Aj69=#U*BN)GQyr.Y(a" type="variables_get">
+                    <field id="%l,?69/m.Sl]lAA,^%v7" name="VAR" variableType="">a</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block id="tDKeU5wbc^Zkc52{}kb0" type="variables_get">
+                    <field id="UM(nD(jErrM*uc}RTwld" name="VAR" variableType="">b</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO0">
+              <block id="Ltyvjrrg=Vt5+;bClMOm" type="variables_set">
+                <field id="Gyl/DA=~6)d.~:Gq(h?1" name="VAR" variableType="">maximum</field>
+                <value name="VALUE">
+                  <block id="k!SYz7B#H]?%F9)22t2z" type="variables_get">
+                    <field id="UM(nD(jErrM*uc}RTwld" name="VAR" variableType="">b</field>
+                  </block>
+                </value>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="RETURN">
+      <block id="!|A-`FRMMFkyqBe7$@m+" type="variables_get">
+        <field id="Gyl/DA=~6)d.~:Gq(h?1" name="VAR" variableType="">maximum</field>
+      </block>
+    </value>
+  </block>
+  <block id="hu8B|^ey{LV$%[~IpDL2" type="text_print" y="202" x="117">
+    <value name="TEXT">
+      <shadow id="D=|,79[oEz~T$A3uwPs%" type="text">
+        <field name="TEXT">abc</field>
+      </shadow>
+      <block id="?8=OgJ!F3q/5TT{{,jjd" type="procedures_callreturn">
+        <mutation name="max">
+          <arg name="a" />
+          <arg name="b" />
+        </mutation>
+        <value name="ARG0">
+          <block id="*-~qL%g}UN|=[c^Opx0n" type="math_number">
+            <field name="NUM">5</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block id="n+ZgEYZ:uQ^r-8CvU%)^" type="math_number">
+            <field name="NUM">2</field>
+          </block>
+        </value>
+      </block>
+    </value>
+  </block>
+</xml>
