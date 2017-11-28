@@ -3,26 +3,12 @@
 <head>
     <meta charset="utf-8">
     <title>Blockly GPIO ZERO LIB</title>
-
-    <!--Blockly related-->
-    <script src="blockly_handler.js"></script>
-    <script src="blockly_user_handler.js"></script>
-    <script src="blockly_compressed.js"></script>
-    <script src="blocks_compressed.js"></script>
+    <script src="../../blockly_compressed.js"></script>
+    <script src="../../blocks_compressed.js"></script>
     <script src="python_compressed.js"></script>
-    <script src="en.js"></script>
-
-    <!--GPIO Zero related-->
-    <script src="gz_code_gen_python.js"></script>
-    <script src="block_def_gz_bool.js"></script>
-    <script src="block_def_gz_complex.js"></script>
-    <script src="block_def_gz_init.js"></script>
-    <script src="block_def_gz_set_const.js"></script>
-    <script src="block_def_gz_set_var.js"></script>
-    <script src="block_def_gz_util.js"></script>
-    <script src="block_def_gz_value.js"></script>
-    <script src="block_def_gz_wait.js"></script>
-
+    <script src="block_def.js"></script>
+    <script src="gpiozero_code_generator_python.js"></script>
+    <script src="../../msg/js/en.js"></script>
 
     <style>
         html, body {
@@ -90,10 +76,11 @@
     </tr>
 </table>
 
-<div id="blocklyDiv" style="position: absolute"></div>
+<div class="terminal"></div>
 
-<!--Toolbox-->
-<div xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
+<div id="blocklyDiv" style="position: absolute"></div>
+//Toolbox
+<xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
     <category name="Logic" colour="#5C81A6">
         <block type="controls_if"></block>
         <block type="logic_compare">
@@ -465,6 +452,9 @@
         <block type="operationofmotor">
             <field name="operation">forward()</field>
         </block>
+        <block type="setvacuumcleaner">
+            <field name="operation">start</field>
+        </block>
         <block type="setbasicoutputdevicestate">
             <field name="state">on</field>
         </block>
@@ -500,10 +490,9 @@
         <block type="setvalueoffield"></block>
         <block type="cputemperaturesinglevalue"></block>
     </category>
-</div>
+</xml>
 
 <script>
-    /*Blockly related*/
     var toolbox = document.getElementById("toolbox");
     var options = {
         toolbox: toolbox,
@@ -538,7 +527,7 @@
     var blocklyArea = document.getElementById('blocklyArea');
     var blocklyDiv = document.getElementById('blocklyDiv');
     var demoWorkspace = Blockly.inject(blocklyDiv, options);
-    var onResize = function (e) {
+    var onresize = function (e) {
         // Compute the absolute coordinates and dimensions of blocklyArea.
         var element = blocklyArea;
         var x = 0;
@@ -554,14 +543,79 @@
         blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
         blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
     };
-
-    window.addEventListener('resize', onResize, false);
-    onResize();
+    window.addEventListener('resize', onresize, false);
+    onresize();
     Blockly.svgResize(demoWorkspace);
+</script>
+
+<script>
+    function generateCode() {
+        saveToFile(Blockly.Python.workspaceToCode(demoWorkspace), 'pythonCodeFromBlocks.py');
+    }
+
+    function saveToFile(textToSave, fileName) {
+        var hiddenElement = document.createElement('a');
+        hiddenElement.href = 'data:attachment/text,' + encodeURI(textToSave);
+        hiddenElement.target = '_blank';
+        hiddenElement.download = fileName;
+        hiddenElement.click();
+    }
+
+    function saveBlocks() {
+        var xml = Blockly.Xml.workspaceToDom(demoWorkspace);
+        var xml_text = Blockly.Xml.domToText(xml);
+        saveToFile(xml_text, 'blocksToSave.xml');
+    }
+
+    function updateWorkspaceWithBlocks(blocks) {
+        var xml = Blockly.Xml.textToDom(blocks);
+        Blockly.mainWorkspace.clear();
+        Blockly.Xml.domToWorkspace(xml, demoWorkspace);
+    }
+
+    document.getElementById('file-input').addEventListener('change', readSingleFile, false);
+
+    function readSingleFile(e) {
+        var file = e.target.files[0];
+        if (!file) {
+            return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var contents = e.target.result;
+            updateWorkspaceWithBlocks(contents)
+        };
+        reader.readAsText(file);
+    }
+
+    function updateRealTimeBlockToPythonConversionTextarea(event) {
+        var code = Blockly.Python.workspaceToCode(demoWorkspace);
+        document.getElementById('on-the-fly-code-textarea').value = code;
+    }
+
     demoWorkspace.addChangeListener(updateRealTimeBlockToPythonConversionTextarea);
 
-    /*User related*/
-    document.getElementById('file-input').addEventListener('change', readSingleFile, false);
 </script>
+
+<script>
+    function connectSSH(ipAndPort) {
+        var http = new XMLHttpRequest();
+        var url = 'http://' + ipAndPort + '/fileupload';
+        var body = Blockly.Python.workspaceToCode(demoWorkspace);
+        http.open("POST", url, true);
+
+        //Send the proper header information along with the request
+        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        http.onreadystatechange = function () {
+            if (http.readyState === 4 && http.status === 200) {
+                alert(http.responseText);
+            }
+        };
+
+        http.send(body);
+    }
+</script>
+
 </body>
 </html>
