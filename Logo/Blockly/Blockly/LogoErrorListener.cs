@@ -8,7 +8,7 @@ using Antlr4.Runtime;
 
 namespace Blockly
 {
-    public class ErrorListener : BaseErrorListener, IAntlrErrorListener<int>
+    public class LogoErrorListener : BaseErrorListener, IAntlrErrorListener<int>
     {
         public override void SyntaxError(IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
         {
