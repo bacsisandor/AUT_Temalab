@@ -8,7 +8,7 @@
         Title="CodeViewer" Height="600" Width="800">
     <Grid>
         <TextBox x:Name="textBox" Margin="10,30,10,10" TextWrapping="Wrap" Text="TextBox"/>
-        <Button x:Name="saveButton" Content="Save" Margin="10,5,10,5" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" VerticalAlignment="Top" Click="saveButton_Click"/>
+        <Button x:Name="saveButton" Content="Save" Margin="10,5,10,5" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" VerticalAlignment="Top" Click="SaveButton_Click"/>
 
     </Grid>
 </Window>

@@ -60,9 +60,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BrowserHandler.cs" />
     <Compile Include="CodeViewer.xaml.cs">
       <DependentUpon>CodeViewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ScriptInterface.cs" />
     <Compile Include="SyntaxErrorException.cs" />
     <Compile Include="TinyScriptCVisitor.cs" />
     <Compile Include="TinyScriptVisitor.cs" />
