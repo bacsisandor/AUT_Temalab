@@ -60,7 +60,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="SyntaxErrorException.cs" />
+    <Compile Include="Blockly\BrowserHandler.cs" />
+    <Compile Include="CodeViewer.xaml.cs">
+      <DependentUpon>CodeViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Blockly\ScriptInterface.cs" />
+    <Compile Include="Compiler\SyntaxErrorException.cs" />
+    <Compile Include="Compiler\TinyScriptCVisitor.cs" />
+    <Compile Include="Compiler\TinyScriptVisitor.cs" />
+    <Compile Include="Compiler\TinyScriptXMLVisitor.cs" />
+    <Compile Include="Compiler\VariableType.cs" />
+    <Page Include="CodeViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -69,8 +82,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LogoErrorListener.cs" />
-    <Compile Include="LogoVisitor.cs" />
+    <Compile Include="Compiler\ErrorListener.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -94,19 +106,20 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Antlr4 Include="logo.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>Blockly</CustomToolNamespace>
-    </Antlr4>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Antlr4 Include="Compiler\TinyScript.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>Blockly</CustomToolNamespace>
+    </Antlr4>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
