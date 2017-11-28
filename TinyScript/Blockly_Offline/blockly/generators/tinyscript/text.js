@@ -1,15 +1,27 @@
+/*
+Text -  creates text
+value_text - text
+*/
 Blockly.TinyScript['text'] = function (block) {
-    var code = Blockly.TinyScript.quote_(block.getFieldValue('TEXT'));
-    return [code, Blockly.TinyScript.ORDER_ATOMIC];
+    var value_text = Blockly.TinyScript.quote_(block.getFieldValue('TEXT'));
+    return [value_text, Blockly.TinyScript.ORDER_ATOMIC];
 };
 
+/*
+Text print - prints the given value
+value_text - the value to print
+*/
 Blockly.TinyScript['text_print'] = function (block) {
-    var msg = Blockly.TinyScript.valueToCode(block, 'TEXT',
+    var value_text = Blockly.TinyScript.valueToCode(block, 'TEXT',
             Blockly.TinyScript.ORDER_NONE) || '\'\'';
-    var code = 'print(' + msg + ');\n';
+    var code = 'print(' + value_text + ');\n';
     return code;
 };
 
+/*
+Text join - joins the given values
+elements - values to join
+*/
 Blockly.TinyScript['text_join'] = function (block) {
     var elements = new Array(block.itemCount_);
     for (var i = 0; i < block.itemCount_; i++) {

@@ -1,3 +1,8 @@
+/*
+Controls if - if statement
+branchCode - statements
+conditionCode - if condition
+*/
 Blockly.TinyScript['controls_if'] = function (block) {
     var n = 0;
     var code = '',
@@ -22,6 +27,12 @@ Blockly.TinyScript['controls_if'] = function (block) {
 
 Blockly.TinyScript['controls_ifelse'] = Blockly.TinyScript['controls_if'];
 
+/*
+Logic compare
+operator - the listed operations below
+argument0 - first operand
+argument1 - second operand
+*/
 Blockly.TinyScript['logic_compare'] = function (block) {
     var OPERATORS = {
         'EQ': '==',
@@ -40,6 +51,12 @@ Blockly.TinyScript['logic_compare'] = function (block) {
     return [code, order];
 };
 
+/*
+Logic operation -
+operator - AND or OR operation
+argument0 - first operand
+argument1 - second operand
+*/
 Blockly.TinyScript['logic_operation'] = function (block) {
     var operator = (block.getFieldValue('OP') == 'AND') ? '&&' : '||';
     var order = (operator == '&&') ? Blockly.TinyScript.ORDER_LOGICAL_AND :
@@ -62,6 +79,10 @@ Blockly.TinyScript['logic_operation'] = function (block) {
     return [code, order];
 };
 
+/*
+Logic negate - negates the given value
+argument0 - the given value
+*/
 Blockly.TinyScript['logic_negate'] = function (block) {
     var order = Blockly.TinyScript.ORDER_LOGICAL_NOT;
     var argument0 = Blockly.TinyScript.valueToCode(block, 'BOOL', order) ||
@@ -70,11 +91,17 @@ Blockly.TinyScript['logic_negate'] = function (block) {
     return [code, order];
 };
 
+/*
+Logic boolean - boolean value (true or false)
+*/
 Blockly.TinyScript['logic_boolean'] = function (block) {
     var code = (block.getFieldValue('BOOL') == 'TRUE') ? 'true' : 'false';
     return [code, Blockly.TinyScript.ORDER_ATOMIC];
 };
 
+/*
+Logic null - null value
+*/
 Blockly.TinyScript['logic_null'] = function (block) {
     return ['null', Blockly.TinyScript.ORDER_ATOMIC];
 };
