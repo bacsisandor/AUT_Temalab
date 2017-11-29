@@ -35,7 +35,7 @@ namespace Blockly
         public string GetPath()
         {
             string path = Assembly.GetExecutingAssembly().Location;
-            string newPath = Path.GetFullPath(Path.Combine(path, @"..\..\..\..\..\Blockly_Offline\blockly\index.html"));
+            string newPath = Path.GetFullPath(Path.Combine(path, @"..\..\..\..\..\Blockly_Offline\index.html"));
             return newPath;
         }
 
