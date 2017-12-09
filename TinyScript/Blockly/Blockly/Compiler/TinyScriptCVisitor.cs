@@ -286,8 +286,7 @@ namespace Blockly
         {
             string varName = context.varName().GetText();
             VariableType type = typeData.GetVariableType(varName);
-            string expr = VisitExpression(context.expression());
-            return $"{ type } { varName }[{ expr }];";
+            return $"std::vector<{ type.ElementType }> { varName }({ type.Size });";
         }
 
         public override string VisitArrayAssignmentStatement([NotNull] TinyScriptParser.ArrayAssignmentStatementContext context)
@@ -309,7 +308,7 @@ namespace Blockly
         {
             string varName = context.varName().GetText();
             VariableType type = typeData.GetVariableType(varName);
-            string result = $"{ type.ElementType } { varName }[] = {{ ";
+            string result = $"std::vector<{ type.ElementType }> { varName } {{ ";
             for (int i = 0; i < context.expression().Length; i++)
             {
                 if (i > 0)
@@ -331,18 +330,10 @@ namespace Blockly
         public override string VisitCountStatement([NotNull] TinyScriptParser.CountStatementContext context)
         {
             string varName = context.varName()[0].GetText();
-            string from = context.signedArgument()[0].argument().GetText();
-            if (context.signedArgument()[0].PLUSMINUS() != null)
-            {
-                from = context.signedArgument()[0].PLUSMINUS().GetText() + from;
-            }
-            string to = context.signedArgument()[1].argument().GetText();
-            if (context.signedArgument()[1].PLUSMINUS() != null)
-            {
-                to = context.signedArgument()[1].PLUSMINUS().GetText() + to;
-            }
+            string from = context.@int()[0].GetText(); ;
+            string to = context.@int()[0].GetText(); ;
             string incr = VisitIncrementation(context.incrementation());
-            string result = $"for ({ varName } = { from }; { varName } = { to }; { incr }) ";
+            string result = $"for ({ varName } = { from }; { varName } <= { to }; { incr }) ";
             result += VisitBlock(context.block());
             return result;
         }

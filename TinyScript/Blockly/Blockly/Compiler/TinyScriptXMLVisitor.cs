@@ -249,7 +249,7 @@ namespace Blockly
         {
             XElement block;
             XElement field;
-            if (context.INT() != null)
+            if (context.@int() != null)
             {
                 block = new XElement("block", new XAttribute("type", "math_number"));
                 field = new XElement("field", new XAttribute("name", "NUM"));
@@ -265,15 +265,10 @@ namespace Blockly
                 block.Add(field);
                 return block;
             }
-            if (context.STRING() != null)
-            {
-                block = new XElement("block", new XAttribute("type", "text"));
-                field = new XElement("field", new XAttribute("name", "TEXT"));
-                field.Add(context.GetText().Trim('"'));
-                block.Add(field);
-                return block;
-            }
-            block = new XElement("block", new XAttribute("type", "logic_null"));
+            block = new XElement("block", new XAttribute("type", "text"));
+            field = new XElement("field", new XAttribute("name", "TEXT"));
+            field.Add(context.GetText().Trim('"'));
+            block.Add(field);
             return block;
         }
 
@@ -594,19 +589,11 @@ namespace Blockly
             field.Add(varName);
             block.Add(field);
             XElement initField = new XElement("field", new XAttribute("name", "initial"));
-            string from = context.signedArgument()[0].argument().GetText();
-            if (context.signedArgument()[0].PLUSMINUS() != null)
-            {
-                from = context.signedArgument()[0].PLUSMINUS().GetText() + from;
-            }
+            string from = context.@int()[0].GetText();
             initField.Add(from);
             block.Add(initField);
             XElement untilField = new XElement("field", new XAttribute("name", "until"));
-            string to = context.signedArgument()[1].argument().GetText();
-            if (context.signedArgument()[1].PLUSMINUS() != null)
-            {
-                to = context.signedArgument()[1].PLUSMINUS().GetText() + to;
-            }
+            string to = context.@int()[1].GetText();
             untilField.Add(to);
             block.Add(untilField);
             XElement dirField = new XElement("field", new XAttribute("name", "direction"));

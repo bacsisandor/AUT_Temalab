@@ -8,11 +8,10 @@ namespace Blockly
 {
     public abstract class VariableType : IEquatable<VariableType>
     {
-        public static readonly VariableType INT = new ElementalType("int");
-        public static readonly VariableType BOOLEAN = new ElementalType("bool");
-        public static readonly VariableType STRING = new ElementalType("string");
-        public static readonly VariableType NULL = new ElementalType("null");
-        public static readonly VariableType VOID = new ElementalType("void");
+        public static readonly VariableType INT = new PrimitiveType("int");
+        public static readonly VariableType BOOLEAN = new PrimitiveType("bool");
+        public static readonly VariableType STRING = new PrimitiveType("string");
+        public static readonly VariableType VOID = new PrimitiveType("void");
 
         public abstract string Name { get; }
 
@@ -20,14 +19,26 @@ namespace Blockly
 
         public abstract VariableType ElementType { get; }
 
+        public abstract int Size { get; }
+
+        public virtual bool TryGetValue(out int value)
+        {
+            value = 0;
+            return false;
+        }
+
         public override string ToString()
         {
             return Name;
         }
 
-        public virtual bool Equals(VariableType other)
+        public bool Equals(VariableType other)
         {
-            return Name == other.Name;
+            if (Name == other.Name)
+            {
+                return Size == -1 || other.Size == -1 || Size == other.Size;
+            }
+            return false;
         }
 
         public override bool Equals(object obj)
@@ -64,7 +75,7 @@ namespace Blockly
             {
                 name = "bool";
             }
-            return new ElementalType(name);
+            return new PrimitiveType(name);
         }
 
         public static VariableType ArrayFromString(string name, int size)
@@ -73,7 +84,7 @@ namespace Blockly
         }
     }
 
-    public class ElementalType : VariableType
+    public class PrimitiveType : VariableType
     {
         private string name;
 
@@ -101,15 +112,40 @@ namespace Blockly
             }
         }
 
-        public ElementalType(string name)
+        public override int Size
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
+        public PrimitiveType(string name)
         {
             this.name = name;
+        }
+    }
+
+    public class Constant : PrimitiveType
+    {
+        private int value;
+
+        public override bool TryGetValue(out int value)
+        {
+            value = this.value;
+            return true;
+        }
+
+        public Constant(int value) : base(INT.Name)
+        {
+            this.value = value;
         }
     }
 
     public class ArrayType : VariableType
     {
         private VariableType elementType;
+        private int size;
 
         public override string Name
         {
@@ -135,17 +171,18 @@ namespace Blockly
             }
         }
 
-        public int Size { get; private set; }
+        public override int Size
+        {
+            get
+            {
+                return size;
+            }
+        }
 
         public ArrayType(VariableType elementType, int size)
         {
             this.elementType = elementType;
-            Size = size;
-        }
-
-        public override bool Equals(VariableType other)
-        {
-            return base.Equals(other) && Size == ((ArrayType)other).Size;
+            this.size = size;
         }
     }
 }

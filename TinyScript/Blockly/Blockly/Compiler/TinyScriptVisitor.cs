@@ -165,7 +165,7 @@ namespace Blockly
             if (context.expression() != null)
             {
                 expression = VisitExpression(context.expression());
-                if (!CheckType(type, expression))
+                if (type != expression)
                 {
                     ThrowSyntaxError(context.expression().Start, "Type mismatch");
                 }
@@ -177,10 +177,6 @@ namespace Blockly
         public override VariableType VisitVariableDeclaration2([NotNull] TinyScriptParser.VariableDeclaration2Context context)
         {
             VariableType expression = VisitExpression(context.expression());
-            if (expression == VariableType.NULL)
-            {
-                ThrowSyntaxError(context.expression().Start, "Type mismatch");
-            }
             MakeVariable(expression, context.varName().Start);
             return VariableType.VOID;
         }
@@ -226,6 +222,12 @@ namespace Blockly
             {
                 ThrowSyntaxError(ops.ElementAt(0).Symbol, "Type mismatch");
             }
+            int value1, value2;
+            if (leftExpr.TryGetValue(out value1) && rightExpr.TryGetValue(out value2))
+            {
+                bool add = ops.ElementAt(0).GetText() == "+";
+                return new Constant(add ? value1 + value2 : value1 - value2);
+            }
             return VariableType.INT;
         }
 
@@ -246,6 +248,12 @@ namespace Blockly
             {
                 ThrowSyntaxError(ops.ElementAt(0).Symbol, "Type mismatch");
             }
+            int value1, value2;
+            if (leftExpr.TryGetValue(out value1) && rightExpr.TryGetValue(out value2))
+            {
+                bool mul = ops.ElementAt(0).GetText() == "*";
+                return new Constant(mul ? value1 * value2 : value1 / value2);
+            }
             return VariableType.INT;
         }
 
@@ -260,6 +268,11 @@ namespace Blockly
             if (type != VariableType.INT)
             {
                 ThrowSyntaxError(context.argument().Start, "Type mismatch");
+            }
+            int value;
+            if (type.TryGetValue(out value))
+            {
+                return new Constant(-value);
             }
             return type;
         }
@@ -298,19 +311,15 @@ namespace Blockly
 
         public override VariableType VisitValue([NotNull] TinyScriptParser.ValueContext context)
         {
-            if (context.INT() != null)
+            if (context.@int() != null)
             {
-                return VariableType.INT;
+                return new Constant(int.Parse(context.GetText()));
             }
             if (context.BOOLEAN() != null)
             {
                 return VariableType.BOOLEAN;
             }
-            if (context.STRING() != null)
-            {
-                return VariableType.STRING;
-            }
-            return VariableType.NULL;
+            return VariableType.STRING;
         }
 
         private void Conditional(TinyScriptParser.ExpressionContext expressionContext)
@@ -394,7 +403,7 @@ namespace Blockly
         {
             VariableType type = VisitVarName(context.varName());
             VariableType expr = VisitExpression(context.expression());
-            if (!CheckType(expr, type))
+            if (expr != type)
             {
                 ThrowSyntaxError(context.expression().Start, "Type mismatch");
             }
@@ -408,9 +417,8 @@ namespace Blockly
 
         public override VariableType VisitFunctionCall([NotNull] TinyScriptParser.FunctionCallContext context)
         {
-            string functionName = context.functionName().GetText();
             IToken nameToken = context.functionName().Start;
-            switch (functionName)
+            switch (nameToken.Text)
             {
                 case "print": return PrintFunction(nameToken, context.expression());
                 case "abs": return AbsFunction(nameToken, context.expression());
@@ -432,7 +440,7 @@ namespace Blockly
             }
             for (int i = 0; i < args.Length; i++)
             {
-                if (!CheckType(typeData.GetParameterType(i), VisitExpression(args[i])))
+                if (typeData.GetParameterType(i) != VisitExpression(args[i]))
                 {
                     ThrowSyntaxError(args[i].Start, "Type mismatch");
                 }
@@ -487,23 +495,19 @@ namespace Blockly
             return VariableType.INT;
         }
 
-        private static bool CheckType(VariableType type1, VariableType type2)
-        {
-            if (type1 == VariableType.NULL || type2 == VariableType.NULL)
-            {
-                return true;
-            }
-            return type1 == type2;
-        }
-
         public override VariableType VisitArrayDeclaration([NotNull] TinyScriptParser.ArrayDeclarationContext context)
         {
-            VariableType type = VariableType.ArrayFromString(context.typeName().GetText(), 0);
             VariableType expr = VisitExpression(context.expression());
-            if (expr != VariableType.INT)
+            int size;
+            if (!expr.TryGetValue(out size))
             {
                 ThrowSyntaxError(context.expression().Start, "Type mismatch");
             }
+            if (size < 0)
+            {
+                ThrowSyntaxError(context.expression().Start, "Array size must be positive or zero");
+            }
+            VariableType type = VariableType.ArrayFromString(context.typeName().GetText(), size);
             MakeVariable(type, context.varName().Start);
             return VariableType.VOID;
         }
@@ -543,7 +547,7 @@ namespace Blockly
             for (int i = 0; i < expressions.Length; i++)
             {
                 VariableType expression = VisitExpression(expressions[i]);
-                if (!CheckType(expression, type.ElementType))
+                if (expression != type.ElementType)
                 {
                     ThrowSyntaxError(expressions[i].Start, "Type mismatch");
                 }
@@ -618,19 +622,12 @@ namespace Blockly
         {
             if (context.varName()[0].GetText() != context.varName()[1].GetText())
             {
-                ThrowSyntaxError(context.varName()[0].Start, "Variables must be the same");
+                ThrowSyntaxError(context.varName()[1].Start, "Variables must be the same");
             }
             VariableType type = VisitVarName(context.varName()[0]);
             if (type != VariableType.INT)
             {
                 ThrowSyntaxError(context.varName()[0].Start, "Type mismatch");
-            }
-
-            VariableType initExpr = VisitSignedArgument(context.signedArgument()[0]);
-            VariableType untilExpr = VisitSignedArgument(context.signedArgument()[1]);
-            if (initExpr != VariableType.INT || untilExpr != VariableType.INT)
-            {
-                ThrowSyntaxError(context.signedArgument()[0].Start, "Type mismatch");
             }
             VisitIncrementation(context.incrementation());
             return VariableType.VOID;
