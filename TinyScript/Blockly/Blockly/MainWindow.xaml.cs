@@ -1,7 +1,6 @@
 ﻿using Antlr4.Runtime;
 using Microsoft.Win32;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows;
@@ -9,32 +8,8 @@ using System.Xml.Linq;
 
 namespace Blockly
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        [System.Runtime.InteropServices.ComVisibleAttribute(true)]
-        public class ScriptInterface
-        {
-            private MainWindow _w;
-            public ScriptInterface(MainWindow w)
-            {
-                _w = w;
-            }
-
-            public void onChanged()
-            {
-                if (_w.autogenCheckBox.IsChecked == true)
-                {
-                    _w.browser.InvokeScript("showCode");
-                    var generatedCode = _w.browser.InvokeScript("eval", new object[] { "generatedCode" });
-                    _w.textBox.Text = generatedCode.ToString();
-                }
-                
-            }
-        }
-
         private struct ValidationResult
         {
             public bool Success { get; private set; }
@@ -52,31 +27,16 @@ namespace Blockly
         public MainWindow()
         {
             InitializeComponent();
-            SetBrowserEmulationMode(); // Changing webbrowser to IE11
-            string path = Assembly.GetExecutingAssembly().Location;
-            string newPath = Path.GetFullPath(Path.Combine(path, @"..\..\..\..\..\Blockly_Offline\blockly\demos\tinyscript\index.html"));
-            browser.Navigate(newPath);
+            BrowserHandler.Instance.SetBrowserSettings();
+            browser.Navigate(GetPath());
             browser.ObjectForScripting = new ScriptInterface(this);
         }
 
-        private void SetBrowserFeatureControlKey(string feature, string appName, uint value)
+        public string GetPath()
         {
-            using (var key = Registry.CurrentUser.CreateSubKey(
-                String.Concat(@"Software\Microsoft\Internet Explorer\Main\FeatureControl\", feature),
-                RegistryKeyPermissionCheck.ReadWriteSubTree))
-            {
-                key.SetValue(appName, (UInt32)value, RegistryValueKind.DWord);
-            }
-        }
-
-        public void SetBrowserEmulationMode()
-        {
-            var fileName = System.IO.Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName);
-
-            if (String.Compare(fileName, "devenv.exe", true) == 0 || String.Compare(fileName, "XDesProc.exe", true) == 0)
-                return;
-            UInt32 mode = 11001;
-            SetBrowserFeatureControlKey("FEATURE_BROWSER_EMULATION", fileName, mode);
+            string path = Assembly.GetExecutingAssembly().Location;
+            string newPath = Path.GetFullPath(Path.Combine(path, @"..\..\..\..\..\Blockly_Offline\index.html"));
+            return newPath;
         }
 
         private void DisplayBlocks(XElement root)
@@ -86,15 +46,13 @@ namespace Blockly
             browser.InvokeScript("execScript", new Object[] { script, "JavaScript" });
         }
 
-        private void toXmlButton_Click(object sender, RoutedEventArgs e)
+        private void ToXmlButton_Click(object sender, RoutedEventArgs e)
         {
-
             var script = "var xml = Blockly.Xml.workspaceToDom(workspace);var xml_text = Blockly.Xml.domToPrettyText(xml); alert(xml_text);";
-
             browser.InvokeScript("execScript", new Object[] { script, "JavaScript" });
         }
 
-        private void generateButton_Click(object sender, RoutedEventArgs e)
+        private void GenerateButton_Click(object sender, RoutedEventArgs e)
         {
             browser.InvokeScript("showCode");
             var generatedCode = browser.InvokeScript("eval", new object[] { "generatedCode" });
@@ -126,7 +84,7 @@ namespace Blockly
             return new ValidationResult(true, context, data);
         }
 
-        private void compileButton_Click(object sender, RoutedEventArgs e)
+        private void CompileButton_Click(object sender, RoutedEventArgs e)
         {
             ValidationResult result = Validate();
             if (!result.Success)
@@ -138,25 +96,29 @@ namespace Blockly
             DisplayBlocks(visitor.Visit(result.ProgramContext));
         }
 
-        private void saveButton_Click(object sender, RoutedEventArgs e)
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             browser.InvokeScript("saveBlocks");
             var xml = browser.InvokeScript("eval", new object[] { "generatedXml" });
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Title = "Save Blocks";
-            saveFileDialog.Filter = "Blocks | *.xml";
-            saveFileDialog.DefaultExt = "xml";
-            saveFileDialog.FileName = "Blocks";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Title = "Save Blocks",
+                Filter = "Blocks | *.xml",
+                DefaultExt = "xml",
+                FileName = "Blocks"
+            };
             if (saveFileDialog.ShowDialog() == true)
             {
-                System.IO.File.WriteAllText(Path.GetFullPath(saveFileDialog.FileName), xml.ToString());
+                File.WriteAllText(Path.GetFullPath(saveFileDialog.FileName), xml.ToString());
             }
         }
 
-        private void loadButton_Click(object sender, RoutedEventArgs e)
+        private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openfiledialog = new OpenFileDialog();
-            openfiledialog.Filter = "Blocks | *.xml";
+            OpenFileDialog openfiledialog = new OpenFileDialog
+            {
+                Filter = "Blocks | *.xml"
+            };
             if (openfiledialog.ShowDialog() == true)
             {
                 string readText = File.ReadAllText(Path.GetFullPath(openfiledialog.FileName));
@@ -164,35 +126,39 @@ namespace Blockly
             }
         }
 
-        private void codeSaveButton_Click(object sender, RoutedEventArgs e)
+        private void CodeSaveButton_Click(object sender, RoutedEventArgs e)
         {
             SaveCode(textBox.Text);
         }
 
         private void SaveCode(string code)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Title = "Save Code";
-            saveFileDialog.Filter = "Text Files | *.txt";
-            saveFileDialog.DefaultExt = "txt";
-            saveFileDialog.FileName = "Code";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Title = "Save Code",
+                Filter = "Text Files | *.txt",
+                DefaultExt = "txt",
+                FileName = "Code"
+            };
             if (saveFileDialog.ShowDialog() == true)
             {
-                System.IO.File.WriteAllText(Path.GetFullPath(saveFileDialog.FileName), code);
+                File.WriteAllText(Path.GetFullPath(saveFileDialog.FileName), code);
             }
         }
 
-        private void codeLoadButton_Click(object sender, RoutedEventArgs e)
+        private void CodeLoadButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openfiledialog = new OpenFileDialog();
-            openfiledialog.Filter = "Text Files | *.txt";
+            OpenFileDialog openfiledialog = new OpenFileDialog
+            {
+                Filter = "Text Files | *.txt"
+            };
             if (openfiledialog.ShowDialog() == true)
             {
                 textBox.Text = File.ReadAllText(Path.GetFullPath(openfiledialog.FileName));
             }
         }
 
-        private void genCButton_Click(object sender, RoutedEventArgs e)
+        private void GenCButton_Click(object sender, RoutedEventArgs e)
         {
             ValidationResult result = Validate();
             if (!result.Success)
@@ -203,7 +169,7 @@ namespace Blockly
             string cCode = visitor.Visit(result.ProgramContext);
             CodeViewer cw = new CodeViewer();
             cw.Show();
-            cw.setTextBox(cCode);
+            cw.SetTextBox(cCode);
         }
     }
 }

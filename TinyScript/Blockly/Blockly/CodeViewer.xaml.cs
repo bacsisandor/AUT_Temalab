@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using System.Windows;
-using System.Windows.Shapes;
 using System.IO;
 
 namespace Blockly
@@ -15,21 +14,23 @@ namespace Blockly
             InitializeComponent();
         }
 
-        public void setTextBox(string text)
+        public void SetTextBox(string text)
         {
             textBox.Text = text;
         }
 
-        private void saveButton_Click(object sender, RoutedEventArgs e)
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Title = "Save Code";
-            saveFileDialog.Filter = "C++ files | *.cpp";
-            saveFileDialog.DefaultExt = "txt";
-            saveFileDialog.FileName = "Code";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Title = "Save Code",
+                Filter = "C++ files | *.cpp",
+                DefaultExt = "txt",
+                FileName = "Code"
+            };
             if (saveFileDialog.ShowDialog() == true)
             {
-                System.IO.File.WriteAllText(System.IO.Path.GetFullPath(saveFileDialog.FileName), textBox.Text);
+                File.WriteAllText(System.IO.Path.GetFullPath(saveFileDialog.FileName), textBox.Text);
             }
         }
     }

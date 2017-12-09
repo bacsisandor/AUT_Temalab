@@ -60,14 +60,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Blockly\BrowserHandler.cs" />
     <Compile Include="CodeViewer.xaml.cs">
       <DependentUpon>CodeViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SyntaxErrorException.cs" />
-    <Compile Include="TinyScriptCVisitor.cs" />
-    <Compile Include="TinyScriptVisitor.cs" />
-    <Compile Include="TinyScriptXMLVisitor.cs" />
-    <Compile Include="VariableType.cs" />
+    <Compile Include="Blockly\ScriptInterface.cs" />
+    <Compile Include="Compiler\SyntaxErrorException.cs" />
+    <Compile Include="Compiler\TinyScriptCVisitor.cs" />
+    <Compile Include="Compiler\TinyScriptVisitor.cs" />
+    <Compile Include="Compiler\TinyScriptXMLVisitor.cs" />
+    <Compile Include="Compiler\VariableType.cs" />
     <Page Include="CodeViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -80,7 +82,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ErrorListener.cs" />
+    <Compile Include="Compiler\ErrorListener.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -109,7 +111,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Antlr4 Include="TinyScript.g4">
+    <Antlr4 Include="Compiler\TinyScript.g4">
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>Blockly</CustomToolNamespace>
     </Antlr4>
@@ -117,6 +119,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
