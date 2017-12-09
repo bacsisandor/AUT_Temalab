@@ -15,8 +15,6 @@ namespace Blockly
         {
             VariableType GetVariableType(string name);
 
-            VariableType GetPrintArgumentType(IToken token);
-
             void EnterScope(string scope);
 
             void ExitScope();
@@ -26,7 +24,6 @@ namespace Blockly
         {
             private Dictionary<string, Dictionary<string, VariableType>> variables = new Dictionary<string, Dictionary<string, VariableType>>();
             private Dictionary<string, List<VariableType>> parameters = new Dictionary<string, List<VariableType>>();
-            private Dictionary<long, VariableType> prints = new Dictionary<long, VariableType>();
             private string scope;
 
             public TypeData()
@@ -38,12 +35,6 @@ namespace Blockly
             public VariableType GetVariableType(string name)
             {
                 return variables[scope][name];
-            }
-
-            public VariableType GetPrintArgumentType(IToken token)
-            {
-                long id = MakePrintIdentifier(token);
-                return prints[id];
             }
 
             public bool TryGetVariableType(string name, out VariableType type)
@@ -70,12 +61,6 @@ namespace Blockly
                 variables.Add(scope, new Dictionary<string, VariableType>());
                 parameters.Add(scope, new List<VariableType>());
                 return true;
-            }
-
-            public void AddPrintArgument(IToken token, VariableType type)
-            {
-                long id = MakePrintIdentifier(token);
-                prints.Add(id, type);
             }
 
             public void EnterScope(string scope)
@@ -111,11 +96,6 @@ namespace Blockly
             public VariableType GetParameterType(int i)
             {
                 return parameters[scope][i];
-            }
-
-            private static long MakePrintIdentifier(IToken token)
-            {
-                return (token.Line << 32) | token.Column;
             }
         }
 
@@ -473,7 +453,6 @@ namespace Blockly
             {
                 ThrowSyntaxError(args[0].Start, "Type mismatch");
             }
-            typeData.AddPrintArgument(nameToken, expression);
             return VariableType.VOID;
         }
 
