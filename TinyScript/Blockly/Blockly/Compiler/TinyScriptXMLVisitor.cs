@@ -249,7 +249,7 @@ namespace Blockly
         {
             XElement block;
             XElement field;
-            if (context.@int() != null)
+            if (context.INT() != null)
             {
                 block = new XElement("block", new XAttribute("type", "math_number"));
                 field = new XElement("field", new XAttribute("name", "NUM"));
@@ -379,7 +379,7 @@ namespace Blockly
             dirField.Add(direction ? "increment" : "decrement");
             block.Add(dirField);
             XElement incrExpr = Increment(context.incrementation().varName(), context.incrementation().expression());
-            XElement by = new XElement("value", new XAttribute("name", "NAME"));
+            XElement by = new XElement("value", new XAttribute("name", "inc_number"));
             by.Add(incrExpr);
             block.Add(by);
             XElement statement = new XElement("statement", new XAttribute("name", "core"));

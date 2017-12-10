@@ -177,7 +177,7 @@ namespace Blockly
         public override VariableType VisitVariableDeclaration2([NotNull] TinyScriptParser.VariableDeclaration2Context context)
         {
             VariableType expression = VisitExpression(context.expression());
-            MakeVariable(expression, context.varName().Start);
+            MakeVariable(new PrimitiveType(expression.Name), context.varName().Start);
             return VariableType.VOID;
         }
 
@@ -311,7 +311,7 @@ namespace Blockly
 
         public override VariableType VisitValue([NotNull] TinyScriptParser.ValueContext context)
         {
-            if (context.@int() != null)
+            if (context.INT() != null)
             {
                 return new Constant(int.Parse(context.GetText()));
             }
@@ -430,6 +430,7 @@ namespace Blockly
 
         private VariableType CustomFunction(IToken nameToken, TinyScriptParser.ExpressionContext[] args)
         {
+            var expressions = from arg in args select VisitExpression(arg);
             if (!typeData.TryEnterScope(nameToken.Text))
             {
                 ThrowSyntaxError(nameToken, "Function does not exist");
@@ -440,7 +441,7 @@ namespace Blockly
             }
             for (int i = 0; i < args.Length; i++)
             {
-                if (typeData.GetParameterType(i) != VisitExpression(args[i]))
+                if (typeData.GetParameterType(i) != expressions.ElementAt(i))
                 {
                     ThrowSyntaxError(args[i].Start, "Type mismatch");
                 }
@@ -606,6 +607,7 @@ namespace Blockly
                 type = VariableType.VOID;
             }
             typeData.AddParameter(type);
+            typeData.TryAddVariable("_return", type);
             VisitFunctionBody(context.functionBody());
             typeData.ExitScope();
             return VariableType.VOID;

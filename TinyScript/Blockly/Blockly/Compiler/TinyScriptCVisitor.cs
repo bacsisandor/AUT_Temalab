@@ -20,32 +20,38 @@ namespace Blockly
 
         public override string VisitProgram([NotNull] TinyScriptParser.ProgramContext context)
         {
+            string fnDef = VisitFunctionDefinitionList(context.functionDefinitionList());
             string varDecl = VisitVariableDeclarationList(context.variableDeclarationList());
             string statements = VisitStatementList(context.statementList());
             string block = $"{ varDecl }\n\n{ statements }\nreturn 0;";
-            block = "\t" + block.Replace("\n", "\n\t");
-            string result = $"#include \"TinyScript.h\"\n\nint main()\n{{\n{ block }\n}}";
+            Indent(ref block);
+            string result = $"#include \"TinyScript.h\"\n\n{ fnDef }\n\nint main()\n{{\n{ block }\n}}";
             return result.Replace("\n", Environment.NewLine);
         }
 
         public override string VisitVariableDeclarationList([NotNull] TinyScriptParser.VariableDeclarationListContext context)
         {
-            return VisitList(context.variableDeclaration());
+            return VisitList(context.variableDeclaration(), "\n");
         }
 
         public override string VisitStatementList([NotNull] TinyScriptParser.StatementListContext context)
         {
-            return VisitList(context.statement());
+            return VisitList(context.statement(), "\n");
         }
 
-        private string VisitList(IParseTree[] tree)
+        public override string VisitFunctionDefinitionList([NotNull] TinyScriptParser.FunctionDefinitionListContext context)
+        {
+            return VisitList(context.functionDefinition(), "\n\n");
+        }
+
+        private string VisitList(IParseTree[] tree, string separator)
         {
             string result = "";
             for (int i = 0; i < tree.Length; i++)
             {
                 if (i > 0)
                 {
-                    result += "\n";
+                    result += separator;
                 }
                 result += Visit(tree[i]);
             }
@@ -76,17 +82,12 @@ namespace Blockly
         {
             string varName = varContext.GetText();
             VariableType type = typeData.GetVariableType(varName);
-            string typeName = type.Name;
-            if (typeName == "string")
-            {
-                typeName = "std::string";
-            }
             if (exprContext == null)
             {
-                return $"{ typeName } { varName };";
+                return $"{ type.ToCPPTypeName() } { varName };";
             }
             string expression = VisitExpression(exprContext);
-            return $"{ typeName } { varName } = { expression };";
+            return $"{ type.ToCPPTypeName() } { varName } = { expression };";
         }
 
         public override string VisitExpression([NotNull] TinyScriptParser.ExpressionContext context)
@@ -194,7 +195,7 @@ namespace Blockly
         public override string VisitBlock(TinyScriptParser.BlockContext context)
         {
             string statements = VisitStatementList(context.statementList());
-            statements = "\t" + statements.Replace("\n", "\n\t");
+            Indent(ref statements);
             return $"{{\n{ statements }\n}}";
         }
 
@@ -259,9 +260,11 @@ namespace Blockly
         {
             string name = context.functionName().GetText();
             var expression = context.expression();
-            if (name == "print")
+            switch (name)
             {
-                return PrintFunction(context.functionName().Start, expression[0]);
+                case "print": return PrintFunction(expression[0]);
+                case "min": return MinMaxFunction(expression, false);
+                case "max": return MinMaxFunction(expression, true);
             }
             string result = $"{ name }(";
             for (int i = 0; i < expression.Length; i++)
@@ -276,17 +279,29 @@ namespace Blockly
             return result;
         }
 
-        private string PrintFunction(IToken token, TinyScriptParser.ExpressionContext exprContext)
+        private string PrintFunction(TinyScriptParser.ExpressionContext exprContext)
         {
             string expression = VisitExpression(exprContext);
             return $"std::cout << ({ expression }) << std::endl";
+        }
+
+        private string MinMaxFunction(TinyScriptParser.ExpressionContext[] exprContext, bool max)
+        {
+            string result = max ? "Max" : "Min";
+            result += $"({ exprContext.Length }";
+            foreach (var expr in exprContext)
+            {
+                result += $", { VisitExpression(expr) }";
+            }
+            result += ")";
+            return result;
         }
 
         public override string VisitArrayDeclaration([NotNull] TinyScriptParser.ArrayDeclarationContext context)
         {
             string varName = context.varName().GetText();
             VariableType type = typeData.GetVariableType(varName);
-            return $"std::vector<{ type.ElementType }> { varName }({ type.Size });";
+            return $"{ type.ToCPPTypeName() } { varName }({ type.Size });";
         }
 
         public override string VisitArrayAssignmentStatement([NotNull] TinyScriptParser.ArrayAssignmentStatementContext context)
@@ -308,7 +323,7 @@ namespace Blockly
         {
             string varName = context.varName().GetText();
             VariableType type = typeData.GetVariableType(varName);
-            string result = $"std::vector<{ type.ElementType }> { varName } {{ ";
+            string result = $"{ type.ElementType.ToCPPTypeName() } _{ varName }_helper[] = {{ ";
             for (int i = 0; i < context.expression().Length; i++)
             {
                 if (i > 0)
@@ -317,7 +332,7 @@ namespace Blockly
                 }
                 result += VisitExpression(context.expression()[i]);
             }
-            result += " };";
+            result += $" }};\n{ type.ToCPPTypeName() } { varName }(_{ varName }_helper, _{ varName }_helper + { type.Size });";
             return result;
         }
 
@@ -336,6 +351,47 @@ namespace Blockly
             string result = $"for ({ varName } = { from }; { varName } <= { to }; { incr }) ";
             result += VisitBlock(context.block());
             return result;
+        }
+
+        public override string VisitFunctionDefinition([NotNull] TinyScriptParser.FunctionDefinitionContext context)
+        {
+            string functionName = context.functionName().GetText();
+            typeData.EnterScope(functionName);
+            VariableType retType = typeData.GetVariableType("_return");
+            string result = $"{ retType.ToCPPTypeName() } { functionName }(";
+            var parameters = context.parameter();
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                if (i > 0)
+                {
+                    result += ", ";
+                }
+                string name = parameters[i].varName().GetText();
+                VariableType type = typeData.GetVariableType(name);
+                if (type.IsArray)
+                {
+                    name = "&" + name;
+                }
+                result += $"{ type.ToCPPTypeName() } { name }";
+            }
+            result += ")\n";
+            result += VisitFunctionBody(context.functionBody());
+            typeData.ExitScope();
+            return result;
+        }
+
+        public override string VisitFunctionBody([NotNull] TinyScriptParser.FunctionBodyContext context)
+        {
+            string declaration = VisitVariableDeclarationList(context.variableDeclarationList());
+            Indent(ref declaration);
+            string statements = VisitStatementList(context.statementList());
+            Indent(ref statements);
+            return $"{{\n{ declaration }\n\n{ statements }\n}}";
+        }
+
+        private static void Indent(ref string str)
+        {
+            str = "\t" + str.Replace("\n", "\n\t");
         }
     }
 }

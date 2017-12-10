@@ -32,32 +32,45 @@ namespace Blockly
             return Name;
         }
 
+        public string ToCPPTypeName()
+        {
+            if (IsArray)
+            {
+                return $"std::vector<{ ElementType.ToCPPTypeName() }>";
+            }
+            if (Name == "string")
+            {
+                return "std::string";
+            }
+            return Name;
+        }
+
         public bool Equals(VariableType other)
         {
-            if (Name == other.Name)
+            if (ReferenceEquals(other, null) || Name != other.Name)
             {
-                return Size == -1 || other.Size == -1 || Size == other.Size;
+                return false;
             }
-            return false;
+            return Size == -1 || other.Size == -1 || Size == other.Size;
         }
 
         public override bool Equals(object obj)
         {
-            if (obj is VariableType)
-            {
-                return Equals((VariableType)obj);
-            }
-            return false;
+            return Equals(obj as VariableType);
         }
 
         public static bool operator ==(VariableType type1, VariableType type2)
         {
+            if (ReferenceEquals(type1, null))
+            {
+                return false;
+            }
             return type1.Equals(type2);
         }
 
         public static bool operator !=(VariableType type1, VariableType type2)
         {
-            return !type1.Equals(type2);
+            return !(type1 == type2);
         }
 
         public override int GetHashCode()

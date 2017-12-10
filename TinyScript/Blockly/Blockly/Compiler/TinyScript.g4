@@ -20,6 +20,7 @@ whileStatement: 'while' '(' expression ')' block ;
 doWhileStatement: 'do' block 'while' '(' expression ')' ';' ;
 forStatement: 'for' '(' varName '=' expression ';' expression ';' incrementation ')' block ;
 countStatement: 'count' '(' 'from' varName '=' int ';' 'to' varName '=' int ';' incrementation ')' block ;
+int: PLUSMINUS? INT;
 ifStatement: 'if' '(' expression ')' block elseIfStatement* elseStatement? ;
 elseIfStatement: 'else' 'if' '(' expression ')' block ;
 elseStatement: 'else' block ;
@@ -40,8 +41,7 @@ argument:  varName | value | indexedArray | functionCall | ('(' expression ')');
 indexedArray: varName '[' expression ']' ;
 functionCall: functionName '(' (expression (',' expression)*)? ')' ;
 
-value: int | STRING | BOOLEAN;
-int: PLUSMINUS? INT;
+value: INT | STRING | BOOLEAN;
 typeName: INTTYPE | BOOLEANTYPE | STRINGTYPE;
 functionName: ID;
 varName: ID;
