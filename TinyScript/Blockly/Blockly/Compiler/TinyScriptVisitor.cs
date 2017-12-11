@@ -15,6 +15,10 @@ namespace Blockly
         {
             VariableType GetVariableType(string name);
 
+            int GetParameterCount();
+
+            string GetParameterName(int i);
+
             void EnterScope(string scope);
 
             void ExitScope();
@@ -23,13 +27,14 @@ namespace Blockly
         private class TypeData : ITypeData
         {
             private Dictionary<string, Dictionary<string, VariableType>> variables = new Dictionary<string, Dictionary<string, VariableType>>();
-            private Dictionary<string, List<VariableType>> parameters = new Dictionary<string, List<VariableType>>();
+            private Dictionary<string, List<string>> parameters = new Dictionary<string, List<string>>();
             private string scope;
 
             public TypeData()
             {
                 TryAddScope("_global");
-                ExitScope();
+                EnterScope("_global");
+                TryAddVariable("_return", VariableType.VOID);
             }
 
             public VariableType GetVariableType(string name)
@@ -59,7 +64,7 @@ namespace Blockly
                     return false;
                 }
                 variables.Add(scope, new Dictionary<string, VariableType>());
-                parameters.Add(scope, new List<VariableType>());
+                parameters.Add(scope, new List<string>());
                 return true;
             }
 
@@ -85,15 +90,15 @@ namespace Blockly
 
             public int GetParameterCount()
             {
-                return parameters[scope].Count - 1;
+                return parameters[scope].Count;
             }
 
-            public void AddParameter(VariableType type)
+            public void AddParameter(string name)
             {
-                parameters[scope].Add(type);
+                parameters[scope].Add(name);
             }
 
-            public VariableType GetParameterType(int i)
+            public string GetParameterName(int i)
             {
                 return parameters[scope][i];
             }
@@ -455,7 +460,6 @@ namespace Blockly
 
         private VariableType CustomFunction(IToken nameToken, TinyScriptParser.ExpressionContext[] args)
         {
-            var expressions = from arg in args select VisitExpression(arg);
             if (!typeData.TryEnterScope(nameToken.Text))
             {
                 ThrowSyntaxError(nameToken, "Function does not exist");
@@ -466,14 +470,14 @@ namespace Blockly
             }
             for (int i = 0; i < args.Length; i++)
             {
-                VariableType type = typeData.GetParameterType(i);
+                VariableType type = typeData.GetVariableType(typeData.GetParameterName(i));
                 VariableType expr = VisitExpression(args[i]);
                 if (type != expr)
                 {
                     ThrowSyntaxErrorCannotConvert(args[i].Start, type, expr);
                 }
             }
-            VariableType result = typeData.GetParameterType(args.Length);
+            VariableType result = typeData.GetVariableType("_return");
             typeData.ExitScope();
             return result;
         }
@@ -616,7 +620,7 @@ namespace Blockly
                 {
                     ThrowSyntaxError(param.Start, "Parameter already exists");
                 }
-                typeData.AddParameter(type);
+                typeData.AddParameter(param.varName().GetText());
             }
             if (context.typeName() != null)
             {
@@ -633,7 +637,6 @@ namespace Blockly
             {
                 type = VariableType.VOID;
             }
-            typeData.AddParameter(type);
             typeData.TryAddVariable("_return", type);
             VisitFunctionBody(context.functionBody());
             typeData.ExitScope();
@@ -643,22 +646,33 @@ namespace Blockly
         public override VariableType VisitFunctionBody([NotNull] TinyScriptParser.FunctionBodyContext context)
         {
             VisitVariableDeclarationList(context.variableDeclarationList());
-            VisitFunctionStatementList(context.functionStatementList());
+            VisitStatementList(context.statementList());
+            return VariableType.VOID;
+        }
+
+        public override VariableType VisitReturnStatement([NotNull] TinyScriptParser.ReturnStatementContext context)
+        {
+            VariableType expression = VisitExpression(context.expression());
+            VariableType type = typeData.GetVariableType("_return");
+            if (expression != type)
+            {
+                ThrowSyntaxErrorCannotConvert(context.expression().Start, expression, type);
+            }
             return VariableType.VOID;
         }
 
         public override VariableType VisitCountStatement([NotNull] TinyScriptParser.CountStatementContext context)
         {
-            if (context.varName()[0].GetText() != context.varName()[1].GetText())
+            string varName = context.varName()[0].GetText();
+            if (varName != context.varName()[1].GetText() || varName != context.countIncrementation().varName().GetText())
             {
-                ThrowSyntaxError(context.varName()[1].Start, "Variables must be the same");
+                ThrowSyntaxError(context.varName()[0].Start, "Variables must be the same");
             }
             VariableType type = VisitVarName(context.varName()[0]);
             if (type != VariableType.INT)
             {
                 ThrowSyntaxErrorCannotConvert(context.varName()[0].Start, type, VariableType.INT);
             }
-            VisitIncrementation(context.incrementation());
             return VariableType.VOID;
         }
     }

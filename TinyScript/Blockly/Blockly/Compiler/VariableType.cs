@@ -45,6 +45,20 @@ namespace Blockly
             return Name;
         }
 
+        public string GetCPPDefault()
+        {
+            if (!IsArray)
+            {
+                switch (Name)
+                {
+                    case "int": return "0";
+                    case "string": return "\"\"";
+                    case "bool": return "false";
+                }
+            }
+            return ToCPPTypeName() + "()";
+        }
+
         public bool Equals(VariableType other)
         {
             if (ReferenceEquals(other, null) || Name != other.Name)

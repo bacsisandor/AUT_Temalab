@@ -345,12 +345,25 @@ namespace Blockly
         public override string VisitCountStatement([NotNull] TinyScriptParser.CountStatementContext context)
         {
             string varName = context.varName()[0].GetText();
-            string from = context.@int()[0].GetText(); ;
-            string to = context.@int()[0].GetText(); ;
-            string incr = VisitIncrementation(context.incrementation());
+            string from = context.@int()[0].GetText();
+            string to = context.@int()[0].GetText();
+            string incr = VisitCountIncrementation(context.countIncrementation());
             string result = $"for ({ varName } = { from }; { varName } <= { to }; { incr }) ";
             result += VisitBlock(context.block());
             return result;
+        }
+
+        public override string VisitCountIncrementation([NotNull] TinyScriptParser.CountIncrementationContext context)
+        {
+            string varName = context.varName().GetText();
+            string op;
+            if (context.@int() == null)
+            {
+                op = context.INCDEC1().GetText();
+                return $"{ varName }{ op }";
+            }
+            op = context.INCDEC2().GetText();
+            return $"{ varName } { op } { context.@int().GetText() }";
         }
 
         public override string VisitFunctionDefinition([NotNull] TinyScriptParser.FunctionDefinitionContext context)
@@ -384,9 +397,20 @@ namespace Blockly
         {
             string declaration = VisitVariableDeclarationList(context.variableDeclarationList());
             Indent(ref declaration);
-            string statements = VisitFunctionStatementList(context.functionStatementList());
+            string statements = VisitStatementList(context.statementList());
+            VariableType type = typeData.GetVariableType("_return");
+            if (type != VariableType.VOID && !statements.Split('\n').LastOrDefault().StartsWith("return"))
+            {
+                statements += $"\nreturn { type.GetCPPDefault() };";
+            }
             Indent(ref statements);
             return $"{{\n{ declaration }\n\n{ statements }\n}}";
+        }
+
+        public override string VisitReturnStatement([NotNull] TinyScriptParser.ReturnStatementContext context)
+        {
+            string expression = VisitExpression(context.expression());
+            return $"return { expression };";
         }
 
         private static void Indent(ref string str)

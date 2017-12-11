@@ -4,12 +4,11 @@ program: functionDefinitionList variableDeclarationList statementList EOF;
 functionDefinitionList: functionDefinition*;
 variableDeclarationList: variableDeclaration*;
 statementList: statement*;
-functionStatementList: (statement | returnStatement)*;
-statement: ifStatement | whileStatement | doWhileStatement | forStatement | countStatement | assignmentStatement | arrayAssignmentStatement | functionCallStatement | incrementStatement | readStatement;
+statement: ifStatement | whileStatement | doWhileStatement | forStatement | countStatement | assignmentStatement | arrayAssignmentStatement | functionCallStatement | incrementStatement | readStatement | returnStatement;
 variableDeclaration: variableDeclaration1 | variableDeclaration2 | arrayDeclaration | arrayInitialization;
 
 functionDefinition: ((typeName (BRACKET3 BRACKET4)?) | 'void') functionName '(' (parameter (',' parameter)*)? ')' functionBody ;
-functionBody: '{' variableDeclarationList functionStatementList '}' ;
+functionBody: '{' variableDeclarationList statementList '}' ;
 parameter: typeName varName (BRACKET3 BRACKET4)? ;
 
 variableDeclaration1: typeName varName ('=' expression)? ';' ;
@@ -20,7 +19,8 @@ arrayInitialization: typeName varName '[' ']' '=' '{' (expression (',' expressio
 whileStatement: 'while' '(' expression ')' block ;
 doWhileStatement: 'do' block 'while' '(' expression ')' ';' ;
 forStatement: 'for' '(' varName '=' expression ';' expression ';' incrementation ')' block ;
-countStatement: 'count' '(' 'from' varName '=' int ';' 'to' varName '=' int ';' incrementation ')' block ;
+countStatement: 'count' '(' 'from' varName '=' int ';' 'to' varName '=' int ';' countIncrementation ')' block ;
+countIncrementation: (varName INCDEC1) | (varName INCDEC2 int) ;
 int: PLUSMINUS? INT;
 ifStatement: 'if' '(' expression ')' block elseIfStatement* elseStatement? ;
 elseIfStatement: 'else' 'if' '(' expression ')' block ;

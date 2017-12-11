@@ -22,13 +22,10 @@ namespace Blockly
         public override XElement VisitProgram([NotNull] TinyScriptParser.ProgramContext context)
         {
             XElement xml = new XElement("xml");
-            xml.Add(VisitVariableDeclarationList(context.variableDeclarationList()));
+            VisitFunctionDefinitionList(context.functionDefinitionList(), xml);
+            XElement varDecl = VisitVariableDeclarationList(context.variableDeclarationList());
             XElement statements = VisitStatementList(context.statementList());
-            if (statements != null)
-            {
-                statements.Add(new XAttribute("x", "0"), new XAttribute("y", "100"));
-                xml.Add(statements);
-            }
+            xml.Add(ConcatElements(varDecl, statements));
             return xml;
         }
 
@@ -42,10 +39,20 @@ namespace Blockly
             return VisitList(context.statement());
         }
 
+        private void VisitFunctionDefinitionList([NotNull] TinyScriptParser.FunctionDefinitionListContext context, XElement parent)
+        {
+            foreach (var fnDef in context.functionDefinition())
+            {
+                parent.Add(VisitFunctionDefinition(fnDef));
+            }
+        }
+
         private XElement VisitList(IParseTree[] tree)
         {
             if (tree.Length == 0)
+            {
                 return null;
+            }
             XElement root = Visit(tree[0]);
             XElement parent = root;
             for (int i = 1; i < tree.Length; i++)
@@ -57,6 +64,30 @@ namespace Blockly
                 parent = child;
             }
             return root;
+        }
+
+        private static XElement ConcatElements(XElement elem1, XElement elem2)
+        {
+            if (elem1 == null)
+            {
+                return elem2;
+            }
+            if (elem2 == null)
+            {
+                return elem1;
+            }
+            XElement last = elem1.Descendants("next").LastOrDefault();
+            if (last != null)
+            {
+                last = last.Elements().ElementAt(0);
+            }
+            else
+            {
+                last = elem1;
+            }
+            XElement next = new XElement("next", elem2);
+            last.Add(next);
+            return elem1;
         }
 
         public override XElement VisitStatement([NotNull] TinyScriptParser.StatementContext context)
@@ -448,19 +479,39 @@ namespace Blockly
 
         public override XElement VisitFunctionCall([NotNull] TinyScriptParser.FunctionCallContext context)
         {
-            string functionName = context.functionName().GetText();
-            IToken nameToken = context.functionName().Start;
-            switch (functionName)
+            string name = context.functionName().GetText();
+            switch (name)
             {
-                case "print": return PrintFunction(nameToken, context.expression());
-                case "abs": return AbsFunction(nameToken, context.expression());
-                case "min": return MinMaxFunction(nameToken, context.expression(), false);
-                case "max": return MinMaxFunction(nameToken, context.expression(), true);
-                default: return new XElement("test");
+                case "print": return PrintFunction(context.expression());
+                case "abs": return AbsFunction(context.expression());
+                case "min": return MinMaxFunction(context.expression(), false);
+                case "max": return MinMaxFunction(context.expression(), true);
+                default: return CustomFunction(name, context.expression());
             }
         }
 
-        private XElement PrintFunction(IToken nameToken, TinyScriptParser.ExpressionContext[] args)
+        private XElement CustomFunction(string name, TinyScriptParser.ExpressionContext[] args)
+        {
+            typeData.EnterScope(name);
+            bool ret = typeData.GetVariableType("_return") != VariableType.VOID;
+            XElement block = new XElement("block", new XAttribute("type", ret ? "procedures_callreturn" : "procedures_callnoreturn"));
+            XElement mutation = new XElement("mutation", new XAttribute("name", name));
+            for (int i = 0; i < typeData.GetParameterCount(); i++)
+            {
+                mutation.Add(new XElement("arg", new XAttribute("name", typeData.GetParameterName(i))));
+            }
+            block.Add(mutation);
+            for (int i = 0; i < args.Length; i++)
+            {
+                XElement value = new XElement("value", new XAttribute("name", $"ARG{ i }"));
+                value.Add(VisitExpression(args[i]));
+                block.Add(value);
+            }
+            typeData.ExitScope();
+            return block;
+        }
+
+        private XElement PrintFunction(TinyScriptParser.ExpressionContext[] args)
         {
             XElement block = new XElement("block", new XAttribute("type", "text_print"));
             XElement value = new XElement("value", new XAttribute("name", "TEXT"));
@@ -470,7 +521,7 @@ namespace Blockly
             return block;
         }
 
-        private XElement AbsFunction(IToken nameToken, TinyScriptParser.ExpressionContext[] args)
+        private XElement AbsFunction(TinyScriptParser.ExpressionContext[] args)
         {
             XElement block = new XElement("block", new XAttribute("type", "abs"));
             XElement value = new XElement("value", new XAttribute("name", "NAME"));
@@ -480,7 +531,7 @@ namespace Blockly
             return block;
         }
 
-        private XElement MinMaxFunction(IToken nameToken, TinyScriptParser.ExpressionContext[] args, bool max)
+        private XElement MinMaxFunction(TinyScriptParser.ExpressionContext[] args, bool max)
         {
             XElement block = new XElement("block", new XAttribute("type", "maximum_select"));
             XElement field = new XElement("field", new XAttribute("name", "select"));
@@ -583,7 +634,74 @@ namespace Blockly
 
         public override XElement VisitFunctionDefinition([NotNull] TinyScriptParser.FunctionDefinitionContext context)
         {
-            return null;
+            string fnName = context.functionName().GetText();
+            typeData.EnterScope(fnName);
+            VariableType retType = typeData.GetVariableType("_return");
+            XElement block = new XElement("block", new XAttribute("type", retType != VariableType.VOID ? "procedures_defreturn" : "procedures_defnoreturn"));
+            XElement mutation = new XElement("mutation");
+            var parameters = context.parameter();
+            foreach (var param in parameters)
+            {
+                string name = param.varName().GetText();
+                mutation.Add(new XElement("arg", new XAttribute("name", name)));
+            }
+            block.Add(mutation);
+            XElement nameField = new XElement("field", new XAttribute("name", "NAME"));
+            nameField.Add(fnName);
+            block.Add(nameField);
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                XElement typeField = new XElement("field", new XAttribute("name", $"type{ i }"));
+                VariableType type = typeData.GetVariableType(parameters[i].varName().GetText());
+                typeField.Add(type);
+                block.Add(typeField);
+            }
+            XElement body = VisitFunctionBody(context.functionBody());
+            if (retType != VariableType.VOID)
+            {
+                XElement retField = new XElement("field", new XAttribute("name", "type"));
+                retField.Add(retType);
+                block.Add(retField);
+                if (body != null)
+                {
+                    XElement last = body.Elements("block").LastOrDefault();
+                    if (last != null && last.Attribute("type").Value == "procedures_ifreturn")
+                    {
+                        last.Remove();
+                        XElement retValue = new XElement("value", new XAttribute("name", "RETURN"));
+                        XElement value = last.Elements("value").Last();
+                        retValue.Add(value.FirstNode);
+                        block.Add(retValue);
+                    }
+                }
+            }
+            block.Add(body);
+            typeData.ExitScope();
+            return block;
+        }
+
+        public override XElement VisitFunctionBody([NotNull] TinyScriptParser.FunctionBodyContext context)
+        {
+            XElement statement = new XElement("statement", new XAttribute("name", "STACK"));
+            XElement varList = VisitVariableDeclarationList(context.variableDeclarationList());
+            XElement statements = VisitStatementList(context.statementList());
+            statement.Add(ConcatElements(varList, statements));
+            return statement;
+        }
+
+        public override XElement VisitReturnStatement([NotNull] TinyScriptParser.ReturnStatementContext context)
+        {
+            XElement block = new XElement("block", new XAttribute("type", "procedures_ifreturn"));
+            XElement condition = new XElement("value", new XAttribute("name", "CONDITION"));
+            XElement cond = new XElement("block", new XAttribute("type", "logic_boolean"));
+            XElement field = new XElement("field", new XAttribute("name", "BOOL"), "TRUE");
+            cond.Add(field);
+            condition.Add(cond);
+            block.Add(condition);
+            XElement value = new XElement("value", new XAttribute("name", "VALUE"));
+            value.Add(VisitExpression(context.expression()));
+            block.Add(value);
+            return block;
         }
 
         public override XElement VisitCountStatement([NotNull] TinyScriptParser.CountStatementContext context)
@@ -603,14 +721,14 @@ namespace Blockly
             block.Add(untilField);
             XElement dirField = new XElement("field", new XAttribute("name", "direction"));
             bool direction;
-            bool incrOne = (context.incrementation().INCDEC1() != null);
+            bool incrOne = (context.countIncrementation().INCDEC1() != null);
             if (incrOne)
             {
-                direction = context.incrementation().INCDEC1().GetText() == "++";
+                direction = context.countIncrementation().INCDEC1().GetText() == "++";
             }
             else
             {
-                direction = context.incrementation().INCDEC2().GetText() == "+=";
+                direction = context.countIncrementation().INCDEC2().GetText() == "+=";
             }
             dirField.Add(direction ? "increment" : "decrement");
             block.Add(dirField);
@@ -622,11 +740,7 @@ namespace Blockly
             }
             else
             {
-                increment = context.incrementation().expression().sum()[0].product()[0].signedArgument()[0].argument().value().GetText();
-                if (context.incrementation().expression().sum()[0].product()[0].signedArgument()[0].PLUSMINUS() != null)
-                {
-                    increment = context.incrementation().expression().sum()[0].product()[0].signedArgument()[0].PLUSMINUS().GetText() + increment;
-                }
+                increment = context.countIncrementation().@int().GetText();
             }
             incrField.Add(increment);
             block.Add(incrField);
