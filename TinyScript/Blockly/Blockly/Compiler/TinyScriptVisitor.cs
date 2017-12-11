@@ -616,7 +616,7 @@ namespace Blockly
         public override VariableType VisitFunctionBody([NotNull] TinyScriptParser.FunctionBodyContext context)
         {
             VisitVariableDeclarationList(context.variableDeclarationList());
-            VisitStatementList(context.statementList());
+            VisitFunctionStatementList(context.functionStatementList());
             return VariableType.VOID;
         }
 

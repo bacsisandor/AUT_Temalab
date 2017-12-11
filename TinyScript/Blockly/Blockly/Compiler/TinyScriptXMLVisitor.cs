@@ -581,6 +581,11 @@ namespace Blockly
             return block;
         }
 
+        public override XElement VisitFunctionDefinition([NotNull] TinyScriptParser.FunctionDefinitionContext context)
+        {
+            return null;
+        }
+
         public override XElement VisitCountStatement([NotNull] TinyScriptParser.CountStatementContext context)
         {
             XElement block = new XElement("block", new XAttribute("type", "count"));

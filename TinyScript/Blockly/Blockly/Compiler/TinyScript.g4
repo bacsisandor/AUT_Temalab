@@ -4,11 +4,12 @@ program: functionDefinitionList variableDeclarationList statementList EOF;
 functionDefinitionList: functionDefinition*;
 variableDeclarationList: variableDeclaration*;
 statementList: statement*;
+functionStatementList: (statement | returnStatement)*;
 statement: ifStatement | whileStatement | doWhileStatement | forStatement | countStatement | assignmentStatement | arrayAssignmentStatement | functionCallStatement | incrementStatement | readStatement;
 variableDeclaration: variableDeclaration1 | variableDeclaration2 | arrayDeclaration | arrayInitialization;
 
 functionDefinition: ((typeName (BRACKET3 BRACKET4)?) | 'void') functionName '(' (parameter (',' parameter)*)? ')' functionBody ;
-functionBody: '{' variableDeclarationList statementList '}' ;
+functionBody: '{' variableDeclarationList functionStatementList '}' ;
 parameter: typeName varName (BRACKET3 BRACKET4)? ;
 
 variableDeclaration1: typeName varName ('=' expression)? ';' ;
@@ -31,6 +32,7 @@ functionCallStatement: functionCall ';' ;
 incrementStatement: incrementation ';' ;
 incrementation: (varName INCDEC1) | (varName INCDEC2 expression) ;
 readStatement: 'read' '(' varName ')' ';' ;
+returnStatement: 'return' expression ';' ;
 
 expression: sum (compareOp sum)?;
 compareOp: EQ | NEQ | LT | LTE | GT | GTE;
@@ -74,6 +76,7 @@ FROM: 'from';
 TO: 'to';
 VAR: 'var';
 READ: 'read';
+RETURN: 'return';
 CURLY1: '{';
 CURLY2: '}';
 BRACKET1: '(';

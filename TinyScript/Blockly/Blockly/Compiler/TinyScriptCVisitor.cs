@@ -384,7 +384,7 @@ namespace Blockly
         {
             string declaration = VisitVariableDeclarationList(context.variableDeclarationList());
             Indent(ref declaration);
-            string statements = VisitStatementList(context.statementList());
+            string statements = VisitFunctionStatementList(context.functionStatementList());
             Indent(ref statements);
             return $"{{\n{ declaration }\n\n{ statements }\n}}";
         }
