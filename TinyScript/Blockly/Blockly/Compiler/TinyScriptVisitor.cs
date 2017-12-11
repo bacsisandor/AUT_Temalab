@@ -106,6 +106,20 @@ namespace Blockly
             throw new SyntaxErrorException(token.Line, token.Column, message);
         }
 
+        private void ThrowSyntaxErrorCannotConvert(IToken token, VariableType typeConvertFrom, VariableType typeConvertTo)
+        {
+            ThrowSyntaxError(token, $"Cannot convert '{typeConvertFrom}' to '{typeConvertTo}'");
+        }
+
+        private void ThrowSyntaxErrorOperator(IToken token, string op, VariableType leftExpr, VariableType rightExpr)
+        {
+            if (leftExpr == VariableType.VOID)
+            {
+                ThrowSyntaxError(token, $"Operator '{op}' cannot be applied to operands of type '{rightExpr}' ");
+            }
+            ThrowSyntaxError(token, $"Operator '{op}' cannot be applied to operands of type '{leftExpr}' and '{rightExpr}' ");
+        }
+
         public ITypeData Analyze(TinyScriptParser.ProgramContext context)
         {
             VisitProgram(context);
@@ -167,7 +181,7 @@ namespace Blockly
                 expression = VisitExpression(context.expression());
                 if (type != expression)
                 {
-                    ThrowSyntaxError(context.expression().Start, "Type mismatch");
+                    ThrowSyntaxErrorCannotConvert(context.expression().Start, expression, type);
                 }
             }
             MakeVariable(type, context.varName().Start);
@@ -200,7 +214,7 @@ namespace Blockly
             VariableType rightExpr = VisitSum(context.sum()[1]);
             if (leftExpr != VariableType.INT || rightExpr != VariableType.INT)
             {
-                ThrowSyntaxError(context.compareOp().Start, "Type mismatch");
+                ThrowSyntaxErrorOperator(context.compareOp().Start, context.compareOp().GetText(), leftExpr, rightExpr);
             }
             return VariableType.BOOLEAN;
         }
@@ -220,7 +234,7 @@ namespace Blockly
             VariableType rightExpr = Expression(ops.Skip(1), products.Skip(1));
             if (leftExpr != VariableType.INT || rightExpr != VariableType.INT)
             {
-                ThrowSyntaxError(ops.ElementAt(0).Symbol, "Type mismatch");
+                ThrowSyntaxErrorOperator(ops.ElementAt(0).Symbol, ops.ElementAt(0).GetText(), leftExpr, rightExpr);
             }
             int value1, value2;
             if (leftExpr.TryGetValue(out value1) && rightExpr.TryGetValue(out value2))
@@ -246,7 +260,7 @@ namespace Blockly
             VariableType rightExpr = Product(ops.Skip(1), args.Skip(1));
             if (leftExpr != VariableType.INT || rightExpr != VariableType.INT)
             {
-                ThrowSyntaxError(ops.ElementAt(0).Symbol, "Type mismatch");
+                ThrowSyntaxErrorOperator(ops.ElementAt(0).Symbol, ops.ElementAt(0).GetText(), leftExpr, rightExpr);
             }
             int value1, value2;
             if (leftExpr.TryGetValue(out value1) && rightExpr.TryGetValue(out value2))
@@ -267,7 +281,7 @@ namespace Blockly
             VariableType type = VisitArgument(context.argument());
             if (type != VariableType.INT)
             {
-                ThrowSyntaxError(context.argument().Start, "Type mismatch");
+                ThrowSyntaxErrorOperator(context.argument().Start, op.GetText(), VariableType.VOID, type);
             }
             int value;
             if (type.TryGetValue(out value))
@@ -327,7 +341,7 @@ namespace Blockly
             VariableType expression = VisitExpression(expressionContext);
             if (expression != VariableType.BOOLEAN)
             {
-                ThrowSyntaxError(expressionContext.Start, "Type mismatch");
+                ThrowSyntaxErrorCannotConvert(expressionContext.Start, expression, VariableType.BOOLEAN);
             }
         }
 
@@ -364,13 +378,17 @@ namespace Blockly
             VariableType type = VisitVarName(context.varName());
             if (type != VariableType.INT)
             {
-                ThrowSyntaxError(context.varName().Start, "Type mismatch");
+                ThrowSyntaxErrorCannotConvert(context.varName().Start, type, VariableType.INT);
             }
             VariableType assignExpr = VisitExpression(context.expression()[0]);
             VariableType compareExpr = VisitExpression(context.expression()[1]);
-            if (assignExpr != VariableType.INT || compareExpr != VariableType.BOOLEAN)
+            if (assignExpr != VariableType.INT)
             {
-                ThrowSyntaxError(context.expression()[0].Start, "Type mismatch");
+                ThrowSyntaxErrorCannotConvert(context.expression()[0].Start, assignExpr, VariableType.INT);
+            }
+            if (compareExpr != VariableType.BOOLEAN)
+            {
+                ThrowSyntaxErrorCannotConvert(context.expression()[1].Start, compareExpr, VariableType.BOOLEAN);
             }
             VisitIncrementation(context.incrementation());
             return VariableType.VOID;
@@ -381,14 +399,21 @@ namespace Blockly
             VariableType type = VisitVarName(context.varName());
             if (type != VariableType.INT)
             {
-                ThrowSyntaxError(context.varName().Start, "Type mismatch");
+                if (context.INCDEC1() != null)
+                {
+                    ThrowSyntaxErrorOperator(context.varName().Start, context.INCDEC1().GetText(), VariableType.VOID, type);
+                }
+                else
+                {
+                    ThrowSyntaxErrorOperator(context.varName().Start, context.INCDEC2().GetText(), VariableType.VOID, type);
+                }
             }
             if (context.expression() != null)
             {
                 VariableType expression = VisitExpression(context.expression());
                 if (expression != VariableType.INT)
                 {
-                    ThrowSyntaxError(context.expression().Start, "Type mismatch");
+                    ThrowSyntaxErrorCannotConvert(context.expression().Start, expression, VariableType.INT);
                 }
             }
             return VariableType.VOID;
@@ -405,7 +430,7 @@ namespace Blockly
             VariableType expr = VisitExpression(context.expression());
             if (expr != type)
             {
-                ThrowSyntaxError(context.expression().Start, "Type mismatch");
+                ThrowSyntaxErrorCannotConvert(context.expression().Start, expr, type);
             }
             return VariableType.VOID;
         }
@@ -441,9 +466,11 @@ namespace Blockly
             }
             for (int i = 0; i < args.Length; i++)
             {
-                if (typeData.GetParameterType(i) != expressions.ElementAt(i))
+                VariableType type = typeData.GetParameterType(i);
+                VariableType expr = VisitExpression(args[i]);
+                if (type != expr)
                 {
-                    ThrowSyntaxError(args[i].Start, "Type mismatch");
+                    ThrowSyntaxErrorCannotConvert(args[i].Start, type, expr);
                 }
             }
             VariableType result = typeData.GetParameterType(args.Length);
@@ -460,7 +487,7 @@ namespace Blockly
             VariableType expression = VisitExpression(args[0]);
             if (expression.IsArray)
             {
-                ThrowSyntaxError(args[0].Start, "Type mismatch");
+                ThrowSyntaxError(args[0].Start, "Array cannot be printed");
             }
             return VariableType.VOID;
         }
@@ -474,7 +501,7 @@ namespace Blockly
             VariableType expression = VisitExpression(args[0]);
             if (expression != VariableType.INT)
             {
-                ThrowSyntaxError(args[0].Start, "Type mismatch");
+                ThrowSyntaxErrorCannotConvert(args[0].Start, expression, VariableType.INT);
             }
             return VariableType.INT;
         }
@@ -490,7 +517,7 @@ namespace Blockly
                 VariableType expr = VisitExpression(args[i]);
                 if (expr != VariableType.INT)
                 {
-                    ThrowSyntaxError(args[i].Start, "Type mismatch");
+                    ThrowSyntaxErrorCannotConvert(args[i].Start, expr, VariableType.INT);
                 }
             }
             return VariableType.INT;
@@ -502,7 +529,7 @@ namespace Blockly
             int size;
             if (!expr.TryGetValue(out size))
             {
-                ThrowSyntaxError(context.expression().Start, "Type mismatch");
+                ThrowSyntaxErrorCannotConvert(context.expression().Start, expr, VariableType.INT);
             }
             if (size < 0)
             {
@@ -519,12 +546,12 @@ namespace Blockly
             VariableType idxExpression = VisitExpression(context.expression()[0]);
             if (idxExpression != VariableType.INT)
             {
-                ThrowSyntaxError(context.expression()[0].Start, "Type mismatch");
+                ThrowSyntaxErrorCannotConvert(context.expression()[0].Start, idxExpression, type);
             }
             VariableType valueExpression = VisitExpression(context.expression()[1]);
             if (!type.IsArray || valueExpression != type.ElementType)
             {
-                ThrowSyntaxError(context.expression()[1].Start, "Type mismatch");
+                ThrowSyntaxErrorCannotConvert(context.expression()[1].Start, valueExpression, type.ElementType);
             }
             return VariableType.VOID;
         }
@@ -535,7 +562,7 @@ namespace Blockly
             VariableType idxExpression = VisitExpression(context.expression());
             if (!type.IsArray || idxExpression != VariableType.INT)
             {
-                ThrowSyntaxError(context.expression().Start, "Type mismatch");
+                ThrowSyntaxErrorCannotConvert(context.expression().Start, idxExpression, VariableType.INT);
             }
             return type.ElementType;
         }
@@ -550,7 +577,7 @@ namespace Blockly
                 VariableType expression = VisitExpression(expressions[i]);
                 if (expression != type.ElementType)
                 {
-                    ThrowSyntaxError(expressions[i].Start, "Type mismatch");
+                    ThrowSyntaxErrorCannotConvert(expressions[i].Start, expression, type.ElementType);
                 }
             }
             return VariableType.VOID;
@@ -561,7 +588,7 @@ namespace Blockly
             VariableType type = VisitVarName(context.varName());
             if (type.IsArray)
             {
-                ThrowSyntaxError(context.varName().Start, "Type mismatch");
+                ThrowSyntaxError(context.varName().Start, "Input cannot be read into array");
             }
             return VariableType.VOID;
         }
@@ -629,7 +656,7 @@ namespace Blockly
             VariableType type = VisitVarName(context.varName()[0]);
             if (type != VariableType.INT)
             {
-                ThrowSyntaxError(context.varName()[0].Start, "Type mismatch");
+                ThrowSyntaxErrorCannotConvert(context.varName()[0].Start, type, VariableType.INT);
             }
             VisitIncrementation(context.incrementation());
             return VariableType.VOID;
