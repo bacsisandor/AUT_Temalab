@@ -106,6 +106,15 @@ namespace Blockly
             string result = "";
             var products = context.product();
             var ops = context.PLUSMINUS();
+            if (ops.Any(op => typeData.IsStringConcat(op.Symbol)))
+            {
+                result += $"tostring({ VisitProduct(products[0]) })";
+                for (int i = 0; i < ops.Length; i++)
+                {
+                    result += $" { ops[i].GetText() } tostring({ VisitProduct(products[i + 1]) })";
+                }
+                return result;
+            }
             result += VisitProduct(products[0]);
             for (int i = 0; i < ops.Length; i++)
             {
@@ -287,7 +296,7 @@ namespace Blockly
 
         private string MinMaxFunction(TinyScriptParser.ExpressionContext[] exprContext, bool max)
         {
-            string result = max ? "Max" : "Min";
+            string result = max ? "max" : "min";
             result += $"({ exprContext.Length }";
             foreach (var expr in exprContext)
             {

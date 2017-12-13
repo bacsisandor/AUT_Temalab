@@ -176,16 +176,30 @@ namespace Blockly
             {
                 return VisitProduct(products.ElementAt(0));
             }
-            XElement block = new XElement("block", new XAttribute("type", "math_arithmetic"));
+            XElement block;
+            if (ops.Any(op => typeData.IsStringConcat(op.Symbol)))
+            {
+                block = new XElement("block", new XAttribute("type", "text_join"));
+                XElement mutation = new XElement("mutation", new XAttribute("items", products.Count()));
+                block.Add(mutation);
+                for (int i = 0; i < products.Count(); i++)
+                {
+                    XElement value = new XElement("value", new XAttribute("name", $"ADD{ i }"));
+                    value.Add(VisitProduct(products.ElementAt(i)));
+                    block.Add(value);
+                }
+                return block;
+            }
+            block = new XElement("block", new XAttribute("type", "math_arithmetic"));
             XElement field = new XElement("field", new XAttribute("name", "OP"));
             field.Value = ops.ElementAt(0).GetText() == "+" ? "ADD" : "MINUS";
             block.Add(field);
-            XElement left = new XElement("value", new XAttribute("name", "A"));
             XElement leftExpr = VisitProduct(products.ElementAt(0));
+            XElement rightExpr = Expression(ops.Skip(1), products.Skip(1));
+            XElement left = new XElement("value", new XAttribute("name", "A"));
             left.Add(leftExpr);
             block.Add(left);
             XElement right = new XElement("value", new XAttribute("name", "B"));
-            XElement rightExpr = Expression(ops.Skip(1), products.Skip(1));
             right.Add(rightExpr);
             block.Add(right);
             return block;

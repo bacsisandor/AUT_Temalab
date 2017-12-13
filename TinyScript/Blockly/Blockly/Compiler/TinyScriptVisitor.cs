@@ -22,6 +22,8 @@ namespace Blockly
             void EnterScope(string scope);
 
             void ExitScope();
+
+            bool IsStringConcat(IToken op);
         }
 
         private class TypeData : ITypeData
@@ -29,6 +31,7 @@ namespace Blockly
             private Dictionary<string, Dictionary<string, VariableType>> variables = new Dictionary<string, Dictionary<string, VariableType>>();
             private Dictionary<string, List<string>> parameters = new Dictionary<string, List<string>>();
             private string scope;
+            private List<IToken> strConcats = new List<IToken>();
 
             public TypeData()
             {
@@ -101,6 +104,16 @@ namespace Blockly
             public string GetParameterName(int i)
             {
                 return parameters[scope][i];
+            }
+
+            public bool IsStringConcat(IToken op)
+            {
+                return strConcats.Contains(op);
+            }
+
+            public void AddStringConcat(IToken op)
+            {
+                strConcats.Add(op);
             }
         }
 
@@ -217,9 +230,10 @@ namespace Blockly
             }
             VariableType leftExpr = VisitSum(context.sum()[0]);
             VariableType rightExpr = VisitSum(context.sum()[1]);
-            if (leftExpr != VariableType.INT || rightExpr != VariableType.INT)
+            string op = context.compareOp().GetText();
+            if (op != "==" && op != "!=" && (leftExpr != VariableType.INT || rightExpr != VariableType.INT))
             {
-                ThrowSyntaxErrorOperator(context.compareOp().Start, context.compareOp().GetText(), leftExpr, rightExpr);
+                ThrowSyntaxErrorOperator(context.compareOp().Start, op, leftExpr, rightExpr);
             }
             return VariableType.BOOLEAN;
         }
@@ -237,6 +251,11 @@ namespace Blockly
             }
             VariableType leftExpr = VisitProduct(products.ElementAt(0));
             VariableType rightExpr = Expression(ops.Skip(1), products.Skip(1));
+            if (rightExpr == VariableType.STRING || leftExpr == VariableType.STRING)
+            {
+                typeData.AddStringConcat(ops.ElementAt(0).Symbol);
+                return VariableType.STRING;
+            }
             if (leftExpr != VariableType.INT || rightExpr != VariableType.INT)
             {
                 ThrowSyntaxErrorOperator(ops.ElementAt(0).Symbol, ops.ElementAt(0).GetText(), leftExpr, rightExpr);
